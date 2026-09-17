@@ -36,6 +36,11 @@ public actor SecureEnclaveSealer: SecretSealing {
     private let keyBlob: Data
     private let publicKey: P256.KeyAgreement.PublicKey
     private var authContext: AuthContextBox?
+    /// When the user last answered a prompt through `authContext`. An
+    /// evaluated `LAContext` keeps satisfying the key's `userPresence` check
+    /// until it is invalidated — the reuse duration on the context does not
+    /// expire that — so the window is enforced here, not by the framework.
+    private var lastAuthenticatedAt: Date?
     public var configuration: Configuration
 
     public init(keyBlob: Data, configuration: Configuration = Configuration()) throws {
@@ -76,18 +81,32 @@ public actor SecureEnclaveSealer: SecretSealing {
     }
 
     public func open(_ sealed: SealedSecret, info: Data) async throws -> Data {
+        if authContext != nil,
+           Self.needsFreshAuthentication(lastAuthenticatedAt: lastAuthenticatedAt, reuseDuration: configuration.reuseDuration) {
+            endAuthenticationSession()
+        }
+        let prompts = authContext == nil
         let box = authContext ?? makeAuthContext()
         authContext = box
         let keyBlob = keyBlob
         // Detached: the enclave blocks the calling thread until the user
         // answers the prompt, and that must not be this actor (other vault
         // calls keep flowing) nor the main thread (the window keeps painting).
-        return try await Task.detached {
+        let plaintext = try await Task.detached {
             let key = try SecureEnclave.P256.KeyAgreement.PrivateKey(
                 dataRepresentation: keyBlob, authenticationContext: box.context
             )
             return try HPKEEnvelope.open(sealed, with: key, info: info)
         }.value
+        if prompts { lastAuthenticatedAt = Date() }
+        return plaintext
+    }
+
+    /// True once the last prompt is older than the reuse window; a window of
+    /// 0 means every `open` prompts.
+    static func needsFreshAuthentication(lastAuthenticatedAt: Date?, reuseDuration: TimeInterval, now: Date = Date()) -> Bool {
+        guard reuseDuration > 0, let last = lastAuthenticatedAt else { return true }
+        return now.timeIntervalSince(last) > reuseDuration
     }
 
     public func beginAuthenticationSession() async throws {
@@ -99,15 +118,16 @@ public actor SecureEnclaveSealer: SecretSealing {
         }
         authContext?.context.invalidate()
         authContext = box
+        lastAuthenticatedAt = Date()
     }
 
     public func endAuthenticationSession() {
         authContext?.context.invalidate()
         authContext = nil
+        lastAuthenticatedAt = nil
     }
 
-    /// Applies to the next authentication session; the current one keeps
-    /// the duration it was created with.
+    /// Checked on every `open`, so a change applies immediately.
     public func setReuseDuration(_ seconds: TimeInterval) {
         configuration.reuseDuration = seconds
     }

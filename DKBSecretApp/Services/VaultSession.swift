@@ -50,7 +50,8 @@ final class VaultSession {
             lastUnlockError = nil
             onUnlock.forEach { $0() }
         } catch {
-            lastUnlockError = error.localizedDescription
+            // A dismissed Touch ID sheet is not an error worth a red line.
+            lastUnlockError = ItemActions.isUserCancellation(error) ? nil : error.localizedDescription
         }
     }
 

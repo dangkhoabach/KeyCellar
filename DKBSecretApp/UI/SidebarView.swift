@@ -26,28 +26,28 @@ struct SidebarView: View {
     private var selection: Binding<SidebarSelection?> {
         Binding(
             get: { navigation.sidebarSelection },
-            set: { if let value = $0 { navigation.sidebarSelection = value } }
+            set: { if let value = $0 { navigation.sidebarSelection = value; navigation.selectedItemIds = [] } }
         )
     }
 
     var body: some View {
         List(selection: selection) {
             Section {
-                row(.section(.all), SidebarSection.all.title, SidebarSection.all.systemImage, count: model.counts.all)
-                row(.section(.favorites), SidebarSection.favorites.title, SidebarSection.favorites.systemImage, count: model.counts.favorites)
-                row(.section(.recent), SidebarSection.recent.title, SidebarSection.recent.systemImage)
-                row(.section(.expiring), SidebarSection.expiring.title, SidebarSection.expiring.systemImage,
+                row(.section(.all), Text(SidebarSection.all.title), SidebarSection.all.systemImage, count: model.counts.all)
+                row(.section(.favorites), Text(SidebarSection.favorites.title), SidebarSection.favorites.systemImage, count: model.counts.favorites)
+                row(.section(.recent), Text(SidebarSection.recent.title), SidebarSection.recent.systemImage)
+                row(.section(.expiring), Text(SidebarSection.expiring.title), SidebarSection.expiring.systemImage,
                     count: model.counts.expiring, badge: model.counts.expiring > 0)
             }
             Section("Kinds") {
                 ForEach(SecretKind.allCases, id: \.self) { kind in
-                    row(.kind(kind), kind.title, kind.systemImage, count: model.counts.byKind[kind] ?? 0)
+                    row(.kind(kind), Text(kind.title), kind.systemImage, count: model.counts.byKind[kind] ?? 0)
                 }
             }
             if !model.projects.isEmpty {
                 Section("Projects") {
                     ForEach(model.projects) { project in
-                        row(.project(project.id), LocalizedStringKey(project.name), "folder",
+                        row(.project(project.id), Text(verbatim: project.name), "folder",
                             count: model.counts.byProject[project.id] ?? 0, tint: ProjectColor(project.color).color)
                             .dropDestination(for: String.self) { ids, _ in
                                 model.move(itemIds: ids, toProject: project.id)
@@ -60,20 +60,25 @@ struct SidebarView: View {
             if !model.tags.isEmpty {
                 Section("Tags") {
                     ForEach(model.tags) { tag in
-                        row(.tag(tag.id), LocalizedStringKey(tag.name), "tag")
+                        row(.tag(tag.id), Text(verbatim: tag.name), "tag")
                             .contextMenu { tagMenu(tag) }
                     }
                 }
             }
             Section {
-                row(.section(.trash), SidebarSection.trash.title, SidebarSection.trash.systemImage, count: model.counts.trash)
-                row(.section(.settings), SidebarSection.settings.title, SidebarSection.settings.systemImage)
+                row(.section(.trash), Text(SidebarSection.trash.title), SidebarSection.trash.systemImage, count: model.counts.trash)
+                row(.section(.settings), Text(SidebarSection.settings.title), SidebarSection.settings.systemImage)
             }
         }
         .navigationSplitViewColumnWidth(min: 190, ideal: 220)
         .focused($focused)
         .onAppear { focused = true; model.start() }
         .onChange(of: navigation.sidebarSelection) { _, _ in focused = true }
+        .alert("Something went wrong", isPresented: Binding(get: { model.lastError != nil }, set: { if !$0 { model.clearError() } })) {
+            Button("OK") {}
+        } message: {
+            Text(model.lastError ?? "")
+        }
         .alert("Rename", isPresented: Binding(get: { renaming != nil }, set: { if !$0 { renaming = nil } }), presenting: renaming) { target in
             TextField("Name", text: $renameText)
             Button("Rename") { commitRename(target) }
@@ -83,12 +88,14 @@ struct SidebarView: View {
         }
     }
 
-    private func row(_ value: SidebarSelection, _ title: LocalizedStringKey, _ symbol: String,
+    /// `title` is a `Text` so section names come through the catalog while
+    /// project and tag names (user data) are shown verbatim.
+    private func row(_ value: SidebarSelection, _ title: Text, _ symbol: String,
                      count: Int? = nil, badge: Bool = false, tint: Color? = nil) -> some View {
         let selected = navigation.sidebarSelection == value
         return Label {
             HStack {
-                Text(title)
+                title
                 Spacer()
                 if let count, count > 0 {
                     Text(count, format: .number)

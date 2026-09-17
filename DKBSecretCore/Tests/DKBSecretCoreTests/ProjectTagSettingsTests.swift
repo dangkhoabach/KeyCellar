@@ -13,6 +13,15 @@ import Testing
         #expect(try projects.all().map(\.name) == ["A", "B"])
     }
 
+    @Test func projectAndTagNamesMatchCaseInsensitively() async throws {
+        let t = try TestVault()
+        let projects = ProjectRepository(dbQueue: t.database.dbQueue)
+        #expect(try projects.findOrCreate(name: "Prod").id == projects.findOrCreate(name: "prod").id)
+        try await t.vault.create(makeItem("a"), tags: ["Email"], secrets: ["key": SecretBytes("x")])
+        try await t.vault.create(makeItem("b"), tags: ["email"], secrets: ["key": SecretBytes("x")])
+        #expect(try TagRepository(dbQueue: t.database.dbQueue).all().map(\.name) == ["Email"])
+    }
+
     @Test func deletingAProjectKeepsItsItems() async throws {
         let t = try TestVault()
         let projects = ProjectRepository(dbQueue: t.database.dbQueue)

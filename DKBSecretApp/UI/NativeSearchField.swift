@@ -29,6 +29,10 @@ struct NativeSearchField: NSViewRepresentable {
         if nsView.stringValue != text {
             nsView.stringValue = text
         }
+        // The placeholder follows the in-app language switch.
+        if nsView.placeholderString != placeholder {
+            nsView.placeholderString = placeholder
+        }
     }
 
     func makeCoordinator() -> Coordinator {

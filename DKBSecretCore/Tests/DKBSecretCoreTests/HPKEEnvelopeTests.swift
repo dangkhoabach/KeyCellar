@@ -44,6 +44,14 @@ import Testing
         #expect(one != two, "fresh ephemeral key per seal — equal plaintexts must not produce equal blobs")
     }
 
+    @Test func reuseWindowDecidesWhenToPromptAgain() {
+        let now = Date()
+        #expect(SecureEnclaveSealer.needsFreshAuthentication(lastAuthenticatedAt: nil, reuseDuration: 30, now: now))
+        #expect(SecureEnclaveSealer.needsFreshAuthentication(lastAuthenticatedAt: now, reuseDuration: 0, now: now), "0 = every reveal asks")
+        #expect(!SecureEnclaveSealer.needsFreshAuthentication(lastAuthenticatedAt: now.addingTimeInterval(-10), reuseDuration: 30, now: now))
+        #expect(SecureEnclaveSealer.needsFreshAuthentication(lastAuthenticatedAt: now.addingTimeInterval(-31), reuseDuration: 30, now: now))
+    }
+
     @Test func secureEnclaveKeyBlobIsCreatedOnceAndReloadable() throws {
         // No Secure Enclave on CI runners; Touch ID would be needed to open,
         // so this only covers create + persist + reload.

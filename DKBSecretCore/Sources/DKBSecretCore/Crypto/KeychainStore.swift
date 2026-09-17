@@ -49,6 +49,8 @@ public struct KeychainStore: KeychainStoring {
             SecItemDelete(Self.baseQuery as CFDictionary)
             var query = Self.baseQuery
             query[kSecValueData as String] = blob
+            // What Keychain Access shows instead of the raw service name.
+            query[kSecAttrLabel as String] = "DKB Secret – vault master key"
             let status = SecItemAdd(query as CFDictionary, nil)
             guard status == errSecSuccess else { throw KeychainStoreError.unhandledStatus(status) }
         }

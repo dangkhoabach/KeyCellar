@@ -1,6 +1,16 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ is required.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cần có %@."
+          }
+        }
+      }
+    },
     "%@ — %lld previous": {
       "localizations": {
         "vi": {
@@ -141,11 +151,31 @@
         }
       }
     },
+    "A title is required.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cần có tiêu đề."
+          }
+        }
+      }
+    },
     "API Key": {
       "shouldTranslate": false
     },
     "API Keys": {
       "shouldTranslate": false
+    },
+    "Account ID": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ID tài khoản"
+          }
+        }
+      }
     },
     "Add": {
       "localizations": {
@@ -153,6 +183,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thêm"
+          }
+        }
+      }
+    },
+    "Add at least one KEY=VALUE line.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thêm ít nhất một dòng KEY=VALUE."
           }
         }
       }
@@ -173,6 +213,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tất cả"
+          }
+        }
+      }
+    },
+    "Another app already uses this shortcut, so it does nothing here. Choose a different one.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ứng dụng khác đã dùng phím tắt này nên ở đây không có tác dụng. Hãy chọn tổ hợp khác."
           }
         }
       }
@@ -247,6 +297,16 @@
         }
       }
     },
+    "Backed up to %@/%@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã sao lưu vào %@/%@."
+          }
+        }
+      }
+    },
     "Backup": {
       "localizations": {
         "vi": {
@@ -293,6 +353,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Đổi…"
+          }
+        }
+      }
+    },
+    "Choose a kind.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hãy chọn loại."
           }
         }
       }
@@ -438,6 +508,16 @@
       }
     },
     "DKB Secret": {},
+    "DKB Secret can't open the vault": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "DKB Secret không mở được kho"
+          }
+        }
+      }
+    },
     "Daily": {
       "localizations": {
         "vi": {
@@ -489,6 +569,16 @@
         }
       }
     },
+    "Delete %lld items permanently?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá vĩnh viễn %lld mục?"
+          }
+        }
+      }
+    },
     "Delete Permanently": {
       "localizations": {
         "vi": {
@@ -525,6 +615,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Xoá vĩnh viễn mục này?"
+          }
+        }
+      }
+    },
+    "Delete “%@” permanently?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá vĩnh viễn “%@”?"
           }
         }
       }
@@ -589,6 +689,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "Môi trường"
+          }
+        }
+      }
+    },
+    "Erase this vault and load the backup?": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Xoá kho này và nạp bản sao lưu?"
+          }
+        }
+      }
+    },
+    "Every current item, its history and the Trash will be gone. The import is applied only if the whole file decrypts and loads.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mọi mục hiện có, lịch sử và Thùng rác sẽ mất. Chỉ áp dụng khi toàn bộ tệp giải mã và nạp thành công."
           }
         }
       }
@@ -723,6 +843,16 @@
         }
       }
     },
+    "Exported %lld items to %@.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã xuất %lld mục ra %@."
+          }
+        }
+      }
+    },
     "Favorite": {
       "localizations": {
         "vi": {
@@ -843,6 +973,16 @@
         }
       }
     },
+    "Host": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máy chủ"
+          }
+        }
+      }
+    },
     "Import": {
       "localizations": {
         "vi": {
@@ -859,6 +999,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nhập bản sao lưu"
+          }
+        }
+      }
+    },
+    "Imported %lld items, skipped %lld that were newer here.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đã nhập %lld mục, bỏ qua %lld mục mới hơn ở đây."
           }
         }
       }
@@ -939,6 +1089,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Giữ lại"
+          }
+        }
+      }
+    },
+    "Key": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá"
           }
         }
       }
@@ -1323,6 +1483,26 @@
         }
       }
     },
+    "Note": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi chú"
+          }
+        }
+      }
+    },
+    "Notes": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ghi chú"
+          }
+        }
+      }
+    },
     "Notifications are turned off for DKB Secret, so reminders can't be shown.": {
       "localizations": {
         "vi": {
@@ -1333,7 +1513,16 @@
         }
       }
     },
-    "OK": {},
+    "OK": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
     "Off": {
       "localizations": {
         "vi": {
@@ -1415,7 +1604,14 @@
       }
     },
     "Passphrase": {
-      "shouldTranslate": false
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cụm mật khẩu"
+          }
+        }
+      }
     },
     "Passphrase for scheduled backups": {
       "localizations": {
@@ -1433,6 +1629,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Passphrase cho phiên này"
+          }
+        }
+      }
+    },
+    "Password": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mật khẩu"
           }
         }
       }
@@ -1457,6 +1663,16 @@
         }
       }
     },
+    "Private Key": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá riêng"
+          }
+        }
+      }
+    },
     "Production": {
       "shouldTranslate": false
     },
@@ -1476,6 +1692,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dự án"
+          }
+        }
+      }
+    },
+    "Public Key": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Khoá công khai"
           }
         }
       }
@@ -1706,6 +1932,16 @@
         }
       }
     },
+    "Search": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tìm kiếm"
+          }
+        }
+      }
+    },
     "Search secrets": {
       "localizations": {
         "vi": {
@@ -1722,6 +1958,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bí mật"
+          }
+        }
+      }
+    },
+    "Secrets and history cannot be recovered.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không thể khôi phục bí mật và lịch sử."
           }
         }
       }
@@ -1757,6 +2003,16 @@
       }
     },
     "Seed Sample Data": {},
+    "Service": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dịch vụ"
+          }
+        }
+      }
+    },
     "Set": {
       "localizations": {
         "vi": {
@@ -1860,6 +2116,26 @@
         }
       }
     },
+    "That is not a DKB Secret backup file.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đây không phải tệp sao lưu DKB Secret."
+          }
+        }
+      }
+    },
+    "The backup folder is no longer accessible. Choose it again.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Không truy cập được thư mục sao lưu nữa. Hãy chọn lại."
+          }
+        }
+      }
+    },
     "The current value is kept in History. Expiry will be set to %lld days from now.": {
       "localizations": {
         "vi": {
@@ -1900,6 +2176,16 @@
         }
       }
     },
+    "The passphrase must be at least %lld characters.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cụm mật khẩu phải có ít nhất %lld ký tự."
+          }
+        }
+      }
+    },
     "The two entries don't match.": {
       "localizations": {
         "vi": {
@@ -1930,12 +2216,32 @@
         }
       }
     },
+    "This backup uses format version %lld, which this app can't read.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bản sao lưu dùng định dạng phiên bản %lld, ứng dụng này không đọc được."
+          }
+        }
+      }
+    },
     "Title": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
             "value": "Tiêu đề"
+          }
+        }
+      }
+    },
+    "Too easy to guess — make it longer or mix in more kinds of characters.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quá dễ đoán — hãy đặt dài hơn hoặc trộn thêm nhiều loại ký tự."
           }
         }
       }
@@ -1966,6 +2272,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thùng rác trống"
+          }
+        }
+      }
+    },
+    "URL": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL"
           }
         }
       }
@@ -2030,6 +2346,16 @@
         }
       }
     },
+    "Username": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tên đăng nhập"
+          }
+        }
+      }
+    },
     "VI": {},
     "Variables": {
       "localizations": {
@@ -2051,6 +2377,16 @@
         }
       }
     },
+    "Version -%lld": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phiên bản -%lld"
+          }
+        }
+      }
+    },
     "Weekly": {
       "localizations": {
         "vi": {
@@ -2067,6 +2403,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dùng được từ mọi ứng dụng. Enter sao chép kết quả đầu, ⌘Enter mở mục đó."
+          }
+        }
+      }
+    },
+    "Wrong passphrase, or the file is damaged.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sai cụm mật khẩu, hoặc tệp bị hỏng."
           }
         }
       }
@@ -2101,12 +2447,32 @@
         }
       }
     },
+    "unlock your vault": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "mở khoá kho của bạn"
+          }
+        }
+      }
+    },
     "· In Trash": {
       "localizations": {
         "vi": {
           "stringUnit": {
             "state": "translated",
             "value": "· Trong Thùng rác"
+          }
+        }
+      }
+    },
+    "“%@” is already in use.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” đã được dùng."
           }
         }
       }

@@ -4,6 +4,11 @@ import GRDB
 /// What the list column asks for: a scope (sidebar row), free-text search
 /// over metadata, and a sort. Search never touches secret values — they are
 /// ciphertext in the database, and that is the point.
+///
+/// The search itself runs in Swift, not SQL `LIKE`: SQLite's LIKE is only
+/// case-insensitive for ASCII (so "Đăng" never matched "đăng") and treats
+/// `%`/`_` as wildcards. Diacritic-insensitive matching over a few thousand
+/// rows is well under the 50 ms budget (`PerformanceTests`).
 public struct ItemQuery: Equatable, Sendable {
     public enum Scope: Equatable, Sendable {
         case all, favorites, recent, trash
@@ -84,18 +89,6 @@ public struct ItemRepository: Sendable {
             arguments.append(tagId)
         }
 
-        let search = query.search.trimmingCharacters(in: .whitespaces)
-        if !search.isEmpty {
-            let pattern = "%\(search)%"
-            conditions.append("""
-                (i.title LIKE ? OR i.service LIKE ? OR i.username LIKE ? OR i.url LIKE ?
-                 OR EXISTS (SELECT 1 FROM projects p WHERE p.id = i.project_id AND p.name LIKE ?)
-                 OR EXISTS (SELECT 1 FROM item_tags it JOIN tags t ON t.id = it.tag_id
-                            WHERE it.item_id = i.id AND t.name LIKE ?))
-                """)
-            arguments.append(contentsOf: Array(repeating: pattern, count: 6))
-        }
-
         sql += " WHERE " + conditions.joined(separator: " AND ")
 
         // `recent` is defined by its ordering, whatever sort the list asked for.
@@ -110,7 +103,29 @@ public struct ItemRepository: Sendable {
             sql += " ORDER BY i.expires_at IS NULL, i.expires_at, i.title COLLATE NOCASE"
         }
 
-        return try SecretItem.fetchAll(db, sql: sql, arguments: StatementArguments(arguments))
+        let items = try SecretItem.fetchAll(db, sql: sql, arguments: StatementArguments(arguments))
+        let search = query.search.trimmingCharacters(in: .whitespaces)
+        guard !search.isEmpty else { return items }
+
+        let projectNames = Dictionary(uniqueKeysWithValues: try Project.fetchAll(db).map { ($0.id, $0.name) })
+        var tagNames: [String: [String]] = [:]
+        for row in try Row.fetchAll(db, sql: "SELECT it.item_id, t.name FROM item_tags it JOIN tags t ON t.id = it.tag_id") {
+            tagNames[row["item_id"], default: []].append(row["name"])
+        }
+        let needle = Self.fold(search)
+        // One fold per item, not per field: folding is the expensive part.
+        return items.filter { item in
+            let fields = [item.title, item.service, item.username, item.url, item.projectId.flatMap { projectNames[$0] }]
+                .compactMap { $0 } + (tagNames[item.id] ?? [])
+            return Self.fold(fields.joined(separator: "\n")).contains(needle)
+        }
+    }
+
+    /// Case- and accent-insensitive form. "đ" is its own letter, not "d"
+    /// with a mark, so it is mapped by hand — "dang" must find "Đăng".
+    static func fold(_ text: String) -> String {
+        text.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil)
+            .replacingOccurrences(of: "đ", with: "d")
     }
 
     public func tags(for itemId: String) throws -> [Tag] {
@@ -136,7 +151,7 @@ public struct ItemRepository: Sendable {
     static func setTags(_ names: [String], for itemId: String, _ db: Database) throws {
         try db.execute(sql: "DELETE FROM item_tags WHERE item_id = ?", arguments: [itemId])
         for name in Set(names.map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }) {
-            let tag = try Tag.filter(Column("name") == name).fetchOne(db) ?? {
+            let tag = try Tag.filter(Column("name").collating(.nocase) == name).fetchOne(db) ?? {
                 let tag = Tag(name: name)
                 try tag.insert(db)
                 return tag

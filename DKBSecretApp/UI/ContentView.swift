@@ -71,6 +71,11 @@ struct ContentView: View {
             ItemFormView(model: form) { actions.form = nil }
         }
         .overlay(alignment: .bottom) { CopyToast(clipboard: clipboard) }
+        .confirmationDialog(purgeTitle, isPresented: Binding(get: { !actions.pendingPurge.isEmpty }, set: { if !$0 { actions.pendingPurge = [] } })) {
+            Button("Delete Permanently", role: .destructive) { actions.confirmPendingPurge() }
+        } message: {
+            Text("Secrets and history cannot be recovered.")
+        }
         .alert("Something went wrong", isPresented: Binding(get: { actions.lastError != nil }, set: { if !$0 { actions.lastError = nil } })) {
             Button("OK") {}
         } message: {
@@ -81,6 +86,14 @@ struct ContentView: View {
             actions.newEnvSet(fromFile: url)
             return true
         }
+    }
+}
+
+extension ContentView {
+    private var purgeTitle: Text {
+        actions.pendingPurge.count == 1
+            ? Text("Delete “\(actions.pendingPurge[0].title)” permanently?")
+            : Text("Delete \(actions.pendingPurge.count) items permanently?")
     }
 }
 

@@ -88,6 +88,8 @@ struct HotKey: Equatable, Sendable {
 @Observable
 final class HotKeyManager {
     private(set) var hotKey: HotKey
+    /// Carbon refused the combination — another app holds it globally.
+    private(set) var registrationFailed = false
     private let settings: SettingsRepository
     private let onPress: () -> Void
     private var registration: EventHotKeyRef?
@@ -128,6 +130,9 @@ final class HotKeyManager {
         var ref: EventHotKeyRef?
         if RegisterEventHotKey(hotKey.keyCode, hotKey.carbonModifiers, id, GetApplicationEventTarget(), 0, &ref) == noErr {
             registration = ref
+            registrationFailed = false
+        } else {
+            registrationFailed = true
         }
     }
 }

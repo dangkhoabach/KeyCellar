@@ -114,6 +114,24 @@ import Testing
         #expect(try source.items.fetch(id: extra.id) == nil)
     }
 
+    @Test func aFailedImportLeavesTheVaultUntouched() async throws {
+        let source = try await seededVault()
+        let file = try await VaultBackup.export(vault: source.vault, passphrase: passphrase)
+
+        // The target's sealer gives up part-way through re-sealing the
+        // backup: with Replace, the old contents must still be there.
+        let target = try TestVault(sealer: FlakySealer(failAfter: 1))
+        let keep = makeItem("Keep me")
+        try await target.vault.create(keep, secrets: ["key": SecretBytes("k")])
+        let before = try target.database.dumpAllValues()
+
+        await #expect(throws: FlakySealer.SealFailed.self) {
+            try await VaultBackup.import(file, passphrase: passphrase, mode: .replace, into: target.vault)
+        }
+        #expect(try target.database.dumpAllValues() == before, "a failed import must not change a single row")
+        #expect(try target.items.fetch(ItemQuery()).map(\.title) == ["Keep me"])
+    }
+
     @Test func olderBackupOverwritesAnOlderLocalCopy() async throws {
         let source = try await seededVault()
         var item = try #require(try source.items.fetch(ItemQuery(search: "Resend")).first)

@@ -11,6 +11,8 @@ import Observation
 final class ItemActions {
     var form: ItemFormModel?
     var lastError: String?
+    /// Items waiting for the "delete permanently?" confirmation.
+    var pendingPurge: [SecretItem] = []
     /// Which field is being rotated, if the sheet is up.
     var rotating: (item: SecretItem, field: FieldSpec)?
 
@@ -164,23 +166,37 @@ final class ItemActions {
         run { try await self.vault.restore(itemId: item.id) }
     }
 
-    func purge(_ item: SecretItem) {
-        run { try await self.vault.purge(itemId: item.id) }
-        navigation.selectedItemIds.remove(item.id)
+    /// Every permanent delete — button, context menu, ⌫ in the Trash, ⌘⇧⌫ —
+    /// goes through the confirmation in `ContentView` first.
+    func requestPurge(_ items: [SecretItem]) {
+        if !items.isEmpty { pendingPurge = items }
+    }
+
+    func requestPurge(_ item: SecretItem) {
+        requestPurge([item])
+    }
+
+    func confirmPendingPurge() {
+        for item in pendingPurge {
+            run { try await self.vault.purge(itemId: item.id) }
+            navigation.selectedItemIds.remove(item.id)
+        }
+        pendingPurge = []
     }
 
     /// ⌫ on the list: Trash normally, permanent delete when viewing the Trash.
     func trashOrPurgeSelection() {
+        if navigation.sidebarSelection.isTrash {
+            purgeSelection()
+            return
+        }
         for id in navigation.selectedItemIds {
-            guard let item = try? items.fetch(id: id) else { continue }
-            navigation.sidebarSelection.isTrash ? purge(item) : trash(item)
+            if let item = try? items.fetch(id: id) { trash(item) }
         }
     }
 
     func purgeSelection() {
-        for id in navigation.selectedItemIds {
-            if let item = try? items.fetch(id: id) { purge(item) }
-        }
+        requestPurge(navigation.selectedItemIds.compactMap { try? items.fetch(id: $0) })
     }
 
     // MARK: Helpers

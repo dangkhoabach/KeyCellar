@@ -24,13 +24,16 @@ public struct ProjectRepository: Sendable {
     /// UNIQUE constraint — the form's "create inline" path needs exactly that.
     @discardableResult
     public func findOrCreate(name: String) throws -> Project {
-        try dbQueue.write { db in
-            if let existing = try Project.filter(Column("name") == name).fetchOne(db) { return existing }
-            let next = try Int.fetchOne(db, sql: "SELECT COALESCE(MAX(sort_order), -1) + 1 FROM projects") ?? 0
-            let project = Project(name: name, sortOrder: next)
-            try project.insert(db)
-            return project
-        }
+        try dbQueue.write { db in try Self.findOrCreate(name: name, db) }
+    }
+
+    /// Name match is case-insensitive so "Prod" and "prod" are one project.
+    static func findOrCreate(name: String, _ db: Database) throws -> Project {
+        if let existing = try Project.filter(Column("name").collating(.nocase) == name).fetchOne(db) { return existing }
+        let next = try Int.fetchOne(db, sql: "SELECT COALESCE(MAX(sort_order), -1) + 1 FROM projects") ?? 0
+        let project = Project(name: name, sortOrder: next)
+        try project.insert(db)
+        return project
     }
 
     public func update(_ project: Project) throws {

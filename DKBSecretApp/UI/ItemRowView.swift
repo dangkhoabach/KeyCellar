@@ -48,7 +48,7 @@ struct ItemRowView: View {
         var parts: [String] = []
         if let service = item.service, !service.isEmpty { parts.append(service) }
         else if let username = item.username, !username.isEmpty { parts.append(username) }
-        else { parts.append(String(localized: String.LocalizationValue(kindName))) }
+        else { parts.append(String(localized: String.LocalizationValue(kindName), bundle: AppLocale.bundle)) }
         if let used = item.lastUsedAt {
             parts.append(used.formatted(.relative(presentation: .named)))
         }

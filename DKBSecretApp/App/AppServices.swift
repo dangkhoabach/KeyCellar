@@ -48,7 +48,9 @@ final class AppServices {
             let store: any KeychainStoring = KeychainStore()
             #endif
             let blob = try SecureEnclaveSealer.loadOrCreateKeyBlob(keychain: store)
-            let enclave = try SecureEnclaveSealer(keyBlob: blob)
+            let enclave = try SecureEnclaveSealer(keyBlob: blob, configuration: .init(
+                localizedReason: String(localized: "unlock your vault", bundle: AppLocale.bundle)
+            ))
             enclaveSealer = enclave
             sealer = enclave
         } catch {

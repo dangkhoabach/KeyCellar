@@ -29,5 +29,8 @@ import Testing
         #expect(PassphraseSheet.entropyBits("") == 0)
         #expect(PassphraseSheet.entropyBits("aaaaaaaaaaaa") < PassphraseSheet.entropyBits("aAaAaAaAaAaA"))
         #expect(PassphraseSheet.entropyBits("aAaAaAaAaAaA") < PassphraseSheet.entropyBits("aA1!aA1!aA1!aA1!"))
+        // Twelve lowercase letters pass the length rule but not the strength floor.
+        #expect(PassphraseSheet.entropyBits("aaaaaaaaaaaa") < PassphraseSheet.minimumBits)
+        #expect(PassphraseSheet.entropyBits("correct horse battery staple") >= PassphraseSheet.minimumBits)
     }
 }

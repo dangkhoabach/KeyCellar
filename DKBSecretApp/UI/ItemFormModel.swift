@@ -144,13 +144,15 @@ final class ItemFormModel: Identifiable {
     var canSave: Bool { validate() == nil }
 
     func validate() -> String? {
-        guard let kind else { return "Choose a kind." }
-        if title.trimmingCharacters(in: .whitespaces).isEmpty { return "A title is required." }
+        let bundle = AppLocale.bundle
+        guard let kind else { return String(localized: "Choose a kind.", bundle: bundle) }
+        if title.trimmingCharacters(in: .whitespaces).isEmpty { return String(localized: "A title is required.", bundle: bundle) }
         if kind == .envSet {
-            if DotEnvFile.parse(envText).isEmpty { return "Add at least one KEY=VALUE line." }
+            if DotEnvFile.parse(envText).isEmpty { return String(localized: "Add at least one KEY=VALUE line.", bundle: bundle) }
         } else if !isEditing, let primary = kind.template.primaryField,
                   (values[primary.key] ?? "").isEmpty {
-            return "\(primary.label) is required."
+            let label = String(localized: String.LocalizationValue(primary.label), bundle: bundle)
+            return String(localized: "\(label) is required.", bundle: bundle)
         }
         return nil
     }

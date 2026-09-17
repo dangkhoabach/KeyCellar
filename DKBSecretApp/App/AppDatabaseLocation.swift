@@ -9,7 +9,8 @@ enum AppDatabaseLocation {
         try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
         // Debug builds keep their own file so seeding sample data or testing
         // a migration never touches the vault the Release build in
-        // /Applications is using. Both share the same Secure Enclave key.
+        // /Applications is using. Debug also has its own enclave key blob
+        // (`DebugKeyBlobStore`), so the two vaults share nothing.
         #if DEBUG
         return base.appendingPathComponent("dkb-secret-debug.db")
         #else

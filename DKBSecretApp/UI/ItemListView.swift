@@ -10,7 +10,7 @@ struct ItemListView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 8) {
-                NativeSearchField(text: $model.search, placeholder: "Search")
+                NativeSearchField(text: $model.search, placeholder: String(localized: "Search", bundle: AppLocale.bundle))
                     .focused($searchFocused)
                 Menu {
                     Picker("Sort", selection: $model.sort) {
@@ -51,10 +51,10 @@ struct ItemListView: View {
         }
         .navigationSplitViewColumnWidth(min: 260, ideal: 320)
         .onAppear { model.show(navigation.sidebarSelection) }
-        .onChange(of: navigation.sidebarSelection) { _, selection in
-            model.show(selection)
-            navigation.selectedItemIds = []
-        }
+        // The selection is cleared by the sidebar itself on a user click, not
+        // here: this also fires after `AppNavigationState.show(itemId:)`
+        // switched the sidebar, and wiped the item it had just selected.
+        .onChange(of: navigation.sidebarSelection) { _, selection in model.show(selection) }
         .onReceive(NotificationCenter.default.publisher(for: .focusSearch)) { _ in searchFocused = true }
     }
 
@@ -79,10 +79,10 @@ struct ItemListView: View {
     private func contextMenu(for item: SecretItem) -> some View {
         if navigation.sidebarSelection.isTrash {
             Button("Restore") { actions.restore(item) }
-            Button("Delete Permanently", role: .destructive) { actions.purge(item) }
+            Button("Delete Permanently", role: .destructive) { actions.requestPurge(item) }
         } else {
             if item.kind.template.primaryField != nil {
-                Button("Copy \(primaryLabel(item))") { actions.copyPrimary(item) }
+                Button("Copy \(Text(LocalizedStringKey(primaryLabel(item))))") { actions.copyPrimary(item) }
             }
             Button(item.favorite ? "Remove from Favorites" : "Add to Favorites") { actions.toggleFavorite(item) }
             Button("Edit…") { actions.edit(item) }

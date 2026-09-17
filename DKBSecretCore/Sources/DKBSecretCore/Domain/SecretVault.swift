@@ -145,6 +145,7 @@ public actor SecretVault {
         try await database.dbQueue.write { db in
             try Self.requireItem(itemId, db)
             _ = try SecretItem.deleteOne(db, key: itemId)
+            try Self.purgeOrphanMarkers(db)
         }
     }
 
@@ -156,8 +157,19 @@ public actor SecretVault {
                 sql: "DELETE FROM items WHERE deleted_at IS NOT NULL AND deleted_at <= ?",
                 arguments: [now.addingTimeInterval(-TimeInterval(days) * 86_400)]
             )
-            return db.changesCount
+            let purged = db.changesCount
+            try Self.purgeOrphanMarkers(db)
+            return purged
         }
+    }
+
+    /// Expiry reminders record `notified.<itemId>.…` markers in `settings`
+    /// (see `ExpiryMilestones`); drop the ones whose item no longer exists.
+    static func purgeOrphanMarkers(_ db: Database) throws {
+        try db.execute(sql: """
+            DELETE FROM settings WHERE key LIKE 'notified.%'
+              AND NOT EXISTS (SELECT 1 FROM items WHERE settings.key LIKE 'notified.' || items.id || '.%')
+            """)
     }
 
     // MARK: Helpers

@@ -4,7 +4,8 @@ import SwiftUI
 /// A masked value with reveal and copy buttons. Revealed text is monospaced
 /// inside a yellow border with a countdown, then hides itself (plan §7.3).
 struct SecretFieldRow: View {
-    let label: String
+    /// A `Text` so template labels are localized while `.env` KEY names stay verbatim.
+    let label: Text
     let field: String
     var slot = 0
     var multiline = false
@@ -13,7 +14,7 @@ struct SecretFieldRow: View {
     let onError: (any Error) -> Void
 
     var body: some View {
-        LabeledContent(label) {
+        LabeledContent {
             HStack(alignment: .top, spacing: 6) {
                 Group {
                     if let value = model.revealedValue(field, slot: slot) {
@@ -53,6 +54,8 @@ struct SecretFieldRow: View {
                 .help("Copy (Touch ID)")
                 .accessibilityLabel("Copy \(label)")
             }
+        } label: {
+            label
         }
     }
 }

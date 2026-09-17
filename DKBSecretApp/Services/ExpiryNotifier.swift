@@ -68,10 +68,11 @@ final class ExpiryNotifier: NSObject, UNUserNotificationCenterDelegate {
         for reminder in due {
             let content = UNMutableNotificationContent()
             content.title = reminder.item.title
+            let bundle = AppLocale.bundle
             content.body = switch reminder.daysLeft {
-            case 0: String(localized: "Expires today. Rotate it in DKB Secret.")
-            case 1: String(localized: "Expires tomorrow.")
-            default: String(localized: "Expires in \(reminder.daysLeft) days.")
+            case 0: String(localized: "Expires today. Rotate it in DKB Secret.", bundle: bundle)
+            case 1: String(localized: "Expires tomorrow.", bundle: bundle)
+            default: String(localized: "Expires in \(reminder.daysLeft) days.", bundle: bundle)
             }
             content.sound = .default
             content.userInfo = ["itemId": reminder.item.id]

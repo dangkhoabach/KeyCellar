@@ -1,6 +1,7 @@
 import AppKit
 import DKBSecretCore
 import Foundation
+import LocalAuthentication
 import Testing
 @testable import DKB_Secret
 
@@ -37,5 +38,20 @@ import Testing
         await session.unlock()
         #expect(session.isLocked)
         #expect(session.lastUnlockError == "denied")
+    }
+
+    @Test func aCancelledUnlockStaysLockedWithoutAnErrorMessage() async throws {
+        struct Cancelling: SecretSealing {
+            let inner = SoftwareSealer()
+            func seal(_ p: Data, info: Data) throws -> SealedSecret { try inner.seal(p, info: info) }
+            func open(_ s: SealedSecret, info: Data) throws -> Data { try inner.open(s, info: info) }
+            func beginAuthenticationSession() throws { throw LAError(.userCancel) }
+            func endAuthenticationSession() {}
+        }
+        let vault = SecretVault(database: try AppDatabase.inMemory(), sealer: Cancelling())
+        let session = VaultSession(vault: vault, clipboard: ClipboardService(pasteboard: NSPasteboard(name: NSPasteboard.Name("x-\(UUID())"))))
+        await session.unlock()
+        #expect(session.isLocked)
+        #expect(session.lastUnlockError == nil, "dismissing Touch ID is not an error")
     }
 }

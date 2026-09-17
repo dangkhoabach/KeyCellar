@@ -87,39 +87,53 @@ public enum VaultBackup {
         return try await restore(payload, mode: mode, into: vault)
     }
 
+    /// Re-seals every secret first (no Touch ID, no writes), then applies the
+    /// whole import in one transaction: a failure anywhere leaves the vault
+    /// exactly as it was, instead of a Replace that wiped it and stopped.
     static func restore(_ payload: BackupPayload, mode: BackupMode, into vault: SecretVault) async throws -> ImportSummary {
-        let database = vault.database
-        if mode == .replace {
-            try await database.dbQueue.write { db in
+        var prepared: [(entry: BackupPayload.Item, blobs: [SecretBlob])] = []
+        for entry in payload.items {
+            var blobs: [SecretBlob] = []
+            for secret in entry.secrets {
+                blobs.append(try await vault.sealForBackup(secret, itemId: entry.item.id))
+            }
+            prepared.append((entry, blobs))
+        }
+        let entries = prepared
+        let projects = payload.projects.sorted(by: { $0.sortOrder < $1.sortOrder })
+
+        return try await vault.database.dbQueue.write { db in
+            if mode == .replace {
                 try db.execute(sql: "DELETE FROM items; DELETE FROM projects; DELETE FROM tags;")
             }
-        }
-        let projects = ProjectRepository(dbQueue: database.dbQueue)
-        for project in payload.projects.sorted(by: { $0.sortOrder < $1.sortOrder }) {
-            var local = try projects.findOrCreate(name: project.name)
-            if local.color == nil, project.color != nil {
-                local.color = project.color
-                try projects.update(local)
-            }
-        }
-        let projectIds = Dictionary(uniqueKeysWithValues: try projects.all().map { ($0.name, $0.id) })
-
-        var summary = ImportSummary()
-        for entry in payload.items {
-            var item = entry.item
-            item.projectId = entry.projectName.flatMap { projectIds[$0] }
-            let itemId = item.id
-            if let existing = try await database.dbQueue.read({ db in try SecretItem.fetchOne(db, key: itemId) }) {
-                if existing.updatedAt >= item.updatedAt {
-                    summary.skipped += 1
-                    continue
+            for project in projects {
+                var local = try ProjectRepository.findOrCreate(name: project.name, db)
+                if local.color == nil, project.color != nil {
+                    local.color = project.color
+                    try local.update(db)
                 }
-                try await vault.purge(itemId: item.id)
             }
-            try await vault.restoreFromBackup(item, tags: entry.tags, secrets: entry.secrets)
-            summary.imported += 1
+            let projectIds = Dictionary(uniqueKeysWithValues: try Project.fetchAll(db).map { ($0.name, $0.id) })
+
+            var summary = ImportSummary()
+            for (entry, blobs) in entries {
+                var item = entry.item
+                item.projectId = entry.projectName.flatMap { projectIds[$0] }
+                if let existing = try SecretItem.fetchOne(db, key: item.id) {
+                    if existing.updatedAt >= item.updatedAt {
+                        summary.skipped += 1
+                        continue
+                    }
+                    _ = try SecretItem.deleteOne(db, key: item.id)
+                }
+                try item.insert(db)
+                try ItemRepository.setTags(entry.tags, for: item.id, db)
+                for blob in blobs { try blob.insert(db) }
+                summary.imported += 1
+            }
+            try SecretVault.purgeOrphanMarkers(db)
+            return summary
         }
-        return summary
     }
 }
 
@@ -130,21 +144,12 @@ extension SecretVault {
         try await open(SealedSecret(encapsulatedKey: blob.encapsulatedKey, ciphertext: blob.ciphertext), info: HPKEEnvelope.info(blobId: blob.id))
     }
 
-    /// Inserts an item with its full secret history, re-sealed to this
-    /// vault's key. The item's own id and dates are kept.
-    func restoreFromBackup(_ item: SecretItem, tags: [String], secrets: [BackupPayload.Secret]) async throws {
-        var blobs: [SecretBlob] = []
-        for secret in secrets {
-            let blobId = UUID().uuidString
-            let sealed = try await seal(secret.value, info: HPKEEnvelope.info(blobId: blobId))
-            blobs.append(SecretBlob(id: blobId, itemId: item.id, field: secret.field, slot: secret.slot,
-                                    encapsulatedKey: sealed.encapsulatedKey, ciphertext: sealed.ciphertext, createdAt: secret.createdAt))
-        }
-        let toInsert = blobs
-        try await database.dbQueue.write { db in
-            try item.insert(db)
-            try ItemRepository.setTags(tags, for: item.id, db)
-            for blob in toInsert { try blob.insert(db) }
-        }
+    /// One backed-up value re-sealed to this vault's key, keeping its slot
+    /// and date. Only seals — `VaultBackup.restore` does the inserting.
+    func sealForBackup(_ secret: BackupPayload.Secret, itemId: String) async throws -> SecretBlob {
+        let blobId = UUID().uuidString
+        let sealed = try await seal(secret.value, info: HPKEEnvelope.info(blobId: blobId))
+        return SecretBlob(id: blobId, itemId: itemId, field: secret.field, slot: secret.slot,
+                          encapsulatedKey: sealed.encapsulatedKey, ciphertext: sealed.ciphertext, createdAt: secret.createdAt)
     }
 }

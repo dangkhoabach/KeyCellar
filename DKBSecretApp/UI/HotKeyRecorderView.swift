@@ -10,13 +10,19 @@ struct HotKeyRecorderView: View {
 
     var body: some View {
         LabeledContent("Quick search shortcut") {
-            HStack {
-                Button(recording ? "Press keys…" : manager.hotKey.displayString) {
-                    recording ? stop() : start()
+            VStack(alignment: .trailing, spacing: 4) {
+                HStack {
+                    Button(recording ? "Press keys…" : manager.hotKey.displayString) {
+                        recording ? stop() : start()
+                    }
+                    .frame(minWidth: 110)
+                    if recording {
+                        Button("Cancel") { stop() }
+                    }
                 }
-                .frame(minWidth: 110)
-                if recording {
-                    Button("Cancel") { stop() }
+                if manager.registrationFailed {
+                    Label("Another app already uses this shortcut, so it does nothing here. Choose a different one.", systemImage: "exclamationmark.triangle")
+                        .font(.callout).foregroundStyle(.orange)
                 }
             }
         }

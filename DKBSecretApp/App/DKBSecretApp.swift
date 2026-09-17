@@ -92,8 +92,8 @@ struct DKBSecretApp: App {
             }
         }
 
-        // Placeholder until Phase 7 (quick search, Lock now). `.window` style
-        // because that phase needs a real view here, not plain menu items.
+        // `.window` style: the dropdown hosts the quick search, not plain
+        // menu items.
         MenuBarExtra {
             MenuBarContentView()
                 .environment(\.locale, appLocale.locale)

@@ -119,6 +119,7 @@ struct ImportSheet: View {
     let onCancel: () -> Void
     @State private var passphrase = ""
     @State private var replace = false
+    @State private var confirmReplace = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -138,12 +139,19 @@ struct ImportSheet: View {
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel, action: onCancel).keyboardShortcut(.cancelAction)
-                Button(replace ? "Replace Vault" : "Import") { onConfirm(passphrase, replace ? .replace : .merge) }
-                    .keyboardShortcut(.defaultAction)
-                    .disabled(passphrase.isEmpty)
+                Button(replace ? "Replace Vault" : "Import") {
+                    replace ? confirmReplace = true : onConfirm(passphrase, .merge)
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(passphrase.isEmpty)
             }
         }
         .padding(20)
         .frame(width: 440)
+        .confirmationDialog("Erase this vault and load the backup?", isPresented: $confirmReplace) {
+            Button("Replace Vault", role: .destructive) { onConfirm(passphrase, .replace) }
+        } message: {
+            Text("Every current item, its history and the Trash will be gone. The import is applied only if the whole file decrypts and loads.")
+        }
     }
 }

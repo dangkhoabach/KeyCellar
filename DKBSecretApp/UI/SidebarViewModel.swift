@@ -12,6 +12,8 @@ final class SidebarViewModel {
     private(set) var projects: [Project] = []
     private(set) var tags: [Tag] = []
     private(set) var counts = Counts()
+    /// A rename that hit the UNIQUE name constraint, for the sidebar's alert.
+    private(set) var lastError: String?
 
     struct Counts: Equatable {
         var all = 0, favorites = 0, expiring = 0, trash = 0
@@ -73,7 +75,16 @@ final class SidebarViewModel {
     func renameProject(_ project: Project, to name: String) {
         var project = project
         project.name = name
-        try? projectRepository.update(project)
+        do { try projectRepository.update(project) } catch { lastError = Self.describeRename(error, name) }
+    }
+
+    func clearError() { lastError = nil }
+
+    private static func describeRename(_ error: any Error, _ name: String) -> String {
+        if let dbError = error as? DatabaseError, dbError.extendedResultCode == .SQLITE_CONSTRAINT_UNIQUE {
+            return String(localized: "“\(name)” is already in use.", bundle: AppLocale.bundle)
+        }
+        return error.localizedDescription
     }
 
     func setProjectColor(_ project: Project, _ color: String?) {
@@ -87,7 +98,7 @@ final class SidebarViewModel {
     }
 
     func renameTag(_ tag: Tag, to name: String) {
-        try? tagRepository.rename(id: tag.id, to: name)
+        do { try tagRepository.rename(id: tag.id, to: name) } catch { lastError = Self.describeRename(error, name) }
     }
 
     func deleteTag(_ tag: Tag) {

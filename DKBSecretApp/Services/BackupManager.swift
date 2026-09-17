@@ -2,6 +2,7 @@ import AppKit
 import DKBSecretCore
 import Foundation
 import Observation
+import UniformTypeIdentifiers
 
 /// Export, import and scheduled backups of the whole vault (plan §8 Phase 6).
 ///
@@ -29,6 +30,8 @@ final class BackupManager {
     static let staleAfterDays = 7
     nonisolated static let filePrefix = "DKB Secret Backup "
     nonisolated static let fileExtension = "dkbsecret"
+    /// Declared in project.yml (`UTExportedTypeDeclarations`).
+    static let fileType = UTType(exportedAs: "com.dangkhoabach.dkb-secret.backup")
 
     var schedule: Schedule { didSet { try? settings.set(Keys.schedule, schedule.rawValue) } }
     var keepCount: Int { didSet { try? settings.set(Keys.keep, String(keepCount)) } }
@@ -75,13 +78,14 @@ final class BackupManager {
     func exportNow(passphrase: String) async {
         let panel = NSSavePanel()
         panel.nameFieldStringValue = Self.fileName(for: Date())
-        panel.allowedContentTypes = [.init(filenameExtension: Self.fileExtension)!]
+        panel.allowedContentTypes = [Self.fileType]
         guard panel.runModal() == .OK, let url = panel.url else { return }
         do {
             let data = try await VaultBackup.export(vault: vault, passphrase: passphrase)
             try data.write(to: url, options: .atomic)
             recordBackup(Date())
-            lastMessage = "Exported \(try BackupCrypto.readHeader(data).itemCount) items to \(url.lastPathComponent)."
+            let count = try BackupCrypto.readHeader(data).itemCount
+            lastMessage = String(localized: "Exported \(count) items to \(url.lastPathComponent).", bundle: AppLocale.bundle)
             lastError = nil
         } catch {
             lastError = Self.describe(error)
@@ -91,7 +95,7 @@ final class BackupManager {
     /// Step 1 of import: pick the file and read its plaintext header.
     func pickImportFile() -> (url: URL, header: BackupCrypto.Header)? {
         let panel = NSOpenPanel()
-        panel.allowedContentTypes = [.init(filenameExtension: Self.fileExtension)!]
+        panel.allowedContentTypes = [Self.fileType]
         panel.allowsMultipleSelection = false
         guard panel.runModal() == .OK, let url = panel.url else { return nil }
         do {
@@ -107,7 +111,7 @@ final class BackupManager {
     func importFile(_ url: URL, passphrase: String, mode: BackupMode) async {
         do {
             let summary = try await VaultBackup.import(try Data(contentsOf: url), passphrase: passphrase, mode: mode, into: vault)
-            lastMessage = "Imported \(summary.imported) items, skipped \(summary.skipped) that were newer here."
+            lastMessage = String(localized: "Imported \(summary.imported) items, skipped \(summary.skipped) that were newer here.", bundle: AppLocale.bundle)
             lastError = nil
         } catch {
             lastError = Self.describe(error)
@@ -151,7 +155,7 @@ final class BackupManager {
               let folder = resolveFolder() else { return }
         if let last = lastBackupAt, now.timeIntervalSince(last) < interval { return }
         guard folder.url.startAccessingSecurityScopedResource() else {
-            lastError = "The backup folder is no longer accessible. Choose it again."
+            lastError = String(localized: "The backup folder is no longer accessible. Choose it again.", bundle: AppLocale.bundle)
             return
         }
         defer { folder.url.stopAccessingSecurityScopedResource() }
@@ -161,7 +165,7 @@ final class BackupManager {
             try data.write(to: file, options: .atomic)
             recordBackup(now)
             try prune(in: folder.url)
-            lastMessage = "Backed up to \(folder.url.lastPathComponent)/\(file.lastPathComponent)."
+            lastMessage = String(localized: "Backed up to \(folder.url.lastPathComponent)/\(file.lastPathComponent).", bundle: AppLocale.bundle)
             lastError = nil
         } catch {
             lastError = Self.describe(error)
@@ -203,11 +207,12 @@ final class BackupManager {
     }
 
     static func describe(_ error: any Error) -> String {
-        switch error {
-        case BackupError.wrongPassphraseOrCorrupt: "Wrong passphrase, or the file is damaged."
-        case BackupError.notABackupFile: "That is not a DKB Secret backup file."
-        case BackupError.unsupportedVersion(let v): "This backup uses format version \(v), which this app can't read."
-        case BackupError.passphraseTooShort: "The passphrase must be at least \(BackupCrypto.minimumPassphraseLength) characters."
+        let bundle = AppLocale.bundle
+        return switch error {
+        case BackupError.wrongPassphraseOrCorrupt: String(localized: "Wrong passphrase, or the file is damaged.", bundle: bundle)
+        case BackupError.notABackupFile: String(localized: "That is not a DKB Secret backup file.", bundle: bundle)
+        case BackupError.unsupportedVersion(let v): String(localized: "This backup uses format version \(v), which this app can't read.", bundle: bundle)
+        case BackupError.passphraseTooShort: String(localized: "The passphrase must be at least \(BackupCrypto.minimumPassphraseLength) characters.", bundle: bundle)
         default: error.localizedDescription
         }
     }

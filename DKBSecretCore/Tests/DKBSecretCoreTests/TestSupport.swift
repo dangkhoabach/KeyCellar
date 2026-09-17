@@ -9,11 +9,33 @@ struct TestVault {
     let vault: SecretVault
     let items: ItemRepository
 
-    init() throws {
+    init(sealer: any SecretSealing = SoftwareSealer()) throws {
         database = try AppDatabase.inMemory()
-        vault = SecretVault(database: database, sealer: SoftwareSealer())
+        vault = SecretVault(database: database, sealer: sealer)
         items = ItemRepository(dbQueue: database.dbQueue)
     }
+}
+
+/// Seals normally until `failAfter` seals have happened, then throws — for
+/// proving that a half-failed import changes nothing.
+final class FlakySealer: SecretSealing, @unchecked Sendable {
+    struct SealFailed: Error {}
+    private let inner = SoftwareSealer()
+    private let lock = NSLock()
+    private var seals = 0
+    let failAfter: Int
+
+    init(failAfter: Int) { self.failAfter = failAfter }
+
+    func seal(_ plaintext: Data, info: Data) throws -> SealedSecret {
+        let n = lock.withLock { seals += 1; return seals }
+        if n > failAfter { throw SealFailed() }
+        return try inner.seal(plaintext, info: info)
+    }
+
+    func open(_ sealed: SealedSecret, info: Data) throws -> Data { try inner.open(sealed, info: info) }
+    func beginAuthenticationSession() {}
+    func endAuthenticationSession() {}
 }
 
 extension AppDatabase {

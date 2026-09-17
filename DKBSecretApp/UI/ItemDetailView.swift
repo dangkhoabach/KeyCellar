@@ -5,7 +5,6 @@ struct ItemDetailView: View {
     let model: ItemDetailViewModel
     let actions: ItemActions
     let inTrash: Bool
-    @State private var confirmPurge = false
     @State private var confirmEnvExport = false
 
     var body: some View {
@@ -38,11 +37,6 @@ struct ItemDetailView: View {
                 Button("Export Unencrypted File") { actions.exportEnvFile(item) }
             } message: {
                 Text("The file will contain every value in plain text. Keep it out of version control and delete it when you're done.")
-            }
-            .confirmationDialog("Delete this item permanently?", isPresented: $confirmPurge) {
-                Button("Delete Permanently", role: .destructive) { actions.purge(item) }
-            } message: {
-                Text("Its secrets and history cannot be recovered.")
             }
         } else {
             ContentUnavailableView("No Item Selected", systemImage: "key")
@@ -81,7 +75,7 @@ struct ItemDetailView: View {
         HStack(spacing: 4) {
             if inTrash {
                 Button("Restore", systemImage: "arrow.uturn.backward") { actions.restore(item) }
-                Button("Delete Permanently", systemImage: "trash.slash") { confirmPurge = true }
+                Button("Delete Permanently", systemImage: "trash.slash") { actions.requestPurge(item) }
             } else {
                 Button(item.favorite ? "Unfavorite" : "Favorite", systemImage: item.favorite ? "star.fill" : "star") {
                     actions.toggleFavorite(item)
@@ -165,7 +159,7 @@ struct ItemDetailView: View {
             ForEach(model.secretFields, id: \.self) { field in
                 let spec = template.fields.first { $0.key == field }
                 SecretFieldRow(
-                    label: spec?.label ?? String(field.dropFirst(SecretItem.envFieldPrefix.count)),
+                    label: spec.map { Text(LocalizedStringKey($0.label)) } ?? Text(verbatim: String(field.dropFirst(SecretItem.envFieldPrefix.count))),
                     field: field,
                     multiline: spec?.isMultiline ?? false,
                     model: model,
@@ -180,7 +174,7 @@ struct ItemDetailView: View {
                 Button("Export as .env…", systemImage: "square.and.arrow.up") { confirmEnvExport = true }
             }
             if let primary = template.primaryField, model.secretFields.contains(primary.key), !inTrash {
-                Button("Rotate \(primary.label)…", systemImage: "arrow.triangle.2.circlepath") { actions.beginRotate(item, field: primary) }
+                Button("Rotate \(Text(LocalizedStringKey(primary.label)))…", systemImage: "arrow.triangle.2.circlepath") { actions.beginRotate(item, field: primary) }
             }
         }
     }
@@ -188,11 +182,12 @@ struct ItemDetailView: View {
     private func historySection(_ item: SecretItem) -> some View {
         Section("History") {
             ForEach(model.secretFields.filter { (model.historyCounts[$0] ?? 0) > 0 }, id: \.self) { field in
-                let label = item.kind.template.fields.first { $0.key == field }?.label ?? field
+                let label = item.kind.template.fields.first { $0.key == field }.map { Text(LocalizedStringKey($0.label)) }
+                    ?? Text(verbatim: String(field.dropFirst(SecretItem.envFieldPrefix.count)))
                 DisclosureGroup("\(label) — \(model.historyCounts[field] ?? 0) previous") {
                     ForEach(1...(model.historyCounts[field] ?? 1), id: \.self) { slot in
                         SecretFieldRow(
-                            label: "Version -\(slot)", field: field, slot: slot, model: model,
+                            label: Text("Version -\(slot)"), field: field, slot: slot, model: model,
                             onCopy: { actions.copy(item, field: field, slot: slot) },
                             onError: { actions.report($0) }
                         )

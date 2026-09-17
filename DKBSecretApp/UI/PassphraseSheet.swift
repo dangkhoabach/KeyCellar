@@ -20,8 +20,13 @@ struct PassphraseSheet: View {
         return false
     }
 
+    /// Twelve lowercase letters pass the length rule at ~56 bits; this is the
+    /// floor that actually makes the PBKDF2 work count for something.
+    static let minimumBits = 60.0
+
     private var problem: LocalizedStringKey? {
         if passphrase.count < BackupCrypto.minimumPassphraseLength { return "At least \(BackupCrypto.minimumPassphraseLength) characters." }
+        if isCreate, Self.entropyBits(passphrase) < Self.minimumBits { return "Too easy to guess — make it longer or mix in more kinds of characters." }
         if isCreate, passphrase != confirmation { return "The two entries don't match." }
         return nil
     }

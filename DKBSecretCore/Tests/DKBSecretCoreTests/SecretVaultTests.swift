@@ -88,6 +88,20 @@ import Testing
         #expect(leftovers == (0, 0), "blobs and tag links must cascade")
     }
 
+    @Test func purgeDropsTheItemsReminderMarkers() async throws {
+        let t = try TestVault()
+        let settings = SettingsRepository(dbQueue: t.database.dbQueue)
+        let gone = makeItem("gone", expiresAt: Date()), kept = makeItem("kept", expiresAt: Date())
+        try await t.vault.create(gone, secrets: ["key": SecretBytes("a")])
+        try await t.vault.create(kept, secrets: ["key": SecretBytes("b")])
+        for item in [gone, kept] {
+            try settings.set(ExpiryMilestones.Reminder.markerKey(itemId: item.id, expiresAt: item.expiresAt!, milestone: 7), "1")
+        }
+        try await t.vault.purge(itemId: gone.id)
+        let keys = try await t.database.dbQueue.read { db in try String.fetchAll(db, sql: "SELECT key FROM settings ORDER BY key") }
+        #expect(keys == [ExpiryMilestones.Reminder.markerKey(itemId: kept.id, expiresAt: kept.expiresAt!, milestone: 7)])
+    }
+
     @Test func purgeTrashOnlyRemovesOldEntries() async throws {
         let t = try TestVault()
         let old = makeItem("old"), fresh = makeItem("fresh")

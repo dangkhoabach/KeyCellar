@@ -8,7 +8,11 @@ enum WindowPresenter {
     static func showMainWindow() {
         NSApp.setActivationPolicy(.regular)
         NSApp.unhide(nil)
-        for window in NSApp.windows {
+        // Only real document-level windows: `NSApp.windows` also lists the
+        // quick-search panel and hidden helper windows (text-field completion
+        // lists, the menu bar extra's popover), and ordering those front left
+        // an empty grey window floating over the detail column.
+        for window in NSApp.windows where !(window is NSPanel) && window.level == .normal {
             window.makeKeyAndOrderFront(nil)
         }
         NSApp.activate(ignoringOtherApps: true)

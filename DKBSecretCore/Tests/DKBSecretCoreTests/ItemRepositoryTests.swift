@@ -36,6 +36,15 @@ import Testing
         #expect(try t.items.fetch(ItemQuery(search: "nothing-like-this")).isEmpty)
     }
 
+    @Test func searchIgnoresCaseDiacriticsAndWildcards() async throws {
+        let t = try await seeded()
+        try await t.vault.create(makeItem("Đăng nhập router nhà", kind: .login), secrets: ["password": SecretBytes("x")])
+        #expect(try t.items.fetch(ItemQuery(search: "dang nhap")).map(\.title) == ["Đăng nhập router nhà"])
+        #expect(try t.items.fetch(ItemQuery(search: "ĐĂNG")).count == 1)
+        #expect(try t.items.fetch(ItemQuery(search: "%")).isEmpty, "% is a character, not a wildcard")
+        #expect(try t.items.fetch(ItemQuery(search: "_")).isEmpty)
+    }
+
     @Test func scopesFilterAsTheSidebarExpects() async throws {
         let t = try await seeded()
         let all = try t.items.fetch(ItemQuery(scope: .all))

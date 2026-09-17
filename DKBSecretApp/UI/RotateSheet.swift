@@ -14,7 +14,7 @@ struct RotateSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("Rotate \(field.label)").font(.title3.bold())
+            Text("Rotate \(Text(LocalizedStringKey(field.label)))").font(.title3.bold())
             Text(item.title).foregroundStyle(.secondary)
             HStack {
                 if field.isMultiline {
@@ -22,7 +22,7 @@ struct RotateSheet: View {
                         .font(.system(.body, design: .monospaced))
                         .frame(minHeight: 120)
                 } else {
-                    SecureField("New \(field.label)", text: $value)
+                    SecureField("New \(Text(LocalizedStringKey(field.label)))", text: $value)
                     Button { showGenerator = true } label: { Image(systemName: "dice") }
                         .buttonStyle(.borderless)
                         .popover(isPresented: $showGenerator) {

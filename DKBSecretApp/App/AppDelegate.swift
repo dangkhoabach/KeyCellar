@@ -13,9 +13,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let failure = services.startupFailure {
             let alert = NSAlert()
             alert.alertStyle = .critical
-            alert.messageText = "DKB Secret can't open the vault"
+            alert.messageText = String(localized: "DKB Secret can't open the vault", bundle: AppLocale.bundle)
             alert.informativeText = failure
-            alert.addButton(withTitle: "Quit")
+            alert.addButton(withTitle: String(localized: "Quit", bundle: AppLocale.bundle))
             alert.runModal()
             NSApp.terminate(nil)
             return

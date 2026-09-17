@@ -52,9 +52,17 @@ targets:
         # from this file on every `xcodegen generate` (not merged), so editing
         # the plist directly gets silently discarded. scripts/release.sh
         # (Phase 10) edits these two lines, not the plist.
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "1.0.0"
+        CFBundleShortVersionString: "1.0.1"
+        CFBundleVersion: "1.0.1"
         LSUIElement: false
+        # Gives .dkbsecret files a description in Finder/open panels; the
+        # format itself is documented in BackupCrypto.
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.dangkhoabach.dkb-secret.backup
+            UTTypeDescription: DKB Secret Backup
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [dkbsecret]
     entitlements:
       path: DKBSecretApp/DKBSecretApp.entitlements
       properties:

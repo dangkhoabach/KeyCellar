@@ -26,11 +26,14 @@ import Testing
     @Test func validationRequiresKindTitleAndPrimarySecret() throws {
         let env = try Env()
         let form = env.form(.create(kind: nil))
-        #expect(form.validate() == "Choose a kind.")
+        // Messages follow the in-app language, so compare through the same lookup.
+        let bundle = AppLocale.bundle
+        #expect(form.validate() == String(localized: "Choose a kind.", bundle: bundle))
         form.kind = .apiKey
-        #expect(form.validate() == "A title is required.")
+        #expect(form.validate() == String(localized: "A title is required.", bundle: bundle))
         form.title = "x"
-        #expect(form.validate() == "Key is required.")
+        let key = String(localized: "Key", bundle: bundle)
+        #expect(form.validate() == String(localized: "\(key) is required.", bundle: bundle))
         form.values["key"] = "abc"
         #expect(form.validate() == nil)
     }
