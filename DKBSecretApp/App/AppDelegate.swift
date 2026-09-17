@@ -21,6 +21,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         services.idleMonitor.start()
+        services.hotKeys.start()
+        services.expiryNotifier.start()
         Task { try? await services.vault.purgeTrash() }
         #if DEBUG
         if CommandLine.arguments.contains("--seed-sample-data") {

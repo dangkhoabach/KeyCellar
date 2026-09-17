@@ -26,6 +26,14 @@ struct ItemDetailView: View {
                 }
             }
             .formStyle(.grouped)
+            .sheet(isPresented: Binding(get: { actions.rotating != nil }, set: { if !$0 { actions.rotating = nil } })) {
+                if let rotating = actions.rotating {
+                    RotateSheet(item: rotating.item, field: rotating.field, ttlDays: AppServices.shared.preferences.expiry.ttl(for: rotating.item.kind)) { value in
+                        actions.rotate(rotating.item, field: rotating.field.key, newValue: value)
+                        actions.rotating = nil
+                    } onCancel: { actions.rotating = nil }
+                }
+            }
             .confirmationDialog("Export as a plain .env file?", isPresented: $confirmEnvExport) {
                 Button("Export Unencrypted File") { actions.exportEnvFile(item) }
             } message: {
@@ -110,6 +118,11 @@ struct ItemDetailView: View {
                         HStack {
                             Text(expires, format: .dateTime.day().month().year())
                             ExpiryLabel(date: expires)
+                            if !inTrash {
+                                Button("Mark as Rotated") { actions.markRotated(item) }
+                                    .controlSize(.small)
+                                    .help("The key was rotated elsewhere: reset the expiry without changing the stored value")
+                            }
                         }
                     }
                 }
@@ -165,6 +178,9 @@ struct ItemDetailView: View {
             }
             if item.kind == .envSet, !model.secretFields.isEmpty, !inTrash {
                 Button("Export as .env…", systemImage: "square.and.arrow.up") { confirmEnvExport = true }
+            }
+            if let primary = template.primaryField, model.secretFields.contains(primary.key), !inTrash {
+                Button("Rotate \(primary.label)…", systemImage: "arrow.triangle.2.circlepath") { actions.beginRotate(item, field: primary) }
             }
         }
     }

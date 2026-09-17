@@ -11,30 +11,38 @@ import Observation
 final class ItemActions {
     var form: ItemFormModel?
     var lastError: String?
+    /// Which field is being rotated, if the sheet is up.
+    var rotating: (item: SecretItem, field: FieldSpec)?
 
     private let vault: SecretVault
     private let items: ItemRepository
     private let projects: ProjectRepository
     private let clipboard: ClipboardService
     private let navigation: AppNavigationState
+    private let expiryPolicy: () -> ExpiryPolicy
 
     init(vault: SecretVault, items: ItemRepository, projects: ProjectRepository,
-         clipboard: ClipboardService, navigation: AppNavigationState) {
+         clipboard: ClipboardService, navigation: AppNavigationState, expiryPolicy: @escaping () -> ExpiryPolicy = { ExpiryPolicy() }) {
         self.vault = vault
         self.items = items
         self.projects = projects
         self.clipboard = clipboard
         self.navigation = navigation
+        self.expiryPolicy = expiryPolicy
+    }
+
+    private func makeForm(_ mode: ItemFormModel.Mode) -> ItemFormModel {
+        ItemFormModel(mode: mode, vault: vault, items: items, projects: projects, expiryPolicy: expiryPolicy())
     }
 
     // MARK: Create / edit
 
     func newItem() {
-        form = ItemFormModel(mode: .create(kind: nil), vault: vault, items: items, projects: projects)
+        form = makeForm(.create(kind: nil))
     }
 
     func newItem(kind: SecretKind) {
-        form = ItemFormModel(mode: .create(kind: kind), vault: vault, items: items, projects: projects)
+        form = makeForm(.create(kind: kind))
     }
 
     /// ⌘⇧N: the clipboard's text becomes the primary secret, with kind and
@@ -42,7 +50,7 @@ final class ItemActions {
     func newItemFromClipboard() {
         let text = NSPasteboard.general.string(forType: .string) ?? ""
         let detection = SecretDetector.detect(text)
-        let model = ItemFormModel(mode: .create(kind: detection?.kind), vault: vault, items: items, projects: projects)
+        let model = makeForm(.create(kind: detection?.kind))
         if let detection {
             model.prefill(from: text, detection: detection)
         }
@@ -51,20 +59,41 @@ final class ItemActions {
 
     func newEnvSet(fromFile url: URL) {
         guard let text = try? String(contentsOf: url, encoding: .utf8) else { return }
-        let model = ItemFormModel(mode: .create(kind: .envSet), vault: vault, items: items, projects: projects)
+        let model = makeForm(.create(kind: .envSet))
         model.title = url.deletingPathExtension().lastPathComponent == "" ? url.lastPathComponent : url.deletingLastPathComponent().lastPathComponent
         model.envText = text
         form = model
     }
 
     func edit(_ item: SecretItem) {
-        let model = ItemFormModel(mode: .edit(item), vault: vault, items: items, projects: projects)
+        let model = makeForm(.edit(item))
         form = model
         Task { await model.loadForEditing() }
     }
 
     func editSelection() {
         if let item = selectedItem() { edit(item) }
+    }
+
+    // MARK: Rotate
+
+    func beginRotate(_ item: SecretItem, field: FieldSpec) {
+        rotating = (item, field)
+    }
+
+    func rotate(_ item: SecretItem, field: String, newValue: String) {
+        let expiry = expiryPolicy().expiryDate(for: item.kind)
+        run {
+            try await self.vault.rotate(itemId: item.id, field: field, newValue: SecretBytes(newValue))
+            try await self.vault.setExpiry(itemId: item.id, to: expiry)
+        }
+    }
+
+    /// The key was rotated at the provider and the new value entered by
+    /// hand elsewhere: only the expiry moves.
+    func markRotated(_ item: SecretItem) {
+        let expiry = expiryPolicy().expiryDate(for: item.kind)
+        run { try await self.vault.setExpiry(itemId: item.id, to: expiry) }
     }
 
     // MARK: Copy

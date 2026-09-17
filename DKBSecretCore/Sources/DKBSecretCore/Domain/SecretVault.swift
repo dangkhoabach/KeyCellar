@@ -77,6 +77,14 @@ public actor SecretVault {
         }
     }
 
+    /// Rotation and "mark as rotated" both reset the expiry on their own.
+    public func setExpiry(itemId: String, to date: Date?) async throws {
+        try await database.dbQueue.write { db in
+            try Self.requireItem(itemId, db)
+            try db.execute(sql: "UPDATE items SET expires_at = ?, updated_at = ? WHERE id = ?", arguments: [date, Date(), itemId])
+        }
+    }
+
     /// Removes the field and its history — an `envSet` KEY the user deleted.
     public func deleteSecret(itemId: String, field: String) async throws {
         try await database.dbQueue.write { db in

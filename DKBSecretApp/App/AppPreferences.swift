@@ -15,6 +15,7 @@ final class AppPreferences {
     static let authReuseChoices = [0, 10, 30, 60, 300]
 
     var autoLock: AutoLockPolicy { didSet { try? autoLock.save(to: settings) } }
+    var expiry: ExpiryPolicy { didSet { try? expiry.save(to: settings) } }
     var clipboardSeconds: Int { didSet { try? settings.set(Keys.clipboard, String(clipboardSeconds)) } }
     var revealSeconds: Int { didSet { try? settings.set(Keys.reveal, String(revealSeconds)) } }
     var authReuseSeconds: Int {
@@ -38,6 +39,7 @@ final class AppPreferences {
     init(settings: SettingsRepository) {
         self.settings = settings
         autoLock = (try? AutoLockPolicy.load(from: settings)) ?? AutoLockPolicy()
+        expiry = (try? ExpiryPolicy.load(from: settings)) ?? ExpiryPolicy()
         clipboardSeconds = Self.read(Keys.clipboard, from: settings, in: Self.clipboardChoices) ?? 45
         revealSeconds = Self.read(Keys.reveal, from: settings, in: Self.revealChoices) ?? 30
         authReuseSeconds = Self.read(Keys.authReuse, from: settings, in: Self.authReuseChoices) ?? 30

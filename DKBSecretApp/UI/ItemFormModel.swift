@@ -62,14 +62,18 @@ final class ItemFormModel: Identifiable {
 
     var availableProjects: [Project] { (try? projectRepository.all()) ?? [] }
 
-    init(mode: Mode, vault: SecretVault, items: ItemRepository, projects: ProjectRepository) {
+    private let expiryPolicy: ExpiryPolicy
+
+    init(mode: Mode, vault: SecretVault, items: ItemRepository, projects: ProjectRepository, expiryPolicy: ExpiryPolicy = ExpiryPolicy()) {
         self.mode = mode
         self.vault = vault
         self.items = items
         projectRepository = projects
+        self.expiryPolicy = expiryPolicy
         switch mode {
         case .create(let kind):
             self.kind = kind
+            if let kind { applyDefaultExpiry(kind) }
         case .edit(let item):
             kind = item.kind
             title = item.title
@@ -88,10 +92,23 @@ final class ItemFormModel: Identifiable {
         }
     }
 
+    /// The kind's default lifetime, as the matching preset. Called whenever
+    /// the kind is chosen while creating.
+    func applyDefaultExpiry(_ kind: SecretKind) {
+        expiryPreset = switch expiryPolicy.ttl(for: kind) {
+        case 30: .days30
+        case 90: .days90
+        case 180: .days180
+        case 365: .days365
+        default: .none
+        }
+    }
+
     /// Fills the sheet from pasted text: the primary secret, plus the
     /// service `SecretDetector` recognised.
     func prefill(from text: String, detection: SecretDetector.Detection) {
         kind = detection.kind
+        applyDefaultExpiry(detection.kind)
         if detection.kind == .envSet {
             envText = text
         } else if let primary = detection.kind.template.primaryField {

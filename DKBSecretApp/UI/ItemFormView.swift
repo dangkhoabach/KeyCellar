@@ -31,6 +31,7 @@ struct ItemFormView: View {
                 ForEach(SecretKind.allCases, id: \.self) { kind in
                     Button {
                         model.kind = kind
+                        model.applyDefaultExpiry(kind)
                     } label: {
                         VStack(spacing: 8) {
                             Image(systemName: kind.systemImage).font(.system(size: 28))

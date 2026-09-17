@@ -22,6 +22,9 @@ final class AppServices {
     let actions: ItemActions
     let preferences: AppPreferences
     let backup: BackupManager
+    let hotKeys: HotKeyManager
+    let quickSearch: QuickSearchPanel
+    let expiryNotifier: ExpiryNotifier
 
     /// Set when the vault could not be brought up. The app shows it and
     /// quits — a vault that silently starts empty would look like data loss.
@@ -70,6 +73,26 @@ final class AppServices {
             policy: { preferences.autoLock },
             onLock: { session.lock() }
         )
+        let actions = ItemActions(vault: vault, items: items, projects: projects, clipboard: clipboard,
+                                  navigation: AppNavigationState.shared, expiryPolicy: { preferences.expiry })
+        self.actions = actions
+        let quickSearchModel = QuickSearchModel(repository: items)
+        let quickSearch = QuickSearchPanel(model: quickSearchModel, onCopy: { actions.copyPrimary($0) }, onOpen: { item in
+            WindowPresenter.showMainWindow()
+            AppNavigationState.shared.sidebarSelection = .section(.all)
+            AppNavigationState.shared.show(itemId: item.id)
+        })
+        self.quickSearch = quickSearch
+        hotKeys = HotKeyManager(settings: settings) {
+            // Locked: the panel would only show titles, and copying needs the
+            // vault open anyway — bring the lock screen up instead.
+            session.isLocked ? WindowPresenter.showMainWindow() : quickSearch.toggle()
+        }
+        expiryNotifier = ExpiryNotifier(items: items, settings: settings) { itemId in
+            WindowPresenter.showMainWindow()
+            AppNavigationState.shared.sidebarSelection = .section(.expiring)
+            AppNavigationState.shared.show(itemId: itemId)
+        }
         let backup = BackupManager(vault: vault, settings: settings)
         self.backup = backup
         session.onLock.append { backup.clearSessionPassphrase() }
@@ -79,6 +102,5 @@ final class AppServices {
             apply(preferences.authReuseSeconds)
             preferences.onAuthReuseChanged = apply
         }
-        actions = ItemActions(vault: vault, items: items, projects: projects, clipboard: clipboard, navigation: AppNavigationState.shared)
     }
 }

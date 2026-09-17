@@ -45,6 +45,7 @@ struct ContentView: View {
             if locked {
                 detail.hideAll()
                 actions.form = nil
+                AppServices.shared.quickSearch.dismiss()
             }
         }
     }

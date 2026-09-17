@@ -45,6 +45,7 @@ struct SettingsView: View {
     let section: SettingsSection
     @Bindable var preferences: AppPreferences
     let backup: BackupManager
+    private let notifier = AppServices.shared.expiryNotifier
     @AppStorage("themePreference") private var themePreferenceRaw = ThemePreference.system.rawValue
     @AppStorage("languagePreference") private var languageRaw = AppLocale.systemDefault.rawValue
     @State private var loginItemEnabled = LoginItemManager.shared.isEnabled
@@ -82,7 +83,9 @@ struct SettingsView: View {
             }
         }
         Section("Quick Search") {
-            Text("The global shortcut arrives in Phase 7.").foregroundStyle(.secondary)
+            HotKeyRecorderView(manager: AppServices.shared.hotKeys)
+            Text("Works from any app. Enter copies the first match, ⌘Enter opens it.")
+                .font(.callout).foregroundStyle(.secondary)
         }
     }
 
@@ -100,6 +103,29 @@ struct SettingsView: View {
             Toggle("Lock when the screen locks", isOn: $preferences.autoLock.lockOnScreenLock)
             Toggle("Lock when the app is hidden", isOn: $preferences.autoLock.lockWhenHidden)
         }
+        Section("Default Expiry") {
+            ForEach(SecretKind.allCases, id: \.self) { kind in
+                Picker(kind.title, selection: Binding(
+                    get: { preferences.expiry.ttl(for: kind) },
+                    set: { preferences.expiry.ttlDays[kind] = $0 }
+                )) {
+                    ForEach(ExpiryPolicy.choices, id: \.self) { days in
+                        Text(days == 0 ? "Never" : "\(days) days").tag(days)
+                    }
+                }
+            }
+            Text("Applied when an item is created or rotated. Reminders arrive 14, 7 and 1 day before, and on the day.")
+                .font(.callout).foregroundStyle(.secondary)
+            if notifier.authorizationStatus == .denied {
+                HStack {
+                    Label("Notifications are turned off for DKB Secret, so reminders can't be shown.", systemImage: "bell.slash")
+                        .foregroundStyle(.orange)
+                    Spacer()
+                    Button("Open System Settings") { ExpiryNotifier.openSystemNotificationSettings() }
+                }
+            }
+        }
+        .task { await notifier.refreshAuthorizationStatus() }
         Section("Secrets") {
             Picker("Clear clipboard after", selection: $preferences.clipboardSeconds) {
                 ForEach(AppPreferences.clipboardChoices, id: \.self) { Text("\($0) seconds").tag($0) }

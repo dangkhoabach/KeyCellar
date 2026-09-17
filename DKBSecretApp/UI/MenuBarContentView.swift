@@ -1,27 +1,47 @@
+import DKBSecretCore
 import SwiftUI
 
-/// Placeholder menu bar dropdown. Phase 7 replaces the body with quick search
-/// and "Lock now"; the Open/Quit items stay.
+/// The menu bar dropdown: quick search on top when unlocked, then Lock /
+/// Open / Settings / Quit.
 struct MenuBarContentView: View {
-    private let session = AppServices.shared.session
+    private let services = AppServices.shared
+    @State private var model = QuickSearchModel(repository: AppServices.shared.items, limit: 5)
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("DKB Secret")
-                .font(.headline)
-            Divider()
-            if session.isLocked {
-                Button("Unlock…") { WindowPresenter.showMainWindow() }
+        VStack(alignment: .leading, spacing: 0) {
+            if services.session.isLocked {
+                HStack {
+                    Image(systemName: "lock.fill").foregroundStyle(.secondary)
+                    Text("Vault is locked")
+                    Spacer()
+                    Button("Unlock…") { WindowPresenter.showMainWindow() }
+                }
+                .padding(12)
             } else {
-                Button("Lock Now") { session.lock() }
+                QuickSearchView(model: model, onCopy: { services.actions.copyPrimary($0) },
+                                onOpen: { open($0) }, onDismiss: {})
+                    .onAppear { model.search() }
             }
-            Button("Open DKB Secret") { WindowPresenter.showMainWindow() }
-            Button("Settings…") { WindowPresenter.showSettings() }
             Divider()
-            Button("Quit") { NSApp.terminate(nil) }
+            HStack(spacing: 12) {
+                if !services.session.isLocked {
+                    Button("Lock Now") { services.session.lock() }
+                }
+                Button("Open") { WindowPresenter.showMainWindow() }
+                Button("Settings…") { WindowPresenter.showSettings() }
+                Spacer()
+                Button("Quit") { NSApp.terminate(nil) }
+            }
+            .buttonStyle(.link)
+            .font(.callout)
+            .padding(10)
         }
-        .buttonStyle(.plain)
-        .padding(12)
-        .frame(width: 220)
+        .frame(width: 360)
+    }
+
+    private func open(_ item: SecretItem) {
+        WindowPresenter.showMainWindow()
+        AppNavigationState.shared.sidebarSelection = .section(.all)
+        AppNavigationState.shared.show(itemId: item.id)
     }
 }
