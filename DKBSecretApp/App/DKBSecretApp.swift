@@ -70,6 +70,9 @@ struct DKBSecretApp: App {
                     .keyboardShortcut("e", modifiers: .command)
                 Button("Delete Permanently") { AppServices.shared.actions.purgeSelection() }
                     .keyboardShortcut(.delete, modifiers: [.command, .shift])
+                Divider()
+                Button("Lock Vault") { AppServices.shared.session.lock() }
+                    .keyboardShortcut("l", modifiers: .command)
             }
             #if DEBUG
             CommandMenu("Debug") {

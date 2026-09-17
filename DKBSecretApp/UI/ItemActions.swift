@@ -98,6 +98,28 @@ final class ItemActions {
     func copyUsernameOfSelection() { copyMetadata(selectedItem()?.username) }
     func copyURLOfSelection() { copyMetadata(selectedItem()?.url) }
 
+    /// Writes the set's KEY=VALUE pairs to a file the user picks, mode 0600.
+    /// The caller has already shown the "this is plaintext" confirmation.
+    func exportEnvFile(_ item: SecretItem) {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = ".env"
+        panel.showsHiddenFiles = true
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        Task {
+            do {
+                var pairs: [DotEnvFile.Pair] = []
+                for blob in try items.blobs(for: item.id) where blob.slot == 0 && blob.field.hasPrefix(SecretItem.envFieldPrefix) {
+                    let value = try await vault.reveal(itemId: item.id, field: blob.field)
+                    pairs.append((String(blob.field.dropFirst(SecretItem.envFieldPrefix.count)), value.string))
+                }
+                try DotEnvFile.serialize(pairs).write(to: url, atomically: true, encoding: .utf8)
+                try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
+            } catch {
+                report(error)
+            }
+        }
+    }
+
     // MARK: Favorite / trash
 
     func toggleFavorite(_ item: SecretItem) {

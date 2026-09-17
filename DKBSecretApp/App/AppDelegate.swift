@@ -7,9 +7,24 @@ import AppKit
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        let services = AppServices.shared
+        // A vault that cannot reach its database or its enclave key must not
+        // pretend to be an empty one — say so and quit.
+        if let failure = services.startupFailure {
+            let alert = NSAlert()
+            alert.alertStyle = .critical
+            alert.messageText = "DKB Secret can't open the vault"
+            alert.informativeText = failure
+            alert.addButton(withTitle: "Quit")
+            alert.runModal()
+            NSApp.terminate(nil)
+            return
+        }
+        services.idleMonitor.start()
+        Task { try? await services.vault.purgeTrash() }
         #if DEBUG
         if CommandLine.arguments.contains("--seed-sample-data") {
-            Task { await SampleData.seed(services: .shared) }
+            Task { await SampleData.seed(services: services) }
         }
         #endif
     }

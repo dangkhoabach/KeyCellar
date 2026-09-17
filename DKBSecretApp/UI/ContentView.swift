@@ -10,33 +10,61 @@ struct ContentView: View {
     @State private var detail: ItemDetailViewModel
     @Bindable private var actions: ItemActions
     private let clipboard: ClipboardService
+    private let session: VaultSession
+    private let preferences: AppPreferences
+    private let backup: BackupManager
+    @State private var settingsSection: SettingsSection = .general
 
     init(services: AppServices = .shared) {
         _sidebar = State(initialValue: SidebarViewModel(database: services.database, projects: services.projects, tags: services.tags))
         _list = State(initialValue: ItemListViewModel(repository: services.items, dbQueue: services.database.dbQueue))
-        _detail = State(initialValue: ItemDetailViewModel(vault: services.vault, dbQueue: services.database.dbQueue))
+        let preferences = services.preferences
+        _detail = State(initialValue: ItemDetailViewModel(vault: services.vault, dbQueue: services.database.dbQueue, revealSeconds: { preferences.revealSeconds }))
         actions = services.actions
         clipboard = services.clipboard
+        session = services.session
+        self.preferences = preferences
+        backup = services.backup
     }
 
     var body: some View {
+        Group {
+            if session.isLocked {
+                // Replaced, not overlaid: nothing of the vault is in the view
+                // hierarchy while locked.
+                LockScreenView(session: session)
+            } else {
+                splitView
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        StatusBarView(preferences: preferences, clipboard: clipboard, backup: backup)
+                    }
+            }
+        }
+        .frame(minWidth: 900, minHeight: 560)
+        .onChange(of: session.isLocked) { _, locked in
+            if locked {
+                detail.hideAll()
+                actions.form = nil
+            }
+        }
+    }
+
+    private var splitView: some View {
         NavigationSplitView {
             SidebarView(navigation: navigation, model: sidebar)
         } content: {
             if navigation.sidebarSelection.isSettings {
-                ContentUnavailableView("Settings", systemImage: "gearshape")
-                    .navigationSplitViewColumnWidth(min: 260, ideal: 320)
+                SettingsSectionList(selection: $settingsSection)
             } else {
                 ItemListView(navigation: navigation, model: list, actions: actions)
             }
         } detail: {
             if navigation.sidebarSelection.isSettings {
-                ContentUnavailableView("Settings arrive in Phase 5", systemImage: "gearshape")
+                SettingsView(section: settingsSection, preferences: preferences, backup: backup)
             } else {
                 ItemDetailView(model: detail, actions: actions, inTrash: navigation.sidebarSelection.isTrash)
             }
         }
-        .frame(minWidth: 900, minHeight: 560)
         .onChange(of: navigation.selectedItemId, initial: true) { _, id in detail.show(itemId: id) }
         .sheet(item: $actions.form) { form in
             ItemFormView(model: form) { actions.form = nil }

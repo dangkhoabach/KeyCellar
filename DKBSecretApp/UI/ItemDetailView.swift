@@ -6,6 +6,7 @@ struct ItemDetailView: View {
     let actions: ItemActions
     let inTrash: Bool
     @State private var confirmPurge = false
+    @State private var confirmEnvExport = false
 
     var body: some View {
         if let item = model.item {
@@ -25,6 +26,11 @@ struct ItemDetailView: View {
                 }
             }
             .formStyle(.grouped)
+            .confirmationDialog("Export as a plain .env file?", isPresented: $confirmEnvExport) {
+                Button("Export Unencrypted File") { actions.exportEnvFile(item) }
+            } message: {
+                Text("The file will contain every value in plain text. Keep it out of version control and delete it when you're done.")
+            }
             .confirmationDialog("Delete this item permanently?", isPresented: $confirmPurge) {
                 Button("Delete Permanently", role: .destructive) { actions.purge(item) }
             } message: {
@@ -156,6 +162,9 @@ struct ItemDetailView: View {
             }
             if model.secretFields.isEmpty {
                 Text("No secret values.").foregroundStyle(.secondary)
+            }
+            if item.kind == .envSet, !model.secretFields.isEmpty, !inTrash {
+                Button("Export as .env…", systemImage: "square.and.arrow.up") { confirmEnvExport = true }
             }
         }
     }

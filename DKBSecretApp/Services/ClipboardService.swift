@@ -13,7 +13,8 @@ final class ClipboardService {
     /// Alfred, 1Password all write or respect it).
     static let concealedType = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
 
-    var clearAfterSeconds = 45
+    /// Read at copy time so a Settings change applies to the next copy.
+    let clearAfterSeconds: () -> Int
     /// Countdown for the UI; `nil` when nothing of ours is on the pasteboard.
     private(set) var remainingSeconds: Int?
 
@@ -21,8 +22,9 @@ final class ClipboardService {
     private var ownedChangeCount: Int?
     private var countdown: Task<Void, Never>?
 
-    init(pasteboard: NSPasteboard = .general) {
+    init(pasteboard: NSPasteboard = .general, clearAfterSeconds: @escaping () -> Int = { 45 }) {
         self.pasteboard = pasteboard
+        self.clearAfterSeconds = clearAfterSeconds
     }
 
     func copy(_ secret: SecretBytes) {
@@ -31,7 +33,7 @@ final class ClipboardService {
         pasteboard.setString(secret.string, forType: .string)
         pasteboard.setString("", forType: Self.concealedType)
         ownedChangeCount = pasteboard.changeCount
-        remainingSeconds = clearAfterSeconds
+        remainingSeconds = clearAfterSeconds()
 
         countdown = Task { [weak self] in
             while let self, let remaining = remainingSeconds, remaining > 0 {

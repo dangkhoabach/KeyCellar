@@ -19,13 +19,24 @@ final class VaultSession {
 
     private(set) var state: State = .locked
     private(set) var lastUnlockError: String?
+    /// For the lock screen's "Locked since"; nil before the first unlock.
+    private(set) var lockedAt: Date?
 
     private let vault: SecretVault
     private let clipboard: ClipboardService
+    /// Run after every successful unlock (auto-backup) and on every lock
+    /// (drop session-only material like the backup passphrase).
+    var onUnlock: [() -> Void] = []
+    var onLock: [() -> Void] = []
 
     init(vault: SecretVault, clipboard: ClipboardService) {
         self.vault = vault
         self.clipboard = clipboard
+        #if DEBUG
+        // DKB_START_UNLOCKED skips only the lock screen while developing the
+        // UI; every reveal still goes through the Secure Enclave. Debug only.
+        if ProcessInfo.processInfo.environment["DKB_START_UNLOCKED"] != nil { state = .unlocked(since: Date()) }
+        #endif
     }
 
     var isLocked: Bool { state == .locked }
@@ -37,6 +48,7 @@ final class VaultSession {
             try await vault.beginAuthenticationSession()
             state = .unlocked(since: Date())
             lastUnlockError = nil
+            onUnlock.forEach { $0() }
         } catch {
             lastUnlockError = error.localizedDescription
         }
@@ -45,7 +57,9 @@ final class VaultSession {
     func lock() {
         guard !isLocked else { return }
         state = .locked
+        lockedAt = Date()
         clipboard.clearIfStillOurs()
+        onLock.forEach { $0() }
         Task { await vault.endAuthenticationSession() }
     }
 }

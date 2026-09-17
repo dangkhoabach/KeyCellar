@@ -106,6 +106,12 @@ public actor SecureEnclaveSealer: SecretSealing {
         authContext = nil
     }
 
+    /// Applies to the next authentication session; the current one keeps
+    /// the duration it was created with.
+    public func setReuseDuration(_ seconds: TimeInterval) {
+        configuration.reuseDuration = seconds
+    }
+
     private func makeAuthContext() -> AuthContextBox {
         let context = LAContext()
         context.localizedReason = configuration.localizedReason

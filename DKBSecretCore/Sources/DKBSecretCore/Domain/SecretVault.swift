@@ -154,6 +154,16 @@ public actor SecretVault {
 
     // MARK: Helpers
 
+    /// Raw sealer access for `VaultBackup`, which needs seal/open without the
+    /// per-item bookkeeping the public API adds.
+    func seal(_ plaintext: Data, info: Data) async throws -> SealedSecret {
+        try await sealer.seal(plaintext, info: info)
+    }
+
+    func open(_ sealed: SealedSecret, info: Data) async throws -> Data {
+        try await sealer.open(sealed, info: info)
+    }
+
     private func seal(_ secrets: [String: SecretBytes], itemId: String) async throws -> [SecretBlob] {
         var blobs: [SecretBlob] = []
         for (field, value) in secrets {

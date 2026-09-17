@@ -19,7 +19,8 @@ final class ItemDetailViewModel {
     private(set) var revealed: [RevealKey: SecretBytes] = [:]
     private(set) var revealCountdown: [RevealKey: Int] = [:]
 
-    var revealSeconds = 30
+    /// Read at reveal time so a Settings change applies to the next reveal.
+    let revealSeconds: () -> Int
 
     struct RevealKey: Hashable {
         let field: String
@@ -31,8 +32,9 @@ final class ItemDetailViewModel {
     private var observation: Task<Void, Never>?
     private var timers: [RevealKey: Task<Void, Never>] = [:]
 
-    init(vault: SecretVault, dbQueue: DatabaseQueue) {
+    init(vault: SecretVault, dbQueue: DatabaseQueue, revealSeconds: @escaping () -> Int = { 30 }) {
         self.vault = vault
+        self.revealSeconds = revealSeconds
         self.dbQueue = dbQueue
     }
 
@@ -93,7 +95,7 @@ final class ItemDetailViewModel {
         guard let item else { return }
         let secret = try await vault.reveal(itemId: item.id, field: field, slot: slot)
         revealed[key] = secret
-        revealCountdown[key] = revealSeconds
+        revealCountdown[key] = revealSeconds()
         timers[key] = Task { [weak self] in
             while let self, let left = revealCountdown[key], left > 0 {
                 try? await Task.sleep(for: .seconds(1))

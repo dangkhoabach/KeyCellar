@@ -5,9 +5,9 @@ import Testing
 
 @MainActor
 @Suite struct ClipboardServiceTests {
-    private func makeService() -> (ClipboardService, NSPasteboard) {
+    private func makeService(clearAfter: Int = 45) -> (ClipboardService, NSPasteboard) {
         let pasteboard = NSPasteboard(name: NSPasteboard.Name("dkb-secret-test-\(UUID().uuidString)"))
-        return (ClipboardService(pasteboard: pasteboard), pasteboard)
+        return (ClipboardService(pasteboard: pasteboard, clearAfterSeconds: { clearAfter }), pasteboard)
     }
 
     @Test func copyWritesTheStringAndTheConcealedMarker() {
@@ -15,12 +15,11 @@ import Testing
         service.copy(SecretBytes("s3cret"))
         #expect(pasteboard.string(forType: .string) == "s3cret")
         #expect(pasteboard.types?.contains(ClipboardService.concealedType) == true)
-        #expect(service.remainingSeconds == service.clearAfterSeconds)
+        #expect(service.remainingSeconds == 45)
     }
 
     @Test func clearsItselfAfterTheTimeout() async throws {
-        let (service, pasteboard) = makeService()
-        service.clearAfterSeconds = 1
+        let (service, pasteboard) = makeService(clearAfter: 1)
         service.copy(SecretBytes("s3cret"))
         try await Task.sleep(for: .milliseconds(1600))
         #expect(pasteboard.string(forType: .string) == nil)
@@ -28,8 +27,7 @@ import Testing
     }
 
     @Test func leavesTheUsersOwnCopyAlone() async throws {
-        let (service, pasteboard) = makeService()
-        service.clearAfterSeconds = 1
+        let (service, pasteboard) = makeService(clearAfter: 1)
         service.copy(SecretBytes("s3cret"))
         pasteboard.clearContents()
         pasteboard.setString("mine", forType: .string)

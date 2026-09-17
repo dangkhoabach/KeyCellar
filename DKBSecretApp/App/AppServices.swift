@@ -20,6 +20,8 @@ final class AppServices {
     let session: VaultSession
     let idleMonitor: IdleMonitor
     let actions: ItemActions
+    let preferences: AppPreferences
+    let backup: BackupManager
 
     /// Set when the vault could not be brought up. The app shows it and
     /// quits — a vault that silently starts empty would look like data loss.
@@ -29,6 +31,7 @@ final class AppServices {
         var failure: String?
         let database: AppDatabase
         let sealer: any SecretSealing
+        var enclaveSealer: SecureEnclaveSealer?
         do {
             database = try AppDatabase(path: AppDatabaseLocation.productionPath().path)
         } catch {
@@ -42,7 +45,9 @@ final class AppServices {
             let store: any KeychainStoring = KeychainStore()
             #endif
             let blob = try SecureEnclaveSealer.loadOrCreateKeyBlob(keychain: store)
-            sealer = try SecureEnclaveSealer(keyBlob: blob)
+            let enclave = try SecureEnclaveSealer(keyBlob: blob)
+            enclaveSealer = enclave
+            sealer = enclave
         } catch {
             failure = failure ?? "Can't access the Secure Enclave master key: \(error.localizedDescription)"
             sealer = SoftwareSealer()
@@ -55,15 +60,25 @@ final class AppServices {
         projects = ProjectRepository(dbQueue: database.dbQueue)
         tags = TagRepository(dbQueue: database.dbQueue)
         settings = SettingsRepository(dbQueue: database.dbQueue)
-        clipboard = ClipboardService()
+        let preferences = AppPreferences(settings: settings)
+        self.preferences = preferences
+        clipboard = ClipboardService(clearAfterSeconds: { preferences.clipboardSeconds })
         session = VaultSession(vault: vault, clipboard: clipboard)
 
-        let settings = self.settings
         let session = self.session
         idleMonitor = IdleMonitor(
-            policy: { (try? AutoLockPolicy.load(from: settings)) ?? AutoLockPolicy() },
+            policy: { preferences.autoLock },
             onLock: { session.lock() }
         )
+        let backup = BackupManager(vault: vault, settings: settings)
+        self.backup = backup
+        session.onLock.append { backup.clearSessionPassphrase() }
+        session.onUnlock.append { Task { await backup.runScheduledBackupIfDue() } }
+        if let enclaveSealer {
+            let apply: (Int) -> Void = { seconds in Task { await enclaveSealer.setReuseDuration(TimeInterval(seconds)) } }
+            apply(preferences.authReuseSeconds)
+            preferences.onAuthReuseChanged = apply
+        }
         actions = ItemActions(vault: vault, items: items, projects: projects, clipboard: clipboard, navigation: AppNavigationState.shared)
     }
 }
