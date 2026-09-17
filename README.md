@@ -47,8 +47,8 @@ DKBSecretCore/
   Sources/DKBSecretCore/
     Models/  Data/  Crypto/  Domain/
   Tests/                        swift-testing suite
-docs/                           build plan, later release + security audit notes
-scripts/                        create-signing-cert.sh, later release.sh
+docs/                           build plan, release process, security audit
+scripts/                        create-signing-cert.sh, release.sh, install-local.sh, generate-app-icon.swift
 ```
 
 ## Getting started
@@ -68,11 +68,28 @@ cd DKBSecretCore
 swift test
 ```
 
-## Signing
+## Features
 
-There is no Apple Developer Program behind this app and none is needed: it
-is built and installed on this Mac only. `scripts/create-signing-cert.sh`
-creates a self-signed code-signing certificate so every build carries the
-same identity (which is what keeps the Keychain ACL on the master-key blob
-valid across builds); ad-hoc (`CODE_SIGN_IDENTITY = -`) also works and is
-what CI uses.
+- Five kinds: API keys (any token), logins, SSH keys, `.env` sets and secure notes, with
+  projects, tags, favourites and environments; instant search over metadata only.
+- Reveal and copy through Touch ID, values hidden again after 30 s, clipboard cleared after
+  45 s (both configurable); rotation with a five-deep history and expiry reminders 14/7/1/0
+  days ahead.
+- Auto-lock on idle, sleep, screen lock or hide; menu bar quick search and a global shortcut
+  (⌥⌘S by default) that works from any app.
+- Encrypted `.dkbsecret` backups (PBKDF2 600k → AES-256-GCM), import by merge or replace,
+  scheduled backups to a folder of your choice; `.env` import and export.
+- English and Vietnamese.
+
+## Signing and installing
+
+There is no Apple Developer Program behind this app and none is needed: it is built and
+installed on this Mac only. `scripts/create-signing-cert.sh` creates a self-signed code-signing
+certificate; `scripts/release.sh` builds, verifies and packages a release and
+`scripts/install-local.sh` puts it in /Applications. See `docs/release.md`, including why the
+first launch of each new build asks for the login keychain password once.
+
+Debug builds keep their own vault in the sandbox container and accept `--seed-sample-data`,
+`--reset-debug-vault`, `DKB_START_UNLOCKED=1` and `DKB_ALLOW_CAPTURE=1` for development; none
+of these exist in Release. The security audit of the shipped build is in
+`docs/security-audit-v1.md`.
