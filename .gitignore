@@ -23,7 +23,6 @@ xcuserdata/
 
 # xcodegen-generated projects are reproducible from project.yml — not tracked
 DKBSecretNative.xcodeproj/
-PoC/DKBSecretPoC.xcodeproj/
 
 # Editor directories and files
 .vscode/*

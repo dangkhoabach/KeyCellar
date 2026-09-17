@@ -1,0 +1,53 @@
+name: Native (Swift) CI
+
+# Build + test only. The app is signed and installed locally (no Apple
+# Developer Program, no distribution), so nothing here needs a secret.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "DKBSecretApp/**"
+      - "DKBSecretAppTests/**"
+      - "DKBSecretCore/**"
+      - "project.yml"
+      - ".github/workflows/native-ci.yml"
+  pull_request:
+    paths:
+      - "DKBSecretApp/**"
+      - "DKBSecretAppTests/**"
+      - "DKBSecretCore/**"
+      - "project.yml"
+      - ".github/workflows/native-ci.yml"
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select latest available Xcode
+        run: |
+          LATEST=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          echo "Using $LATEST"
+          sudo xcode-select -s "$LATEST"
+          xcodebuild -version
+
+      - name: Test DKBSecretCore (headless package)
+        working-directory: DKBSecretCore
+        run: swift test
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      # Local.xcconfig is gitignored (per-machine signing identity); the
+      # example is ad-hoc, which is all a compile check needs.
+      - name: Generate Xcode project
+        run: |
+          cp Local.xcconfig.example Local.xcconfig
+          xcodegen generate
+
+      - name: Build DKBSecretApp
+        run: |
+          xcodebuild -project DKBSecretNative.xcodeproj -scheme DKBSecretApp -configuration Debug build \
+            CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO

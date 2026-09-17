@@ -1,0 +1,80 @@
+name: DKBSecretNative
+options:
+  deploymentTarget:
+    macOS: "14.0"
+  developmentLanguage: en
+# Local.xcconfig is gitignored and per-machine: it carries CODE_SIGN_IDENTITY
+# (the self-signed "DKB Secret Local Signing" certificate that
+# scripts/create-signing-cert.sh creates, or "-" for ad-hoc). Copy
+# Local.xcconfig.example to get started — xcodegen refuses to generate without
+# the file, on purpose, so a build can never silently pick a random identity.
+configFiles:
+  Debug: Local.xcconfig
+  Release: Local.xcconfig
+settings:
+  MACOSX_DEPLOYMENT_TARGET: "14.0"
+  SWIFT_VERSION: "6.0"
+  # Same reason as DKB Monitor: the compiler must emit the exact runtime keys
+  # (`%lld` vs `%@`) for interpolated SwiftUI strings, or hand-written catalog
+  # entries never match at runtime.
+  SWIFT_EMIT_LOC_STRINGS: YES
+  # Manual + no team: this app is built and installed on this Mac only, with
+  # no Apple Developer Program (plan §3.2 D1). No provisioning profile is
+  # involved, so nothing here can expire.
+  CODE_SIGN_STYLE: Manual
+  DEVELOPMENT_TEAM: ""
+  # Applies to Release builds only in practice: Xcode 16+ Debug builds link
+  # the app through a generated <App>.debug.dylib, and Hardened Runtime's
+  # library validation rejects that dylib under a non-Apple identity
+  # ("different Team IDs"), so Xcode drops the runtime flag for Debug on its
+  # own. Confirmed in Phase 0 — the Release artifact signs as
+  # `adhoc,runtime` and is what gets installed and audited (plan Phase 9).
+  ENABLE_HARDENED_RUNTIME: YES
+packages:
+  DKBSecretCore:
+    path: DKBSecretCore
+targets:
+  DKBSecretApp:
+    type: application
+    platform: macOS
+    sources:
+      - DKBSecretApp
+    dependencies:
+      - package: DKBSecretCore
+    info:
+      path: DKBSecretApp/Info.plist
+      properties:
+        # Source of truth for the version — Info.plist is fully regenerated
+        # from this file on every `xcodegen generate` (not merged), so editing
+        # the plist directly gets silently discarded. scripts/release.sh
+        # (Phase 10) edits these two lines, not the plist.
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1.0.0"
+        LSUIElement: false
+    entitlements:
+      path: DKBSecretApp/DKBSecretApp.entitlements
+      properties:
+        # Sandboxed, and deliberately WITHOUT com.apple.security.network.client:
+        # a vault that cannot open a socket cannot leak a secret over the
+        # network no matter what bug it has (plan §2 T6, §3.2 D10). Every
+        # feature the app needs — Secure Enclave, the login Keychain, files
+        # the user picks in an open/save panel — works inside the sandbox
+        # (Phase 0). Adding network access later is a threat-model change,
+        # not a one-line edit.
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-write: true
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.dangkhoabach.dkb-secret
+      PRODUCT_NAME: "DKB Secret"
+
+  DKBSecretAppTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - DKBSecretAppTests
+    dependencies:
+      - target: DKBSecretApp
+    settings:
+      GENERATE_INFOPLIST_FILE: true
+      TEST_HOST: "$(BUILT_PRODUCTS_DIR)/DKB Secret.app/Contents/MacOS/DKB Secret"
+      BUNDLE_LOADER: "$(TEST_HOST)"
