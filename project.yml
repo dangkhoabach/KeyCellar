@@ -23,13 +23,17 @@ settings:
   # involved, so nothing here can expire.
   CODE_SIGN_STYLE: Manual
   DEVELOPMENT_TEAM: ""
-  # Applies to Release builds only in practice: Xcode 16+ Debug builds link
-  # the app through a generated <App>.debug.dylib, and Hardened Runtime's
-  # library validation rejects that dylib under a non-Apple identity
-  # ("different Team IDs"), so Xcode drops the runtime flag for Debug on its
-  # own. Confirmed in Phase 0 — the Release artifact signs as
-  # `adhoc,runtime` and is what gets installed and audited (plan Phase 9).
-  ENABLE_HARDENED_RUNTIME: YES
+  # Release only. Xcode 16+ Debug builds link the app through a generated
+  # <App>.debug.dylib, and Hardened Runtime's library validation rejects that
+  # dylib under any non-Apple identity ("different Team IDs") — with ad-hoc
+  # Xcode silently drops the runtime flag for Debug, but with the self-signed
+  # certificate it keeps it and the Debug app (and the test host) abort at
+  # launch. Confirmed in Phase 1. The Release artifact is what gets installed
+  # and audited (plan Phase 9).
+  ENABLE_HARDENED_RUNTIME: NO
+configs:
+  Debug: debug
+  Release: release
 packages:
   DKBSecretCore:
     path: DKBSecretCore
@@ -64,8 +68,12 @@ targets:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-write: true
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: com.dangkhoabach.dkb-secret
-      PRODUCT_NAME: "DKB Secret"
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dangkhoabach.dkb-secret
+        PRODUCT_NAME: "DKB Secret"
+      configs:
+        Release:
+          ENABLE_HARDENED_RUNTIME: YES
 
   DKBSecretAppTests:
     type: bundle.unit-test
