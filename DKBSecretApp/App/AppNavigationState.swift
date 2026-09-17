@@ -1,14 +1,25 @@
+import DKBSecretCore
 import Observation
 
-/// Sidebar selection, shared between `ContentView` and whatever triggers
-/// navigation from outside the view hierarchy (`WindowPresenter.showSettings`,
-/// later the menu bar extra and notification click-through).
+/// Sidebar and item selection, shared between the columns and whatever
+/// drives navigation from outside the view hierarchy
+/// (`WindowPresenter.showSettings`, the menu bar extra, notifications).
 @MainActor
 @Observable
 final class AppNavigationState {
     static let shared = AppNavigationState()
 
-    var sidebarSelection: SidebarSection = .all
+    var sidebarSelection: SidebarSelection = .section(.all)
+    var selectedItemIds: Set<String> = []
+
+    /// The item the detail column shows: exactly one selected.
+    var selectedItemId: String? {
+        selectedItemIds.count == 1 ? selectedItemIds.first : nil
+    }
 
     private init() {}
+
+    func show(itemId: String) {
+        selectedItemIds = [itemId]
+    }
 }

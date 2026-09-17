@@ -19,6 +19,6 @@ enum WindowPresenter {
     /// tab instead of a separate `Settings {}` window.
     static func showSettings() {
         showMainWindow()
-        AppNavigationState.shared.sidebarSelection = .settings
+        AppNavigationState.shared.sidebarSelection = .section(.settings)
     }
 }

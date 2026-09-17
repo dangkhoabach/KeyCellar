@@ -41,7 +41,13 @@ struct WindowAccessor: NSViewRepresentable {
             // recordings and screen sharing. Every window and panel of this
             // app must set this — a revealed secret is exactly what a
             // screen-share accident captures.
+            // DKB_ALLOW_CAPTURE lets a Debug build be screenshotted while
+            // developing the UI; it does not exist in Release.
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["DKB_ALLOW_CAPTURE"] == nil { window.sharingType = .none }
+            #else
             window.sharingType = .none
+            #endif
         }
         return view
     }

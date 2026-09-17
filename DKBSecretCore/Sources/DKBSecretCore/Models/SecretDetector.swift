@@ -7,6 +7,11 @@ public enum SecretDetector {
     public struct Detection: Equatable, Sendable {
         public let kind: SecretKind
         public let service: String?
+
+        public init(kind: SecretKind, service: String?) {
+            self.kind = kind
+            self.service = service
+        }
     }
 
     private static let prefixes: [(prefix: String, service: String)] = [

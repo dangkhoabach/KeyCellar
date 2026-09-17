@@ -8,6 +8,12 @@ struct DKBSecretApp: App {
     @AppStorage("languagePreference") private var languageRaw = AppLocale.systemDefault.rawValue
     private let windowDelegate = HideInsteadOfCloseDelegate()
 
+    init() {
+        #if DEBUG
+        if CommandLine.arguments.contains("--reset-debug-vault") { AppDatabaseLocation.resetDebugVault() }
+        #endif
+    }
+
     private var themePreference: ThemePreference {
         ThemePreference(rawValue: themePreferenceRaw) ?? .system
     }
@@ -40,6 +46,36 @@ struct DKBSecretApp: App {
                 .onChange(of: themePreferenceRaw) { _, _ in applyAppearance() }
         }
         .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("New Item…") { AppServices.shared.actions.newItem() }
+                    .keyboardShortcut("n", modifiers: .command)
+                Button("New Item from Clipboard…") { AppServices.shared.actions.newItemFromClipboard() }
+                    .keyboardShortcut("n", modifiers: [.command, .shift])
+            }
+            CommandGroup(after: .pasteboard) {
+                Divider()
+                Button("Find") { NotificationCenter.default.post(name: .focusSearch, object: nil) }
+                    .keyboardShortcut("f", modifiers: .command)
+            }
+            // ⌘C on a selected item goes through the list's `onCopyCommand`
+            // (so text fields keep their own copy); these are the secondary
+            // copies from plan §7.2.
+            CommandMenu("Item") {
+                Button("Copy Username") { AppServices.shared.actions.copyUsernameOfSelection() }
+                    .keyboardShortcut("c", modifiers: [.command, .shift])
+                Button("Copy URL") { AppServices.shared.actions.copyURLOfSelection() }
+                    .keyboardShortcut("c", modifiers: [.command, .option])
+                Divider()
+                Button("Edit…") { AppServices.shared.actions.editSelection() }
+                    .keyboardShortcut("e", modifiers: .command)
+                Button("Delete Permanently") { AppServices.shared.actions.purgeSelection() }
+                    .keyboardShortcut(.delete, modifiers: [.command, .shift])
+            }
+            #if DEBUG
+            CommandMenu("Debug") {
+                Button("Seed Sample Data") { Task { await SampleData.seed(services: .shared) } }
+            }
+            #endif
             // Settings is a sidebar tab in the main window (like DKB Monitor),
             // so Cmd+, routes there instead of opening a separate window.
             CommandGroup(replacing: .appSettings) {

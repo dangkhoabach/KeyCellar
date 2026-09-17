@@ -19,6 +19,7 @@ final class AppServices {
     let clipboard: ClipboardService
     let session: VaultSession
     let idleMonitor: IdleMonitor
+    let actions: ItemActions
 
     /// Set when the vault could not be brought up. The app shows it and
     /// quits — a vault that silently starts empty would look like data loss.
@@ -35,7 +36,12 @@ final class AppServices {
             database = (try? AppDatabase.inMemory())!
         }
         do {
-            let blob = try SecureEnclaveSealer.loadOrCreateKeyBlob(keychain: KeychainStore())
+            #if DEBUG
+            let store: any KeychainStoring = DebugKeyBlobStore()
+            #else
+            let store: any KeychainStoring = KeychainStore()
+            #endif
+            let blob = try SecureEnclaveSealer.loadOrCreateKeyBlob(keychain: store)
             sealer = try SecureEnclaveSealer(keyBlob: blob)
         } catch {
             failure = failure ?? "Can't access the Secure Enclave master key: \(error.localizedDescription)"
@@ -58,5 +64,6 @@ final class AppServices {
             policy: { (try? AutoLockPolicy.load(from: settings)) ?? AutoLockPolicy() },
             onLock: { session.lock() }
         )
+        actions = ItemActions(vault: vault, items: items, projects: projects, clipboard: clipboard, navigation: AppNavigationState.shared)
     }
 }

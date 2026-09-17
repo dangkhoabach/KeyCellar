@@ -6,6 +6,14 @@ import AppKit
 /// DKB Monitor's `AppDelegate`, minus everything that app starts at launch.
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        #if DEBUG
+        if CommandLine.arguments.contains("--seed-sample-data") {
+            Task { await SampleData.seed(services: .shared) }
+        }
+        #endif
+    }
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         false
     }
