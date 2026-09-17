@@ -1,0 +1,33 @@
+# Logs
+logs
+*.log
+
+# Local signing identity for this machine (CODE_SIGN_IDENTITY) — never commit
+Local.xcconfig
+
+# Encrypted vault backups must never live in the repo, even encrypted
+*.dkbsecret
+
+# Local build output — reproducible
+release-output/
+
+# Xcode / Swift Package Manager
+build/
+.build/
+DerivedData/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+
+# xcodegen-generated projects are reproducible from project.yml — not tracked
+DKBSecretNative.xcodeproj/
+PoC/DKBSecretPoC.xcodeproj/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.swp
