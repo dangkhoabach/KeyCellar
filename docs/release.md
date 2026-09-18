@@ -1,7 +1,8 @@
 # Releasing DKB Secret
 
-Everything runs on this Mac; the app is never distributed. There is no Apple Developer
-Program, no notarization and no update feed — `scripts/release.sh` is the whole process.
+Everything runs on this Mac. There is no Apple Developer Program, no notarization and no
+update feed — `scripts/release.sh` is the whole process. The DMG it produces is universal
+(Apple silicon + Intel) and can be handed to other people; see "Distributing" below.
 
 ## One-time setup
 
@@ -19,8 +20,13 @@ Program, no notarization and no update feed — `scripts/release.sh` is the whol
 
 `release.sh` runs both test suites, asks for the version (written into `project.yml`, the
 source of truth for `Info.plist`), builds Release, then checks the signature, Hardened Runtime
-and that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship
-— plan §3.2 D10). Output: `release-output/<version>/DKB-Secret-<version>.dmg` and the `.app`.
+that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship —
+plan §3.2 D10) and that the binary contains both arm64 and x86_64. Output:
+`release-output/<version>/DKB-Secret-<version>.dmg` and the `.app`.
+
+The version must be `MAJOR.MINOR.PATCH` and not lower than the current one. If anything fails
+after the version was written, `project.yml` is restored, so a failed run never leaves a
+version behind that was never released.
 
 ## First launch of a new build
 
@@ -48,6 +54,24 @@ key blob) in the sandbox container.
    encrypted) and set the schedule to Weekly.
 5. Turn on notifications for DKB Secret in System Settings › Notifications so expiry reminders
    can be shown.
+
+## Distributing
+
+Requirements on the user's Mac: macOS 14 or later and a Secure Enclave — any Apple silicon
+Mac, or an Intel Mac with the T2 chip (2018 and later). Without one the app explains that and
+quits at launch.
+
+The app is signed with a self-signed certificate, so Gatekeeper treats it as from an
+unidentified developer. On macOS 15 and later the first launch needs **System Settings ›
+Privacy & Security › Open Anyway** (right-click › Open no longer bypasses it); on macOS 14
+right-click › Open works. Every new build also triggers the login-Keychain dialog described
+above once ("Always Allow"). Both go away only with an Apple Developer Program membership
+(Developer ID + notarization; a Team ID also moves the Keychain item off the per-build cdhash
+partition).
+
+There is no in-app update check (no network entitlement). Announce new versions where the
+DMG is published; users replace the app in `/Applications`. Their vault lives in the app's
+container and the enclave key in the login Keychain, so replacing the app keeps the data.
 
 ## Rotating the signing certificate
 

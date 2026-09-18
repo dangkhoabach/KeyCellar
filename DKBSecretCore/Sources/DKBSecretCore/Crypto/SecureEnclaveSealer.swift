@@ -76,6 +76,10 @@ public actor SecureEnclaveSealer: SecretSealing {
 
     public var isAvailable: Bool { SecureEnclave.isAvailable }
 
+    /// False on Intel Macs without a T2 chip — there is no enclave to create
+    /// a key in, so the app cannot run there at all.
+    public static var isSupportedOnThisMac: Bool { SecureEnclave.isAvailable }
+
     public func seal(_ plaintext: Data, info: Data) throws -> SealedSecret {
         try HPKEEnvelope.seal(plaintext, to: publicKey, info: info)
     }

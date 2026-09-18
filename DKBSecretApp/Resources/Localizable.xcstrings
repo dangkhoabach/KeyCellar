@@ -2216,6 +2216,16 @@
         }
       }
     },
+    "This Mac has no Secure Enclave. DKB Secret needs an Apple silicon Mac or an Intel Mac with the T2 chip.": {
+      "localizations": {
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máy Mac này không có Secure Enclave. DKB Secret cần Mac dùng chip Apple silicon hoặc Mac Intel có chip T2."
+          }
+        }
+      }
+    },
     "This backup uses format version %lld, which this app can't read.": {
       "localizations": {
         "vi": {

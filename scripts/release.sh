@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # Builds, signs and packages a DKB Secret release entirely on this Mac
 # (docs/release.md). Same shape as DKB Monitor's and DKB Downloader's
-# release.sh, minus Sparkle: this app is installed on this machine only,
-# so there is no update feed to sign for.
+# release.sh, minus Sparkle: the app has no network entitlement, so there
+# is no update feed to sign for.
 #
 # Signing uses the self-signed "DKB Secret Local Signing" certificate named
-# in Local.xcconfig (scripts/create-signing-cert.sh). No Apple Developer
-# Program, no notarization — the app never leaves this Mac.
+# in Local.xcconfig (scripts/create-signing-cert.sh) — it keeps the vault's
+# Keychain item out of the `unsigned:` partition (plan D1). No Apple
+# Developer Program, no notarization: first launch on another Mac needs
+# System Settings › Privacy & Security › Open Anyway.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -37,7 +39,36 @@ CURRENT_VERSION=$(grep -m1 'CFBundleShortVersionString:' "$PROJECT_YML" | sed -E
 SUGGESTED_VERSION=$(awk -F. '{print $1"."$2"."$3+1}' <<< "$CURRENT_VERSION")
 read -rp "Current version is $CURRENT_VERSION. New version (e.g. $SUGGESTED_VERSION) [Enter to keep]: " INPUT
 VERSION="${INPUT:-$CURRENT_VERSION}"
-[[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Error: version must be MAJOR.MINOR.PATCH" >&2; exit 1; }
+[[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Error: version must be MAJOR.MINOR.PATCH (digits only), got \"$VERSION\"." >&2; exit 1; }
+
+# A lower number than the current one would overwrite an older
+# release-output/<version> with a newer build and mislabel what is installed.
+if [ "$VERSION" != "$CURRENT_VERSION" ] &&
+   [ "$(printf '%s\n%s\n' "$CURRENT_VERSION" "$VERSION" | sort -V | tail -1)" != "$VERSION" ]; then
+  echo "Error: $VERSION is lower than the current $CURRENT_VERSION." >&2
+  exit 1
+fi
+
+# project.yml is edited in place before the build, so any failure from here
+# on would otherwise leave it bumped to a version that never shipped.
+PROJECT_YML_BACKUP=$(mktemp)
+cp "$PROJECT_YML" "$PROJECT_YML_BACKUP"
+
+# One handler, installed once: `$?` inside a trap is whatever ran last, so
+# chaining two traps would have the second read the first's exit code.
+on_exit() {
+  local status=$?
+  if [ -n "${BUILD_DIR:-}" ]; then
+    rm -rf "$BUILD_DIR"
+  fi
+  if [ "$status" -ne 0 ]; then
+    echo "==> Failed (exit $status) — restoring $PROJECT_YML" >&2
+    cp "$PROJECT_YML_BACKUP" "$PROJECT_YML"
+  fi
+  rm -f "$PROJECT_YML_BACKUP"
+}
+trap on_exit EXIT
+
 sed -i '' -E "s/(CFBundleShortVersionString: )\"?[^\"[:space:]]*\"?/\1\"$VERSION\"/" "$PROJECT_YML"
 sed -i '' -E "s/(CFBundleVersion: )\"?[^\"[:space:]]*\"?/\1\"$VERSION\"/" "$PROJECT_YML"
 echo "==> Releasing version $VERSION"
@@ -46,28 +77,39 @@ xcodegen generate
 OUT_DIR="release-output/$VERSION"
 mkdir -p "$OUT_DIR"
 BUILD_DIR=$(mktemp -d)
-trap 'rm -rf "$BUILD_DIR"' EXIT
 
-echo "==> Building (Release, signed with \"$IDENTITY\")"
+echo "==> Building (Release, signed with \"$IDENTITY\", universal arm64+x86_64)"
+# Same as DKB Monitor: without the generic destination xcodebuild builds for
+# this Mac's own architecture only and Intel Macs would be left out.
 xcodebuild build \
   -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
   -derivedDataPath "$BUILD_DIR" \
-  -destination "platform=macOS" -quiet
+  -destination "generic/platform=macOS" -quiet
 
 APP_PATH="$BUILD_DIR/Build/Products/Release/$APP_NAME.app"
 [ -d "$APP_PATH" ] || { echo "Error: no app at $APP_PATH — the build produced nothing." >&2; exit 1; }
 
 echo "==> Verifying the built app"
-codesign --verify --deep --strict "$APP_PATH"
+codesign --verify --deep --strict "$APP_PATH" || {
+  echo "Error: $APP_PATH failed signature verification." >&2
+  exit 1
+}
 # Into a variable first: `grep -q` closing the pipe early makes codesign
 # exit non-zero under pipefail, which read as "no runtime flag".
 SIGNATURE=$(codesign -dvv "$APP_PATH" 2>&1)
 grep -q 'flags=.*runtime' <<< "$SIGNATURE" || { echo "Error: Hardened Runtime is not set on the Release build." >&2; exit 1; }
+ARCHS_BUILT=$(lipo -archs "$APP_PATH/Contents/MacOS/$APP_NAME")
+for arch in arm64 x86_64; do
+  grep -qw "$arch" <<< "$ARCHS_BUILT" || {
+    echo "Error: binary is missing $arch (built: $ARCHS_BUILT). Intel or Apple Silicon Macs would be left out." >&2
+    exit 1
+  }
+done
 # The two entitlements the plan allows, and nothing else (Phase 9 audit #5).
 ENTITLEMENTS=$(codesign -d --entitlements :- "$APP_PATH" 2>/dev/null | grep -oE '<key>[^<]+</key>' | sort | tr -d '\n')
 EXPECTED='<key>com.apple.security.app-sandbox</key><key>com.apple.security.files.user-selected.read-write</key>'
 [ "$ENTITLEMENTS" = "$EXPECTED" ] || { echo "Error: unexpected entitlements: $ENTITLEMENTS" >&2; exit 1; }
-echo "    entitlements OK, hardened runtime OK"
+echo "    entitlements OK, hardened runtime OK, architectures: $ARCHS_BUILT"
 
 echo "==> Creating DMG"
 DMG_PATH="$OUT_DIR/DKB-Secret-$VERSION.dmg"

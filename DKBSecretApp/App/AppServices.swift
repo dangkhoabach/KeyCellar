@@ -47,12 +47,20 @@ final class AppServices {
             #else
             let store: any KeychainStoring = KeychainStore()
             #endif
+            // Intel Macs without a T2 chip have no enclave; CryptoKit's own
+            // error for that is an opaque OSStatus, so say what is missing.
+            guard SecureEnclaveSealer.isSupportedOnThisMac else {
+                throw SecureEnclaveUnavailable()
+            }
             let blob = try SecureEnclaveSealer.loadOrCreateKeyBlob(keychain: store)
             let enclave = try SecureEnclaveSealer(keyBlob: blob, configuration: .init(
                 localizedReason: String(localized: "unlock your vault", bundle: AppLocale.bundle)
             ))
             enclaveSealer = enclave
             sealer = enclave
+        } catch is SecureEnclaveUnavailable {
+            failure = failure ?? String(localized: "This Mac has no Secure Enclave. DKB Secret needs an Apple silicon Mac or an Intel Mac with the T2 chip.", bundle: AppLocale.bundle)
+            sealer = SoftwareSealer()
         } catch {
             failure = failure ?? "Can't access the Secure Enclave master key: \(error.localizedDescription)"
             sealer = SoftwareSealer()
@@ -106,3 +114,7 @@ final class AppServices {
         }
     }
 }
+
+/// Thrown at startup on a Mac without a Secure Enclave — a hardware limit,
+/// not a bug, so it gets its own alert text.
+struct SecureEnclaveUnavailable: Error {}
