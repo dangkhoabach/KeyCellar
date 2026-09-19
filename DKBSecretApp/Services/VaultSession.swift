@@ -24,6 +24,10 @@ final class VaultSession {
 
     private let vault: SecretVault
     private let clipboard: ClipboardService
+    /// The in-flight Touch ID prompt. The lock screen and the menu bar
+    /// popover both prompt on their own; whoever comes second joins this
+    /// instead of raising a second sheet.
+    private var unlockTask: Task<Void, Never>?
     /// Run after every successful unlock (auto-backup) and on every lock
     /// (drop session-only material like the backup passphrase).
     var onUnlock: [() -> Void] = []
@@ -40,10 +44,23 @@ final class VaultSession {
     }
 
     var isLocked: Bool { state == .locked }
+    var isUnlocking: Bool { unlockTask != nil }
 
     /// Touch ID / login password via the sealer. On success the same
     /// authentication serves the first reveals (see `SecretSealing`).
+    /// Concurrent calls share one prompt.
     func unlock() async {
+        if let unlockTask {
+            await unlockTask.value
+            return
+        }
+        let task = Task { await performUnlock() }
+        unlockTask = task
+        await task.value
+        unlockTask = nil
+    }
+
+    private func performUnlock() async {
         do {
             try await vault.beginAuthenticationSession()
             state = .unlocked(since: Date())
