@@ -64,6 +64,17 @@ struct ContentView: View {
                 SettingsView(section: settingsSection, preferences: preferences, backup: backup)
             } else {
                 ItemDetailView(model: detail, actions: actions, inTrash: navigation.sidebarSelection.isTrash)
+                    // Window toolbar (system treatment, Liquid Glass on
+                    // 26+), attached to the detail column so it sits at
+                    // the window's trailing edge.
+                    .toolbar {
+                        // `Spacer` becomes NSToolbar's flexible space, which
+                        // is what pushes the button to the right edge.
+                        ToolbarItem(placement: .primaryAction) { Spacer() }
+                        ToolbarItem(placement: .primaryAction) {
+                            if !navigation.sidebarSelection.isTrash { newItemButton }
+                        }
+                    }
             }
         }
         .onChange(of: navigation.selectedItemId, initial: true) { _, id in detail.show(itemId: id) }
@@ -90,6 +101,27 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    /// Click adds an item (of the kind the sidebar is showing, if any);
+    /// the menu offers every kind and ⌘⇧N's from-clipboard path.
+    private var newItemButton: some View {
+        Menu {
+            ForEach(SecretKind.allCases, id: \.self) { kind in
+                Button(kind.singularTitle, systemImage: kind.systemImage) { actions.newItem(kind: kind) }
+            }
+            Divider()
+            Button("New Item from Clipboard…") { actions.newItemFromClipboard() }
+        } label: {
+            Label("New Item", systemImage: "plus")
+        } primaryAction: {
+            if case .kind(let kind) = navigation.sidebarSelection {
+                actions.newItem(kind: kind)
+            } else {
+                actions.newItem()
+            }
+        }
+        .help("New Item")
+    }
+
     private var purgeTitle: Text {
         actions.pendingPurge.count == 1
             ? Text("Delete “\(actions.pendingPurge[0].title)” permanently?")

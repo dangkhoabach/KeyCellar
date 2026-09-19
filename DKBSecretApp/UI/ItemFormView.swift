@@ -34,11 +34,14 @@ struct ItemFormView: View {
                         model.applyDefaultExpiry(kind)
                     } label: {
                         VStack(spacing: 8) {
-                            Image(systemName: kind.systemImage).font(.system(size: 28))
+                            // Symbols differ in height; a fixed box keeps
+                            // every card the same size.
+                            Image(systemName: kind.systemImage)
+                                .font(.system(size: 28))
+                                .frame(height: 36)
                             Text(kind.singularTitle).font(.headline)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
+                        .frame(maxWidth: .infinity, minHeight: 100)
                         .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
                     }
                     .buttonStyle(.plain)
