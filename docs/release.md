@@ -18,15 +18,36 @@ update feed — `scripts/release.sh` is the whole process. The DMG it produces i
 ./scripts/install-local.sh    # copies release-output/<version>/DKB Secret.app to /Applications
 ```
 
-`release.sh` runs both test suites, asks for the version (written into `project.yml`, the
-source of truth for `Info.plist`), builds Release, then checks the signature, Hardened Runtime
+`release.sh` runs both test suites, asks for the version (written into
+`DKBSecretApp/Info.plist`, both `CFBundleShortVersionString` and `CFBundleVersion`), builds Release, then checks the signature, Hardened Runtime
 that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship —
 plan §3.2 D10) and that the binary contains both arm64 and x86_64. Output:
 `release-output/<version>/DKB-Secret-<version>.dmg` and the `.app`.
 
 The version must be `MAJOR.MINOR.PATCH` and not lower than the current one. If anything fails
-after the version was written, `project.yml` is restored, so a failed run never leaves a
+after the version was written, `Info.plist` is restored, so a failed run never leaves a
 version behind that was never released.
+
+## Build settings worth knowing
+
+Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change them):
+
+- `CODE_SIGN_STYLE = Manual`, no team: the app is built and installed on this Mac only, with
+  no Apple Developer Program (plan §3.2 D1). No provisioning profile is involved, so nothing
+  can expire. The identity itself comes from `Local.xcconfig`.
+- `ENABLE_HARDENED_RUNTIME` is `YES` for Release only. Xcode 16+ Debug builds link the app
+  through a generated `<App>.debug.dylib`, and Hardened Runtime's library validation rejects
+  that dylib under any non-Apple identity, so a Debug build (and the test host) signed with
+  the self-signed certificate would abort at launch.
+- `CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO` for Release: Xcode otherwise injects
+  `get-task-allow` (debugger attach) into every Manual-signed build, and a vault's Release
+  build must not carry it (plan Phase 9 audit).
+- `DKBSecretApp.entitlements` is App Sandbox + user-selected files and deliberately nothing
+  else — no `com.apple.security.network.client` (plan §2 T6, §3.2 D10). Adding network
+  access is a threat-model change, not a one-line edit; `release.sh` fails if any other key
+  ships.
+- `SWIFT_EMIT_LOC_STRINGS = YES`: the compiler must emit the exact runtime keys (`%lld` vs
+  `%@`) for interpolated SwiftUI strings, or hand-written catalog entries never match.
 
 ## First launch of a new build
 

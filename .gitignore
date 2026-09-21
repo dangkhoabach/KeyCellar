@@ -11,7 +11,7 @@ Local.xcconfig
 # Local build output — reproducible
 release-output/
 
-# Xcode / Swift Package Manager
+# Xcode / Swift Package Manager — only project.pbxproj is tracked
 build/
 .build/
 DerivedData/
@@ -20,9 +20,6 @@ DerivedData/
 *.xcuserstate
 xcuserdata/
 .swiftpm/
-
-# xcodegen-generated projects are reproducible from project.yml — not tracked
-DKBSecretNative.xcodeproj/
 
 # Editor directories and files
 .vscode/*

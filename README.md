@@ -32,18 +32,20 @@ checklist — is in [`docs/dkb-secret-build-plan.md`](docs/dkb-secret-build-plan
   models, SQLite storage, Secure Enclave / HPKE sealing, vault service, tests.
 - **`DKBSecretApp`** — the app target: SwiftUI views, `MenuBarExtra`, the
   AppKit glue for window behaviour, clipboard, hotkey, auto-lock.
-- **`xcodegen`** generates the `.xcodeproj` from `project.yml` — the project
-  file itself isn't committed.
+- **`DKBSecretNative.xcodeproj`** — committed as-is (only `project.pbxproj`
+  is tracked); targets, entitlements and `Info.plist` are edited in Xcode.
 
 ## Project structure
 
 ```
-project.yml                     xcodegen spec (targets, entitlements, Info.plist)
+DKBSecretNative.xcodeproj/      Xcode project (targets, build settings)
 Local.xcconfig.example          copy to Local.xcconfig (gitignored): signing identity
 DKBSecretApp/
   App/                          App/Scene setup, window management, navigation state
   UI/                           SwiftUI views
   Services/                     clipboard, auto-lock, hotkey (AppKit-side services)
+  Info.plist                    version (source of truth for release.sh), UTType for .dkbsecret
+  DKBSecretApp.entitlements     App Sandbox + user-selected files, nothing else
   Resources/                    Assets, Localizable.xcstrings (EN/VI)
 DKBSecretAppTests/              app-target tests
 DKBSecretCore/
@@ -57,11 +59,13 @@ scripts/                        create-signing-cert.sh, release.sh, install-loca
 ## Getting started
 
 ```bash
-brew install xcodegen
 cp Local.xcconfig.example Local.xcconfig   # or: ./scripts/create-signing-cert.sh
-xcodegen generate
 open DKBSecretNative.xcodeproj
 ```
+
+`Local.xcconfig` is the base configuration of both build configurations and
+carries only `CODE_SIGN_IDENTITY`; the build fails until the file exists, on
+purpose, so it can never silently pick a random identity.
 
 Run the `DKBSecretApp` scheme from Xcode. `DKBSecretCore` can be tested
 headlessly:

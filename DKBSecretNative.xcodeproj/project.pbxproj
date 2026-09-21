@@ -1,0 +1,717 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02568497B99149A476FD97FE /* BackupSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E25745F5F5353E1CFD74CB9 /* BackupSettingsView.swift */; };
+		030C5E18A9ED56063098F84A /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6F90762C20FEFB717A2278C /* ItemDetailView.swift */; };
+		0924A4A1A553CBC224D3D50F /* ItemFormModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52AF56A6167C29F8B4D24ACE /* ItemFormModelTests.swift */; };
+		0D83CC6809162FF002850FCD /* ItemFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76E5FEA4BB7C3CD5EDDA793 /* ItemFormModel.swift */; };
+		1003A819D3AFDF511DA09E5C /* LoginItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364937D76DAA758CB4450E17 /* LoginItemManager.swift */; };
+		14825CF95D69C87810678CD5 /* SidebarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BBEDA0CA646A9E34103D26 /* SidebarViewModel.swift */; };
+		15B57A344D433ADA0F3946A3 /* ItemFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6831DCB8B5E3845217EF38BE /* ItemFormView.swift */; };
+		1D9A614E318590E34D93F926 /* ExpiryNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2214DBEE4ABE71A19370A14 /* ExpiryNotifier.swift */; };
+		1E95CE55D0CF974BDEC0A0DB /* ItemRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D969A9D6D90301B49B4FC4 /* ItemRowView.swift */; };
+		26C1F403CDCA08F5B9BF91B0 /* ItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EFEABF887823DF8FDCE44E /* ItemListView.swift */; };
+		2945E95008CFB6BE23A5FD2B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 14B40660FE3E6A4CF3FBA2A0 /* Localizable.xcstrings */; };
+		2B6C19AF47C1AB376FF12D89 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B62766A8D8B7F13679BF983 /* ContentView.swift */; };
+		35A6ED5608F9731201680526 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 56A880D123F1C4F419E39FBD /* Assets.xcassets */; };
+		392E19FD8BB56B19D0AD45CA /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E9AC352AB27EF76F3EEC02 /* SettingsView.swift */; };
+		3F7527F346D629DCD5BA5EE4 /* HotKeyRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9697EDD48808F850D930B8 /* HotKeyRecorderView.swift */; };
+		4C9A6129C532ACF1CE6BAF56 /* AppNavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCB75D813E02128A6775C2ED /* AppNavigationState.swift */; };
+		4FB71132453D741B13C834B1 /* NativeSearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8990AC807C7D5792EF0CE8B5 /* NativeSearchField.swift */; };
+		574AD3524C6608330F08BAC3 /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD52A70C65E26CA3E54D56A /* AppServices.swift */; };
+		5816F7E3DC07CD5EAE850B66 /* RotateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20E1C622E4955E8708A442 /* RotateSheet.swift */; };
+		5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */; };
+		5C15EC32347CEDD6496C0427 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E53C60BB41442C6B613530 /* IdleMonitor.swift */; };
+		64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */; };
+		685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */; };
+		6F934FCB7F83B8B1E1D71851 /* WindowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE8E9E2FA802A421DE24C3 /* WindowPresenter.swift */; };
+		71F8E6B33F3DFE609E531505 /* QuickSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A137A466368279A59C6B7580 /* QuickSearchPanel.swift */; };
+		725E712E8756AF68F4029013 /* AppPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E6E9F21A133FE03DD77B40B /* AppPreferencesTests.swift */; };
+		7BC505624BF946DB41EDEC7B /* BackupManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391C6FE6D55E64661D252B03 /* BackupManagerTests.swift */; };
+		7F1ED63AF6D40B0DAFD0157B /* ClipboardServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80A0B1807115EAA208202976 /* ClipboardServiceTests.swift */; };
+		849B9AEADA6E34E0835755E6 /* SecretFieldRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA661F7409BAE724EEE2A942 /* SecretFieldRow.swift */; };
+		8602C93582A49FC2BCD84806 /* ItemActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59514059C9A0418E66500BA3 /* ItemActionsTests.swift */; };
+		89E2507C4FA30523BF3B9526 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E40F780713E9B23A0AAB35 /* SampleData.swift */; };
+		8E8D16647409AB1C592C8248 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD823F817AD5DAFF5646DC6 /* SidebarView.swift */; };
+		8F44EE41DEB2181DDC38BEEB /* ItemListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B9BC8E3F0B74E4ACB9C1C4 /* ItemListViewModel.swift */; };
+		90211956C692461319B0AB4D /* QuickSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7E361EC8D0B62896CC3D1B7 /* QuickSearchView.swift */; };
+		931AF9B057D1BA86DC9BC4A2 /* HotKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED874ACBF7DDB9A17F0E8C14 /* HotKeyTests.swift */; };
+		9E43F44FF8E5A7AE0AD585DF /* ThemePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7EA7CBAF5A0DD8C257B9E /* ThemePreference.swift */; };
+		A043C730EE086DEB8B7A8271 /* DebugKeyBlobStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A818900472F87E65E7AF7E /* DebugKeyBlobStore.swift */; };
+		A34C5399AA956C8527698C8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA593FD57BDE341E85FE933C /* AppDelegate.swift */; };
+		A374A26B19B4CCBC3451BB88 /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D43DE6B639F5BE4C7020189 /* BackupManager.swift */; };
+		A53D7AAEEDA3BDE1B247F597 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */; };
+		A7AA9519DC646FCC04FD7161 /* WindowAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDC65E01C09E061B34E516D /* WindowAccessor.swift */; };
+		A8C39F5E812C70AD0BBF8FD9 /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */; };
+		AC41CF23AE9F5374B2610E5E /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6797632A50D40AD01CEB04 /* HotKeyManager.swift */; };
+		AEB8187E9182E1BD4281C795 /* AppLocale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909D392D0BDD5A6480E860DC /* AppLocale.swift */; };
+		B115AD8359E8C13E2C802598 /* DKBSecretCore in Frameworks */ = {isa = PBXBuildFile; productRef = D7DD59D1A769B63F4182DC6E /* DKBSecretCore */; };
+		B3168B7D774729D5A14CD793 /* StatusBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 962ADD29A9801786A0EB59FF /* StatusBarView.swift */; };
+		B5FC05276C4F9E5D384242C8 /* PassphraseSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C5A8624A58F581E856B10C /* PassphraseSheet.swift */; };
+		B837347FA1427D359579F375 /* ItemActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34BEA8B34F25411FD4D816D6 /* ItemActions.swift */; };
+		B92D480079709A46D1C38045 /* VaultSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37200603C64656E427164F0E /* VaultSession.swift */; };
+		C2E6D41B6AD2CBC4AE072E74 /* DKBSecretApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42809797852C17AC60B96F9D /* DKBSecretApp.swift */; };
+		D63B18045675B2E91B4BA1D7 /* ItemListViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20965233AEE95C7F65B3F261 /* ItemListViewModelTests.swift */; };
+		DA3F7A1F9400036B1AEFBA05 /* VaultSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */; };
+		E4EDCEECDA4865DA0CC327B5 /* ClipboardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA2C8D85C828AC84F12F2C3 /* ClipboardService.swift */; };
+		E510BB3294D4BFEE4C806652 /* AppPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179202217CDFEF4B4E31AF70 /* AppPreferences.swift */; };
+		EBBCCD2D4C82F8D94463C461 /* RotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE07DC64C5C5C0F5B2170F2 /* RotationTests.swift */; };
+		F8DB27C63AC3C4574659E356 /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E55DC078EF3A8B79344716 /* ItemDetailViewModel.swift */; };
+		F9B18806BEE0D7783FB4877C /* LockScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5E6971F6296BD28616EF4B /* LockScreenView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FCE79412874B001A9CE8B423 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D0C33E1AD9343442BC058B31 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BB6FD1F0CAAD7C160E5CB162;
+			remoteInfo = DKBSecretApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreferenceTests.swift; sourceTree = "<group>"; };
+		14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
+		14B40660FE3E6A4CF3FBA2A0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		179202217CDFEF4B4E31AF70 /* AppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferences.swift; sourceTree = "<group>"; };
+		1B62766A8D8B7F13679BF983 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		1D43DE6B639F5BE4C7020189 /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
+		20965233AEE95C7F65B3F261 /* ItemListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModelTests.swift; sourceTree = "<group>"; };
+		287F8221ED7A1D92C9346113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		2E25745F5F5353E1CFD74CB9 /* BackupSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettingsView.swift; sourceTree = "<group>"; };
+		34BEA8B34F25411FD4D816D6 /* ItemActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemActions.swift; sourceTree = "<group>"; };
+		364937D76DAA758CB4450E17 /* LoginItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemManager.swift; sourceTree = "<group>"; };
+		37200603C64656E427164F0E /* VaultSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultSession.swift; sourceTree = "<group>"; };
+		391C6FE6D55E64661D252B03 /* BackupManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManagerTests.swift; sourceTree = "<group>"; };
+		42809797852C17AC60B96F9D /* DKBSecretApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DKBSecretApp.swift; sourceTree = "<group>"; };
+		4AD823F817AD5DAFF5646DC6 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		4AE07DC64C5C5C0F5B2170F2 /* RotationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationTests.swift; sourceTree = "<group>"; };
+		52AF56A6167C29F8B4D24ACE /* ItemFormModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFormModelTests.swift; sourceTree = "<group>"; };
+		56A880D123F1C4F419E39FBD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		59514059C9A0418E66500BA3 /* ItemActionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemActionsTests.swift; sourceTree = "<group>"; };
+		598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultSessionTests.swift; sourceTree = "<group>"; };
+		5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
+		5ADE8E9E2FA802A421DE24C3 /* WindowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowPresenter.swift; sourceTree = "<group>"; };
+		6738FB4CAC3792780F259009 /* Local.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig; sourceTree = "<group>"; };
+		6831DCB8B5E3845217EF38BE /* ItemFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFormView.swift; sourceTree = "<group>"; };
+		6CC1C999504B1C1AE19AA309 /* DKBSecretApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DKBSecretApp.entitlements; sourceTree = "<group>"; };
+		6DD52A70C65E26CA3E54D56A /* AppServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppServices.swift; sourceTree = "<group>"; };
+		6E6E9F21A133FE03DD77B40B /* AppPreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferencesTests.swift; sourceTree = "<group>"; };
+		7E541D59969808C3F893C257 /* DKBSecretAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DKBSecretAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		80A0B1807115EAA208202976 /* ClipboardServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardServiceTests.swift; sourceTree = "<group>"; };
+		81E55DC078EF3A8B79344716 /* ItemDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewModel.swift; sourceTree = "<group>"; };
+		8990AC807C7D5792EF0CE8B5 /* NativeSearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSearchField.swift; sourceTree = "<group>"; };
+		8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDatabaseLocation.swift; sourceTree = "<group>"; };
+		909D392D0BDD5A6480E860DC /* AppLocale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLocale.swift; sourceTree = "<group>"; };
+		90BBEDA0CA646A9E34103D26 /* SidebarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewModel.swift; sourceTree = "<group>"; };
+		91D969A9D6D90301B49B4FC4 /* ItemRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemRowView.swift; sourceTree = "<group>"; };
+		92C5A8624A58F581E856B10C /* PassphraseSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassphraseSheet.swift; sourceTree = "<group>"; };
+		95E40F780713E9B23A0AAB35 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		962ADD29A9801786A0EB59FF /* StatusBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarView.swift; sourceTree = "<group>"; };
+		9FCAC79836D5CFF14E142C98 /* DKBSecretCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DKBSecretCore; path = DKBSecretCore; sourceTree = SOURCE_ROOT; };
+		A137A466368279A59C6B7580 /* QuickSearchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchPanel.swift; sourceTree = "<group>"; };
+		AC9697EDD48808F850D930B8 /* HotKeyRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyRecorderView.swift; sourceTree = "<group>"; };
+		B51EF9ED593F2C1BF977DBF8 /* DKBSecretApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DKBSecretApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAA2C8D85C828AC84F12F2C3 /* ClipboardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardService.swift; sourceTree = "<group>"; };
+		BD20E1C622E4955E8708A442 /* RotateSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotateSheet.swift; sourceTree = "<group>"; };
+		BDDC65E01C09E061B34E516D /* WindowAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessor.swift; sourceTree = "<group>"; };
+		BF5E6971F6296BD28616EF4B /* LockScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenView.swift; sourceTree = "<group>"; };
+		CA593FD57BDE341E85FE933C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CC6797632A50D40AD01CEB04 /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
+		D4EFEABF887823DF8FDCE44E /* ItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListView.swift; sourceTree = "<group>"; };
+		E2214DBEE4ABE71A19370A14 /* ExpiryNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiryNotifier.swift; sourceTree = "<group>"; };
+		E6A818900472F87E65E7AF7E /* DebugKeyBlobStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugKeyBlobStore.swift; sourceTree = "<group>"; };
+		E6F90762C20FEFB717A2278C /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
+		E7B9BC8E3F0B74E4ACB9C1C4 /* ItemListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModel.swift; sourceTree = "<group>"; };
+		E7E361EC8D0B62896CC3D1B7 /* QuickSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSearchView.swift; sourceTree = "<group>"; };
+		EA661F7409BAE724EEE2A942 /* SecretFieldRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretFieldRow.swift; sourceTree = "<group>"; };
+		ECF7EA7CBAF5A0DD8C257B9E /* ThemePreference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreference.swift; sourceTree = "<group>"; };
+		ED874ACBF7DDB9A17F0E8C14 /* HotKeyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyTests.swift; sourceTree = "<group>"; };
+		F76E5FEA4BB7C3CD5EDDA793 /* ItemFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFormModel.swift; sourceTree = "<group>"; };
+		F7E9AC352AB27EF76F3EEC02 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		F9E53C60BB41442C6B613530 /* IdleMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdleMonitor.swift; sourceTree = "<group>"; };
+		FCB75D813E02128A6775C2ED /* AppNavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNavigationState.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C0F4D10C6BC273DC13C8CA53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B115AD8359E8C13E2C802598 /* DKBSecretCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01CAFD6D38B6CCE9359AABEE /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				9FCAC79836D5CFF14E142C98 /* DKBSecretCore */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		23D619CC63FFFA9159A2BD23 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				909D392D0BDD5A6480E860DC /* AppLocale.swift */,
+				2E25745F5F5353E1CFD74CB9 /* BackupSettingsView.swift */,
+				1B62766A8D8B7F13679BF983 /* ContentView.swift */,
+				AC9697EDD48808F850D930B8 /* HotKeyRecorderView.swift */,
+				34BEA8B34F25411FD4D816D6 /* ItemActions.swift */,
+				E6F90762C20FEFB717A2278C /* ItemDetailView.swift */,
+				81E55DC078EF3A8B79344716 /* ItemDetailViewModel.swift */,
+				F76E5FEA4BB7C3CD5EDDA793 /* ItemFormModel.swift */,
+				6831DCB8B5E3845217EF38BE /* ItemFormView.swift */,
+				D4EFEABF887823DF8FDCE44E /* ItemListView.swift */,
+				E7B9BC8E3F0B74E4ACB9C1C4 /* ItemListViewModel.swift */,
+				91D969A9D6D90301B49B4FC4 /* ItemRowView.swift */,
+				BF5E6971F6296BD28616EF4B /* LockScreenView.swift */,
+				2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */,
+				8990AC807C7D5792EF0CE8B5 /* NativeSearchField.swift */,
+				92C5A8624A58F581E856B10C /* PassphraseSheet.swift */,
+				14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */,
+				E7E361EC8D0B62896CC3D1B7 /* QuickSearchView.swift */,
+				BD20E1C622E4955E8708A442 /* RotateSheet.swift */,
+				EA661F7409BAE724EEE2A942 /* SecretFieldRow.swift */,
+				F7E9AC352AB27EF76F3EEC02 /* SettingsView.swift */,
+				5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */,
+				4AD823F817AD5DAFF5646DC6 /* SidebarView.swift */,
+				90BBEDA0CA646A9E34103D26 /* SidebarViewModel.swift */,
+				962ADD29A9801786A0EB59FF /* StatusBarView.swift */,
+				ECF7EA7CBAF5A0DD8C257B9E /* ThemePreference.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		2A81324D7309E1D23B54C5FD = {
+			isa = PBXGroup;
+			children = (
+				67455E39CF3B5600436B4676 /* DKB-Secret */,
+				32C79A9CFFFB823640208F9B /* DKBSecretApp */,
+				F317BD079C3C390877625E38 /* DKBSecretAppTests */,
+				01CAFD6D38B6CCE9359AABEE /* Packages */,
+				CDA882545AB0215F7AF9E13B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		31EE08030E57AF9F92BDED68 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */,
+				CA593FD57BDE341E85FE933C /* AppDelegate.swift */,
+				FCB75D813E02128A6775C2ED /* AppNavigationState.swift */,
+				179202217CDFEF4B4E31AF70 /* AppPreferences.swift */,
+				6DD52A70C65E26CA3E54D56A /* AppServices.swift */,
+				E6A818900472F87E65E7AF7E /* DebugKeyBlobStore.swift */,
+				42809797852C17AC60B96F9D /* DKBSecretApp.swift */,
+				95E40F780713E9B23A0AAB35 /* SampleData.swift */,
+				BDDC65E01C09E061B34E516D /* WindowAccessor.swift */,
+				5ADE8E9E2FA802A421DE24C3 /* WindowPresenter.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		32C79A9CFFFB823640208F9B /* DKBSecretApp */ = {
+			isa = PBXGroup;
+			children = (
+				6CC1C999504B1C1AE19AA309 /* DKBSecretApp.entitlements */,
+				287F8221ED7A1D92C9346113 /* Info.plist */,
+				31EE08030E57AF9F92BDED68 /* App */,
+				7B58696002FB4D2480E8C729 /* Resources */,
+				46B6DE5C5FF5B5B35021313D /* Services */,
+				23D619CC63FFFA9159A2BD23 /* UI */,
+			);
+			path = DKBSecretApp;
+			sourceTree = "<group>";
+		};
+		46B6DE5C5FF5B5B35021313D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1D43DE6B639F5BE4C7020189 /* BackupManager.swift */,
+				BAA2C8D85C828AC84F12F2C3 /* ClipboardService.swift */,
+				E2214DBEE4ABE71A19370A14 /* ExpiryNotifier.swift */,
+				CC6797632A50D40AD01CEB04 /* HotKeyManager.swift */,
+				F9E53C60BB41442C6B613530 /* IdleMonitor.swift */,
+				364937D76DAA758CB4450E17 /* LoginItemManager.swift */,
+				A137A466368279A59C6B7580 /* QuickSearchPanel.swift */,
+				37200603C64656E427164F0E /* VaultSession.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		67455E39CF3B5600436B4676 /* DKB-Secret */ = {
+			isa = PBXGroup;
+			children = (
+				6738FB4CAC3792780F259009 /* Local.xcconfig */,
+			);
+			name = "DKB-Secret";
+			path = .;
+			sourceTree = "<group>";
+		};
+		7B58696002FB4D2480E8C729 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				56A880D123F1C4F419E39FBD /* Assets.xcassets */,
+				14B40660FE3E6A4CF3FBA2A0 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CDA882545AB0215F7AF9E13B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B51EF9ED593F2C1BF977DBF8 /* DKBSecretApp.app */,
+				7E541D59969808C3F893C257 /* DKBSecretAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F317BD079C3C390877625E38 /* DKBSecretAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				6E6E9F21A133FE03DD77B40B /* AppPreferencesTests.swift */,
+				391C6FE6D55E64661D252B03 /* BackupManagerTests.swift */,
+				80A0B1807115EAA208202976 /* ClipboardServiceTests.swift */,
+				ED874ACBF7DDB9A17F0E8C14 /* HotKeyTests.swift */,
+				59514059C9A0418E66500BA3 /* ItemActionsTests.swift */,
+				52AF56A6167C29F8B4D24ACE /* ItemFormModelTests.swift */,
+				20965233AEE95C7F65B3F261 /* ItemListViewModelTests.swift */,
+				4AE07DC64C5C5C0F5B2170F2 /* RotationTests.swift */,
+				09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */,
+				598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */,
+			);
+			path = DKBSecretAppTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		524B752956671952A297283D /* DKBSecretAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E0ED5FDE52669E8970CE702 /* Build configuration list for PBXNativeTarget "DKBSecretAppTests" */;
+			buildPhases = (
+				A05E839512CAB09525E0C763 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FD440E9C42D2B33038F8ED7C /* PBXTargetDependency */,
+			);
+			name = DKBSecretAppTests;
+			packageProductDependencies = (
+			);
+			productName = DKBSecretAppTests;
+			productReference = 7E541D59969808C3F893C257 /* DKBSecretAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BB6FD1F0CAAD7C160E5CB162 /* DKBSecretApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F15C368CBACEF4E87420F22 /* Build configuration list for PBXNativeTarget "DKBSecretApp" */;
+			buildPhases = (
+				84DAF8C70109491C113EC249 /* Sources */,
+				5F06EDB9BDEB230D71541002 /* Resources */,
+				C0F4D10C6BC273DC13C8CA53 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DKBSecretApp;
+			packageProductDependencies = (
+				D7DD59D1A769B63F4182DC6E /* DKBSecretCore */,
+			);
+			productName = DKBSecretApp;
+			productReference = B51EF9ED593F2C1BF977DBF8 /* DKBSecretApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D0C33E1AD9343442BC058B31 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					524B752956671952A297283D = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+					BB6FD1F0CAAD7C160E5CB162 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = FD32B3E5F27E71016E900152 /* Build configuration list for PBXProject "DKBSecretNative" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				vi,
+			);
+			mainGroup = 2A81324D7309E1D23B54C5FD;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6C5B722A3F7E8E5B64A52C43 /* XCLocalSwiftPackageReference "DKBSecretCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = CDA882545AB0215F7AF9E13B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BB6FD1F0CAAD7C160E5CB162 /* DKBSecretApp */,
+				524B752956671952A297283D /* DKBSecretAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5F06EDB9BDEB230D71541002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35A6ED5608F9731201680526 /* Assets.xcassets in Resources */,
+				2945E95008CFB6BE23A5FD2B /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84DAF8C70109491C113EC249 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */,
+				A34C5399AA956C8527698C8B /* AppDelegate.swift in Sources */,
+				AEB8187E9182E1BD4281C795 /* AppLocale.swift in Sources */,
+				4C9A6129C532ACF1CE6BAF56 /* AppNavigationState.swift in Sources */,
+				E510BB3294D4BFEE4C806652 /* AppPreferences.swift in Sources */,
+				574AD3524C6608330F08BAC3 /* AppServices.swift in Sources */,
+				A374A26B19B4CCBC3451BB88 /* BackupManager.swift in Sources */,
+				02568497B99149A476FD97FE /* BackupSettingsView.swift in Sources */,
+				E4EDCEECDA4865DA0CC327B5 /* ClipboardService.swift in Sources */,
+				2B6C19AF47C1AB376FF12D89 /* ContentView.swift in Sources */,
+				C2E6D41B6AD2CBC4AE072E74 /* DKBSecretApp.swift in Sources */,
+				A043C730EE086DEB8B7A8271 /* DebugKeyBlobStore.swift in Sources */,
+				1D9A614E318590E34D93F926 /* ExpiryNotifier.swift in Sources */,
+				AC41CF23AE9F5374B2610E5E /* HotKeyManager.swift in Sources */,
+				3F7527F346D629DCD5BA5EE4 /* HotKeyRecorderView.swift in Sources */,
+				5C15EC32347CEDD6496C0427 /* IdleMonitor.swift in Sources */,
+				B837347FA1427D359579F375 /* ItemActions.swift in Sources */,
+				030C5E18A9ED56063098F84A /* ItemDetailView.swift in Sources */,
+				F8DB27C63AC3C4574659E356 /* ItemDetailViewModel.swift in Sources */,
+				0D83CC6809162FF002850FCD /* ItemFormModel.swift in Sources */,
+				15B57A344D433ADA0F3946A3 /* ItemFormView.swift in Sources */,
+				26C1F403CDCA08F5B9BF91B0 /* ItemListView.swift in Sources */,
+				8F44EE41DEB2181DDC38BEEB /* ItemListViewModel.swift in Sources */,
+				1E95CE55D0CF974BDEC0A0DB /* ItemRowView.swift in Sources */,
+				F9B18806BEE0D7783FB4877C /* LockScreenView.swift in Sources */,
+				1003A819D3AFDF511DA09E5C /* LoginItemManager.swift in Sources */,
+				A53D7AAEEDA3BDE1B247F597 /* MenuBarContentView.swift in Sources */,
+				4FB71132453D741B13C834B1 /* NativeSearchField.swift in Sources */,
+				B5FC05276C4F9E5D384242C8 /* PassphraseSheet.swift in Sources */,
+				A8C39F5E812C70AD0BBF8FD9 /* PasswordGeneratorView.swift in Sources */,
+				71F8E6B33F3DFE609E531505 /* QuickSearchPanel.swift in Sources */,
+				90211956C692461319B0AB4D /* QuickSearchView.swift in Sources */,
+				5816F7E3DC07CD5EAE850B66 /* RotateSheet.swift in Sources */,
+				89E2507C4FA30523BF3B9526 /* SampleData.swift in Sources */,
+				849B9AEADA6E34E0835755E6 /* SecretFieldRow.swift in Sources */,
+				392E19FD8BB56B19D0AD45CA /* SettingsView.swift in Sources */,
+				64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */,
+				8E8D16647409AB1C592C8248 /* SidebarView.swift in Sources */,
+				14825CF95D69C87810678CD5 /* SidebarViewModel.swift in Sources */,
+				B3168B7D774729D5A14CD793 /* StatusBarView.swift in Sources */,
+				9E43F44FF8E5A7AE0AD585DF /* ThemePreference.swift in Sources */,
+				B92D480079709A46D1C38045 /* VaultSession.swift in Sources */,
+				A7AA9519DC646FCC04FD7161 /* WindowAccessor.swift in Sources */,
+				6F934FCB7F83B8B1E1D71851 /* WindowPresenter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A05E839512CAB09525E0C763 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				725E712E8756AF68F4029013 /* AppPreferencesTests.swift in Sources */,
+				7BC505624BF946DB41EDEC7B /* BackupManagerTests.swift in Sources */,
+				7F1ED63AF6D40B0DAFD0157B /* ClipboardServiceTests.swift in Sources */,
+				931AF9B057D1BA86DC9BC4A2 /* HotKeyTests.swift in Sources */,
+				8602C93582A49FC2BCD84806 /* ItemActionsTests.swift in Sources */,
+				0924A4A1A553CBC224D3D50F /* ItemFormModelTests.swift in Sources */,
+				D63B18045675B2E91B4BA1D7 /* ItemListViewModelTests.swift in Sources */,
+				EBBCCD2D4C82F8D94463C461 /* RotationTests.swift in Sources */,
+				5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */,
+				DA3F7A1F9400036B1AEFBA05 /* VaultSessionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FD440E9C42D2B33038F8ED7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BB6FD1F0CAAD7C160E5CB162 /* DKBSecretApp */;
+			targetProxy = FCE79412874B001A9CE8B423 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3A6995FD1F590D7435C3A685 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DKB Secret.app/Contents/MacOS/DKB Secret";
+			};
+			name = Release;
+		};
+		470D0122A53EFC69EE41E015 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6738FB4CAC3792780F259009 /* Local.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		ADB2B2962CBE52537E9584B2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DKB Secret.app/Contents/MacOS/DKB Secret";
+			};
+			name = Debug;
+		};
+		B00FA7B39BBDF27A07DCE1D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DKBSecretApp/DKBSecretApp.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DKBSecretApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dangkhoabach.dkb-secret";
+				PRODUCT_NAME = "DKB Secret";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		BA270FE8C7288A6042BE5F45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6738FB4CAC3792780F259009 /* Local.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		D4EBED9B236937DEF0E94690 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DKBSecretApp/DKBSecretApp.entitlements;
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = DKBSecretApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.dangkhoabach.dkb-secret";
+				PRODUCT_NAME = "DKB Secret";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3E0ED5FDE52669E8970CE702 /* Build configuration list for PBXNativeTarget "DKBSecretAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADB2B2962CBE52537E9584B2 /* Debug */,
+				3A6995FD1F590D7435C3A685 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8F15C368CBACEF4E87420F22 /* Build configuration list for PBXNativeTarget "DKBSecretApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00FA7B39BBDF27A07DCE1D9 /* Debug */,
+				D4EBED9B236937DEF0E94690 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FD32B3E5F27E71016E900152 /* Build configuration list for PBXProject "DKBSecretNative" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				470D0122A53EFC69EE41E015 /* Debug */,
+				BA270FE8C7288A6042BE5F45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		6C5B722A3F7E8E5B64A52C43 /* XCLocalSwiftPackageReference "DKBSecretCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = DKBSecretCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D7DD59D1A769B63F4182DC6E /* DKBSecretCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DKBSecretCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D0C33E1AD9343442BC058B31 /* Project object */;
+}

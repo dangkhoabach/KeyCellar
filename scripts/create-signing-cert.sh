@@ -42,4 +42,4 @@ else
 fi
 
 printf 'CODE_SIGN_IDENTITY = %s\n' "$NAME" > "$ROOT/Local.xcconfig"
-echo "Local.xcconfig now uses \"$NAME\". Run: xcodegen generate"
+echo "Local.xcconfig now uses \"$NAME\"."

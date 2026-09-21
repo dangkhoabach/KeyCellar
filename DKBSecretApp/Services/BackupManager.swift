@@ -30,7 +30,7 @@ final class BackupManager {
     static let staleAfterDays = 7
     nonisolated static let filePrefix = "DKB Secret Backup "
     nonisolated static let fileExtension = "dkbsecret"
-    /// Declared in project.yml (`UTExportedTypeDeclarations`).
+    /// Declared in Info.plist (`UTExportedTypeDeclarations`).
     static let fileType = UTType(exportedAs: "com.dangkhoabach.dkb-secret.backup")
 
     var schedule: Schedule { didSet { try? settings.set(Keys.schedule, schedule.rawValue) } }
