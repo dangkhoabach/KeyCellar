@@ -26,7 +26,7 @@ the vault's owner can complete it (needs Touch ID or a system setting).
 | 15 | Performance | **Automated** | `PerformanceTests.twoThousandItemsSearchUnder50ms`: list, search, filtered search and quick-search ranking over 2 000 items each under 50 ms (whole test incl. inserts: 0.16 s). |
 | 16 | Memory after hiding a reveal | **Owner (optional)** | `SecretBytes` zeroes its buffer in `deinit` (`SecretBytesTests.wipeZeroesTheBufferInPlace`); SwiftUI `Text` copies are outside the app's control (plan §2 T8). An Instruments Allocations pass is a nice-to-have, not a gate. |
 
-## Addendum 1.1.0 — recovery codes (docs/dkb-secret-recovery-codes-plan.md)
+## Addendum 1.0.1 — recovery codes (docs/dkb-secret-recovery-codes-plan.md)
 
 | # | Check | Result | How |
 |---|---|---|---|

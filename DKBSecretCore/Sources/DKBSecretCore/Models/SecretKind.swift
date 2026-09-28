@@ -1,6 +1,6 @@
 import Foundation
 
-/// The item types (plan §5.2; `recoveryCodes` added in 1.1.0, see
+/// The item types (plan §5.2; `recoveryCodes` added in 1.0.1, see
 /// docs/dkb-secret-recovery-codes-plan.md). Each is its own kind because its
 /// field template or behaviour differs — a token is just an `apiKey` with a
 /// different name, so it isn't one.

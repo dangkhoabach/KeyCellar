@@ -90,8 +90,8 @@ above once ("Always Allow"). Both go away only with an Apple Developer Program m
 (Developer ID + notarization; a Team ID also moves the Keychain item off the per-build cdhash
 partition).
 
-Backups only move forward: a `.dkbsecret` made by 1.1.0 or later that holds recovery codes
-does not import into 1.0.x, which does not know that kind (the reverse works). Update the
+Backups only move forward: a `.dkbsecret` made by 1.0.1 or later that holds recovery codes
+does not import into 1.0.0, which does not know that kind (the reverse works). Update the
 other Mac first.
 
 There is no in-app update check (no network entitlement). Announce new versions where the
