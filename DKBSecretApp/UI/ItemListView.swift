@@ -81,7 +81,9 @@ struct ItemListView: View {
             Button("Restore") { actions.restore(item) }
             Button("Delete Permanently", role: .destructive) { actions.requestPurge(item) }
         } else {
-            if item.kind.template.primaryField != nil {
+            if item.kind == .recoveryCodes {
+                Button("Copy Next Unused Code") { actions.copyPrimary(item) }
+            } else if item.kind.template.primaryField != nil {
                 Button("Copy \(Text(LocalizedStringKey(primaryLabel(item))))") { actions.copyPrimary(item) }
             }
             Button(item.favorite ? "Remove from Favorites" : "Add to Favorites") { actions.toggleFavorite(item) }

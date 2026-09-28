@@ -40,7 +40,7 @@ enum SampleData {
                 secrets["env.DATABASE_URL"] = SecretBytes("postgres://u:p@localhost/db\(i)")
                 secrets["env.RESEND_API_KEY"] = SecretBytes("re_sample_\(i)")
                 secrets["env.PORT"] = SecretBytes("300\(i % 10)")
-            case .secureNote: secrets["body"] = SecretBytes("Recovery codes for sample \(i):\n1111-2222\n3333-4444")
+            case .secureNote: secrets["body"] = SecretBytes("Sample note \(i):\nnothing secret in here")
             case .recoveryCodes:
                 secrets["codes"] = SecretBytes((1...10).map { String(format: "%04d-%04d", i, $0) }.joined(separator: "\n"))
                 item.recoveryCodeCount = 10

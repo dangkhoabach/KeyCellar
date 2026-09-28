@@ -95,6 +95,93 @@ import Testing
         #expect(try await env.vault.reveal(itemId: item.id, field: "env.RESEND_API_KEY").string == "re_2")
     }
 
+    // MARK: Recovery codes (fixtures are made up)
+
+    private func createCodes(_ env: Env, _ text: String) async throws -> SecretItem {
+        let form = env.form(.create(kind: .recoveryCodes))
+        form.title = "GitHub"
+        form.loadCodes(text)
+        #expect(await form.save())
+        return try #require(try env.items.fetch(ItemQuery()).first)
+    }
+
+    @Test func recoveryCodesCreateSealsTheNormalisedListAndCountsIt() async throws {
+        let env = try Env()
+        let text = "SAVE YOUR BACKUP CODES\n1. 1111 2222\t\t2. 3333 4444\n3. 5555 6666\t\t4. 7777 8888\n(someone.test@gmail.com)"
+        let item = try await createCodes(env, text)
+        #expect(item.kind == .recoveryCodes)
+        #expect(item.username == "someone.test@gmail.com")
+        #expect(item.recoveryCodeCount == 4)
+        #expect(item.usedRecoveryCodes.isEmpty)
+        #expect(try await env.vault.reveal(itemId: item.id, field: "codes").string == "1111 2222\n3333 4444\n5555 6666\n7777 8888")
+    }
+
+    @Test func recoveryCodesMarkedUsedWhenCreatedAreRecorded() async throws {
+        let env = try Env()
+        let item = try await createCodes(env, "aaaa-1111\n[x] bbbb-2222\ncccc-3333")
+        #expect(Array(item.usedRecoveryCodes.keys) == [2])
+        #expect(item.remainingRecoveryCodes == 2)
+        #expect(try await env.vault.reveal(itemId: item.id, field: "codes").string == "aaaa-1111\nbbbb-2222\ncccc-3333")
+    }
+
+    @Test func recoveryCodesEditRemapsUsedCodesByValue() async throws {
+        let env = try Env()
+        let item = try await createCodes(env, "aaaa-1111\nbbbb-2222\n[x] cccc-3333")
+        let usedOn = try #require(item.usedRecoveryCodes[3])
+
+        let edit = env.form(.edit(item))
+        await edit.loadForEditing()
+        #expect(edit.values["codes"] == "aaaa-1111\nbbbb-2222\n[x] cccc-3333")
+        edit.values["codes"] = "aaaa-1111\n[x] cccc-3333\n[x] dddd-4444"
+        #expect(await edit.save())
+
+        let saved = try #require(try env.items.fetch(id: item.id))
+        #expect(saved.recoveryCodeCount == 3)
+        #expect(saved.usedRecoveryCodes[2] == usedOn, "cccc moved from 3 to 2 and keeps its date")
+        #expect(saved.usedRecoveryCodes[3] != nil)
+        #expect(saved.usedRecoveryCodes[1] == nil)
+        #expect(try await env.vault.reveal(itemId: item.id, field: "codes").string == "aaaa-1111\ncccc-3333\ndddd-4444")
+    }
+
+    @Test func recoveryCodesEditWithoutChangesKeepsTheBlob() async throws {
+        let env = try Env()
+        let item = try await createCodes(env, "aaaa-1111\nbbbb-2222")
+        let blobs = try env.items.blobs(for: item.id)
+        let edit = env.form(.edit(item))
+        await edit.loadForEditing()
+        edit.title = "renamed"
+        #expect(await edit.save())
+        #expect(try env.items.blobs(for: item.id) == blobs)
+    }
+
+    @Test func replacingCodesStartsEmptyAndResetsUsage() async throws {
+        let env = try Env()
+        let item = try await createCodes(env, "[x] aaaa-1111\nbbbb-2222")
+        let replace = env.form(.edit(item))
+        replace.replacingCodes = true
+        await replace.loadForEditing()
+        #expect((replace.values["codes"] ?? "").isEmpty, "the old set is not revealed")
+        #expect(replace.validate() == String(localized: "Add at least one recovery code.", bundle: AppLocale.bundle))
+        replace.values["codes"] = "eeee-5555\nffff-6666\ngggg-7777"
+        #expect(await replace.save())
+
+        let saved = try #require(try env.items.fetch(id: item.id))
+        #expect(saved.recoveryCodeCount == 3)
+        #expect(saved.usedRecoveryCodes.isEmpty)
+        #expect(try await env.vault.reveal(itemId: item.id, field: "codes").string == "eeee-5555\nffff-6666\ngggg-7777")
+        #expect(try env.items.blobs(for: item.id).filter { $0.field == "codes" }.map(\.slot) == [0], "no history for a dead set")
+    }
+
+    @Test func prefillFromClipboardCodeList() throws {
+        let env = try Env()
+        let form = env.form(.create(kind: nil))
+        let text = "abcde-12345\nfghij-67890\nklmno-13579\npqrst-24680"
+        form.prefill(from: text, detection: .init(kind: .recoveryCodes, service: nil))
+        #expect(form.kind == .recoveryCodes)
+        #expect(form.parsedCodes.count == 4)
+        #expect(form.expiryPreset == .none)
+    }
+
     @Test func editWithEmptySecretKeepsTheCurrentValue() async throws {
         let env = try Env()
         let create = env.form(.create(kind: .apiKey))

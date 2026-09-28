@@ -24,6 +24,28 @@
         }
       }
     },
+    "Account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tài khoản"
+          }
+        }
+      }
+    },
+    "Codes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bộ mã"
+          }
+        }
+      }
+    },
     "· In Trash" : {
       "localizations" : {
         "vi" : {
@@ -84,6 +106,32 @@
         }
       }
     },
+    "%lld codes found" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm thấy %lld mã"
+          }
+        }
+      }
+    },
+    "%lld codes found · %lld marked used" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld codes found · %2$lld marked used"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm thấy %1$lld mã · %2$lld đã dùng"
+          }
+        }
+      }
+    },
     "%lld days" : {
       "localizations" : {
         "vi" : {
@@ -100,6 +148,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld mục, tạo lúc %@."
+          }
+        }
+      }
+    },
+    "%lld left" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "còn %lld"
+          }
+        }
+      }
+    },
+    "%lld of %lld left" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld left"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "còn %1$lld/%2$lld"
           }
         }
       }
@@ -231,6 +305,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thêm ít nhất một dòng KEY=VALUE."
+          }
+        }
+      }
+    },
+    "Add at least one recovery code." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm ít nhất một mã khôi phục."
           }
         }
       }
@@ -527,6 +611,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sao chép %@"
+          }
+        }
+      }
+    },
+    "Copy and mark as used (Touch ID)" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao chép và đánh dấu đã dùng (Touch ID)"
+          }
+        }
+      }
+    },
+    "Copy Next Unused" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao chép mã chưa dùng"
+          }
+        }
+      }
+    },
+    "Copy Next Unused Code" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao chép mã chưa dùng kế tiếp"
           }
         }
       }
@@ -881,12 +995,32 @@
         }
       }
     },
+    "Export as .txt…" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xuất ra .txt…"
+          }
+        }
+      }
+    },
     "Export as a plain .env file?" : {
       "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Xuất ra tệp .env thuần?"
+          }
+        }
+      }
+    },
+    "Export as a plain .txt file?" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xuất ra tệp .txt thuần?"
           }
         }
       }
@@ -1068,6 +1202,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nhập bản sao lưu"
+          }
+        }
+      }
+    },
+    "Import from File…" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập từ tệp…"
           }
         }
       }
@@ -1484,6 +1628,16 @@
         }
       }
     },
+    "No codes found" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không tìm thấy mã nào"
+          }
+        }
+      }
+    },
     "No Item Selected" : {
       "localizations" : {
         "vi" : {
@@ -1534,12 +1688,42 @@
         }
       }
     },
+    "No unused codes left — generate a new set" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã hết mã chưa dùng — hãy tạo bộ mới"
+          }
+        }
+      }
+    },
+    "No unused codes left." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã hết mã chưa dùng."
+          }
+        }
+      }
+    },
     "None" : {
       "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Không"
+          }
+        }
+      }
+    },
+    "none left" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hết mã"
           }
         }
       }
@@ -1616,6 +1800,16 @@
         }
       }
     },
+    "One code per line, or the provider's .txt file as is. Mark used codes with [x]." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mỗi dòng một mã, hoặc dán nguyên tệp .txt của nhà cung cấp. Đánh dấu mã đã dùng bằng [x]."
+          }
+        }
+      }
+    },
     "One KEY=VALUE per line. Comments and `export` are fine." : {
       "localizations" : {
         "vi" : {
@@ -1632,6 +1826,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Một lần Touch ID dùng được trong"
+          }
+        }
+      }
+    },
+    "Only %lld codes left — generate a new set" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉ còn %lld mã — hãy tạo bộ mới"
           }
         }
       }
@@ -1727,12 +1931,32 @@
         }
       }
     },
+    "Paste" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dán"
+          }
+        }
+      }
+    },
     "Paste File Contents" : {
       "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dán nội dung tệp"
+          }
+        }
+      }
+    },
+    "Paste the new set. The old codes are replaced when you save." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dán bộ mã mới. Bộ cũ sẽ bị thay khi lưu."
           }
         }
       }
@@ -1842,6 +2066,16 @@
         }
       }
     },
+    "Recovery Codes" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mã khôi phục"
+          }
+        }
+      }
+    },
     "Red" : {
       "localizations" : {
         "vi" : {
@@ -1902,12 +2136,32 @@
         }
       }
     },
+    "Replace Codes…" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thay bộ mã…"
+          }
+        }
+      }
+    },
     "Replace Vault" : {
       "localizations" : {
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thay thế kho"
+          }
+        }
+      }
+    },
+    "Replacing Codes" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang thay bộ mã"
           }
         }
       }
@@ -1938,6 +2192,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hiện %@"
+          }
+        }
+      }
+    },
+    "Reveal All" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện tất cả"
           }
         }
       }
@@ -2242,6 +2506,16 @@
         }
       }
     },
+    "The file will contain every code in plain text. Print it or move it somewhere safe, then delete it." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tệp sẽ chứa mọi mã ở dạng văn bản thuần. Hãy in ra hoặc cất vào nơi an toàn, rồi xoá tệp."
+          }
+        }
+      }
+    },
     "The file will contain every value in plain text. Keep it out of version control and delete it when you're done." : {
       "localizations" : {
         "vi" : {
@@ -2449,6 +2723,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dùng mật khẩu này"
+          }
+        }
+      }
+    },
+    "Used" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã dùng"
+          }
+        }
+      }
+    },
+    "used %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "đã dùng %@"
           }
         }
       }

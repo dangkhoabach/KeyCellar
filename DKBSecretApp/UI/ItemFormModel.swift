@@ -6,9 +6,10 @@ import Observation
 /// because `TextField` needs them; the sheet is short-lived and the model is
 /// dropped as soon as it closes, which is the best a text field allows.
 ///
-/// Editing: secret fields start empty and empty means "unchanged"; the one
-/// exception is an `.env` set, whose editor is the whole KEY=VALUE text, so
-/// its current values are revealed (one Touch ID) when the sheet opens.
+/// Editing: secret fields start empty and empty means "unchanged"; the
+/// exceptions are an `.env` set and a set of recovery codes, whose editor is
+/// the whole text, so their current values are revealed (one Touch ID) when
+/// the sheet opens.
 @MainActor
 @Observable
 final class ItemFormModel: Identifiable {
@@ -45,6 +46,9 @@ final class ItemFormModel: Identifiable {
     var expiryPreset: ExpiryPreset = .none
     var customExpiry = Calendar.current.date(byAdding: .day, value: 90, to: .now) ?? .now
     var favorite = false
+    /// "Replace Codes…": the editor starts empty instead of revealing the old
+    /// set, and saving replaces it (plan RC9).
+    var replacingCodes = false
     private(set) var validationMessage: String?
     private(set) var isLoading = false
     private(set) var saveError: String?
@@ -54,6 +58,8 @@ final class ItemFormModel: Identifiable {
     private let projectRepository: ProjectRepository
     /// For `.envSet` edits: what the item held when the sheet opened.
     private var originalEnv: [String: String] = [:]
+    /// For `.recoveryCodes` edits: the codes the item held when the sheet opened.
+    private var originalCodes: [String] = []
 
     var isEditing: Bool {
         if case .edit = mode { return true }
@@ -111,6 +117,8 @@ final class ItemFormModel: Identifiable {
         applyDefaultExpiry(detection.kind)
         if detection.kind == .envSet {
             envText = text
+        } else if detection.kind == .recoveryCodes {
+            loadCodes(text)
         } else if let primary = detection.kind.template.primaryField {
             values[primary.key] = text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
@@ -120,8 +128,25 @@ final class ItemFormModel: Identifiable {
         }
     }
 
+    /// The codes' text from a paste, a file or the clipboard detector; the
+    /// account a Google file names fills an empty Account field.
+    func loadCodes(_ text: String) {
+        values["codes"] = text
+        if (values["username"] ?? "").isEmpty, let account = RecoveryCodes.accountHint(text) {
+            values["username"] = account
+        }
+    }
+
+    /// What the codes editor holds, parsed; recomputed as the user types.
+    var parsedCodes: [RecoveryCodes.Code] { RecoveryCodes.parse(values["codes"] ?? "") }
+
     func loadForEditing() async {
-        guard case .edit(let item) = mode, item.kind == .envSet else { return }
+        guard case .edit(let item) = mode else { return }
+        if item.kind == .recoveryCodes {
+            if !replacingCodes { await loadCodesForEditing(item) }
+            return
+        }
+        guard item.kind == .envSet else { return }
         isLoading = true
         defer { isLoading = false }
         do {
@@ -139,6 +164,21 @@ final class ItemFormModel: Identifiable {
         }
     }
 
+    /// Shows the set as `serialize` writes it, used codes marked `[x]`, so
+    /// the used state can be edited along with the codes.
+    private func loadCodesForEditing(_ item: SecretItem) async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            originalCodes = try await vault.reveal(itemId: item.id, field: "codes").string
+                .split(separator: "\n").map(String.init)
+            let used = item.usedRecoveryCodes
+            values["codes"] = RecoveryCodes.serialize(originalCodes.enumerated().map { .init($1, used: used[$0 + 1] != nil) })
+        } catch {
+            saveError = error.localizedDescription
+        }
+    }
+
     // MARK: Save
 
     var canSave: Bool { validate() == nil }
@@ -149,6 +189,8 @@ final class ItemFormModel: Identifiable {
         if title.trimmingCharacters(in: .whitespaces).isEmpty { return String(localized: "A title is required.", bundle: bundle) }
         if kind == .envSet {
             if DotEnvFile.parse(envText).isEmpty { return String(localized: "Add at least one KEY=VALUE line.", bundle: bundle) }
+        } else if kind == .recoveryCodes {
+            if parsedCodes.isEmpty { return String(localized: "Add at least one recovery code.", bundle: bundle) }
         } else if !isEditing, let primary = kind.template.primaryField,
                   (values[primary.key] ?? "").isEmpty {
             let label = String(localized: String.LocalizationValue(primary.label), bundle: bundle)
@@ -190,6 +232,7 @@ final class ItemFormModel: Identifiable {
 
     private func applyMetadata(to item: inout SecretItem, projectId: String?) {
         let template = item.kind.template
+        let previouslyUsed = item.usedRecoveryCodes
         item.projectId = projectId
         item.environment = environment
         item.favorite = favorite
@@ -200,12 +243,34 @@ final class ItemFormModel: Identifiable {
         for spec in template.fields where !spec.isSecret && !["service", "url", "username", "environment"].contains(spec.key) {
             if let value = nonEmpty(spec.key) { item.metadata[spec.key] = value }
         }
+        if item.kind == .recoveryCodes {
+            let codes = parsedCodes
+            item.recoveryCodeCount = codes.count
+            item.usedRecoveryCodes = usedCodes(codes, previouslyUsed: previouslyUsed)
+        }
         switch expiryPreset {
         case .none: item.expiresAt = nil
         case .custom: item.expiresAt = customExpiry
         default: item.expiresAt = Calendar.current.date(byAdding: .day, value: expiryPreset.days ?? 0, to: .now)
         }
     }
+
+    /// Positions follow the new list: a code that was already used keeps
+    /// its date wherever it moved to, one newly marked `[x]` gets today.
+    private func usedCodes(_ codes: [RecoveryCodes.Code], previouslyUsed: [Int: Date]) -> [Int: Date] {
+        var usedDate: [String: Date] = [:]
+        for (index, date) in previouslyUsed where originalCodes.indices.contains(index - 1) {
+            usedDate[originalCodes[index - 1]] = date
+        }
+        var used: [Int: Date] = [:]
+        for (offset, code) in codes.enumerated() where code.used {
+            used[offset + 1] = usedDate[code.value] ?? Date()
+        }
+        return used
+    }
+
+    /// The sealed form: one normalised code per line, no marks.
+    private var codesBlob: String { parsedCodes.map(\.value).joined(separator: "\n") }
 
     private func nonEmpty(_ key: String) -> String? {
         let value = (values[key] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -217,6 +282,9 @@ final class ItemFormModel: Identifiable {
         for spec in kind.template.secretFields {
             if let value = values[spec.key], !value.isEmpty { secrets[spec.key] = SecretBytes(value) }
         }
+        if kind == .recoveryCodes {
+            secrets["codes"] = SecretBytes(codesBlob)
+        }
         if kind == .envSet {
             for (key, value) in DotEnvFile.parse(envText) {
                 secrets[SecretItem.envFieldPrefix + key] = SecretBytes(value)
@@ -226,10 +294,15 @@ final class ItemFormModel: Identifiable {
     }
 
     private func applySecretEdits(_ kind: SecretKind, itemId: String) async throws {
-        for spec in kind.template.secretFields {
+        for spec in kind.template.secretFields where spec.key != "codes" {
             if let value = values[spec.key], !value.isEmpty {
                 try await vault.setSecret(itemId: itemId, field: spec.key, value: SecretBytes(value))
             }
+        }
+        // `setSecret`, not `rotate`: a replaced set is dead at the provider,
+        // so there is no history worth keeping.
+        if kind == .recoveryCodes, codesBlob != originalCodes.joined(separator: "\n") {
+            try await vault.setSecret(itemId: itemId, field: "codes", value: SecretBytes(codesBlob))
         }
         guard kind == .envSet else { return }
         let edited = Dictionary(DotEnvFile.parse(envText), uniquingKeysWith: { _, last in last })

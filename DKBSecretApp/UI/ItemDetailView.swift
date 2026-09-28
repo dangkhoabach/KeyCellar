@@ -12,7 +12,13 @@ struct ItemDetailView: View {
             Form {
                 header(item)
                 metadataSection(item)
-                secretsSection(item)
+                if item.kind == .recoveryCodes {
+                    RecoveryCodesSection(item: item, model: model, actions: actions, inTrash: inTrash)
+                }
+                // A set of codes without notes has nothing else to show here.
+                if item.kind != .recoveryCodes || model.secretFields.contains("notes") {
+                    secretsSection(item)
+                }
                 if model.historyCounts.values.contains(where: { $0 > 0 }) {
                     historySection(item)
                 }
@@ -156,7 +162,7 @@ struct ItemDetailView: View {
     private func secretsSection(_ item: SecretItem) -> some View {
         let template = item.kind.template
         Section(item.kind == .envSet ? "Variables" : "Secrets") {
-            ForEach(model.secretFields, id: \.self) { field in
+            ForEach(model.secretFields.filter { $0 != "codes" }, id: \.self) { field in
                 let spec = template.fields.first { $0.key == field }
                 SecretFieldRow(
                     label: spec.map { Text(LocalizedStringKey($0.label)) } ?? Text(verbatim: String(field.dropFirst(SecretItem.envFieldPrefix.count))),
@@ -173,7 +179,8 @@ struct ItemDetailView: View {
             if item.kind == .envSet, !model.secretFields.isEmpty, !inTrash {
                 Button("Export as .env…", systemImage: "square.and.arrow.up") { confirmEnvExport = true }
             }
-            if let primary = template.primaryField, model.secretFields.contains(primary.key), !inTrash {
+            // A set of codes is replaced, not rotated (`RecoveryCodesSection`).
+            if let primary = template.primaryField, model.secretFields.contains(primary.key), !inTrash, item.kind != .recoveryCodes {
                 Button("Rotate \(Text(LocalizedStringKey(primary.label)))…", systemImage: "arrow.triangle.2.circlepath") { actions.beginRotate(item, field: primary) }
             }
         }
@@ -193,6 +200,117 @@ struct ItemDetailView: View {
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+/// The codes of a `recoveryCodes` item, one row each: masked until "Reveal
+/// All" (one Touch ID, hidden again after the same countdown as any reveal),
+/// a copy button that marks the code used, and a checkbox for the used
+/// state, which is metadata and needs no Touch ID (plan §2.4).
+struct RecoveryCodesSection: View {
+    /// At or below this many unused codes the row and this section warn.
+    static let lowCount = 2
+
+    let item: SecretItem
+    let model: ItemDetailViewModel
+    let actions: ItemActions
+    let inTrash: Bool
+    @State private var confirmExport = false
+
+    var body: some View {
+        let codes = model.revealedValue("codes")?.split(separator: "\n").map(String.init)
+        let used = item.usedRecoveryCodes
+        let remaining = item.remainingRecoveryCodes
+        Section {
+            ForEach(0..<(codes?.count ?? item.recoveryCodeCount), id: \.self) { offset in
+                row(index: offset + 1, code: codes?[offset], usedOn: used[offset + 1])
+            }
+            if !inTrash {
+                if remaining <= Self.lowCount {
+                    warning(remaining)
+                }
+                HStack {
+                    Button("Copy Next Unused", systemImage: "doc.on.doc") { actions.copyRecoveryCode(item) }
+                        .disabled(remaining == 0)
+                    Button("Replace Codes…", systemImage: "arrow.triangle.2.circlepath") { actions.replaceCodes(item) }
+                    Button("Export as .txt…", systemImage: "square.and.arrow.up") { confirmExport = true }
+                }
+            }
+        } header: {
+            HStack {
+                Text("Recovery Codes")
+                Spacer()
+                Text("\(remaining) of \(item.recoveryCodeCount) left").foregroundStyle(.secondary)
+                if let left = model.revealCountdown[.init(field: "codes", slot: 0)] {
+                    Text("\(left)s").font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+                }
+                Button(codes == nil ? "Reveal All" : "Hide", systemImage: codes == nil ? "eye" : "eye.slash") {
+                    Task {
+                        do { try await model.toggleReveal("codes") } catch { actions.report(error) }
+                    }
+                }
+                .buttonStyle(.borderless)
+                .help(codes == nil ? "Reveal (Touch ID)" : "Hide")
+            }
+        }
+        .confirmationDialog("Export as a plain .txt file?", isPresented: $confirmExport) {
+            Button("Export Unencrypted File") { actions.exportRecoveryCodes(item) }
+        } message: {
+            Text("The file will contain every code in plain text. Print it or move it somewhere safe, then delete it.")
+        }
+    }
+
+    private func row(index: Int, code: String?, usedOn: Date?) -> some View {
+        HStack(spacing: 10) {
+            Text(verbatim: "\(index)")
+                .font(.body.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(width: 24, alignment: .trailing)
+            Group {
+                if let code {
+                    Text(verbatim: code)
+                        .font(.system(.body, design: .monospaced))
+                        .textSelection(.enabled)
+                        .strikethrough(usedOn != nil)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .overlay(RoundedRectangle(cornerRadius: 5).strokeBorder(Color.yellow.opacity(0.8)))
+                } else {
+                    Text(verbatim: "•••• ••••")
+                }
+            }
+            .foregroundStyle(usedOn == nil ? .primary : .secondary)
+            if let usedOn {
+                Text("used \(usedOn, format: .dateTime.day().month().year())")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            if !inTrash {
+                Button { actions.copyRecoveryCode(item, index: index) } label: { Image(systemName: "doc.on.doc") }
+                    .buttonStyle(.borderless)
+                    .help("Copy and mark as used (Touch ID)")
+                Toggle("Used", isOn: Binding(
+                    get: { usedOn != nil },
+                    set: { actions.setRecoveryCode(item, index: index, used: $0) }
+                ))
+                .toggleStyle(.checkbox)
+                .labelsHidden()
+                .help("Used")
+            }
+        }
+    }
+
+    private func warning(_ remaining: Int) -> some View {
+        HStack {
+            Label(remaining == 0 ? "No unused codes left — generate a new set" : "Only \(remaining) codes left — generate a new set",
+                  systemImage: "exclamationmark.triangle")
+                .foregroundStyle(remaining == 0 ? .red : .orange)
+            Spacer()
+            if let value = item.url, let url = URL(string: value.hasPrefix("http") ? value : "https://\(value)") {
+                Link(value, destination: url).lineLimit(1)
             }
         }
     }

@@ -2,6 +2,7 @@ import AppKit
 import DKBSecretCore
 import LocalAuthentication
 import Observation
+import UniformTypeIdentifiers
 
 /// Item operations reachable from more than one place — list context menu,
 /// detail buttons, the Item menu and its shortcuts — so each has one
@@ -67,6 +68,17 @@ final class ItemActions {
         form = model
     }
 
+    /// A dropped `.txt`: opens the form only when the text reads as a list of
+    /// recovery codes, so any other text file is left alone.
+    func newRecoveryCodes(fromFile url: URL) -> Bool {
+        guard let text = try? String(contentsOf: url, encoding: .utf8), RecoveryCodes.looksLikeCodeList(text) else { return false }
+        let model = makeForm(.create(kind: .recoveryCodes))
+        model.title = url.deletingPathExtension().lastPathComponent
+        model.loadCodes(text)
+        form = model
+        return true
+    }
+
     func edit(_ item: SecretItem) {
         let model = makeForm(.edit(item))
         form = model
@@ -101,6 +113,10 @@ final class ItemActions {
     // MARK: Copy
 
     func copyPrimary(_ item: SecretItem) {
+        if item.kind == .recoveryCodes {
+            copyRecoveryCode(item)
+            return
+        }
         guard let field = item.kind.template.primaryField else { return }
         copy(item, field: field.key)
     }
@@ -144,6 +160,68 @@ final class ItemActions {
                     pairs.append((String(blob.field.dropFirst(SecretItem.envFieldPrefix.count)), value.string))
                 }
                 try DotEnvFile.serialize(pairs).write(to: url, atomically: true, encoding: .utf8)
+                try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
+            } catch {
+                report(error)
+            }
+        }
+    }
+
+    // MARK: Recovery codes
+
+    /// Copies one code — `index` (1-based), or the first unused one — and
+    /// marks it used: a code pasted into a sign-in form is spent (plan RC5).
+    /// The whole set is never copied. Reads the item fresh so a stale row
+    /// from the list or quick search can't hand out a code already used.
+    func copyRecoveryCode(_ item: SecretItem, index: Int? = nil) {
+        guard let current = try? items.fetch(id: item.id), current.deletedAt == nil else { return }
+        var used = current.usedRecoveryCodes
+        guard let target = index ?? (1...max(current.recoveryCodeCount, 1)).first(where: { used[$0] == nil }),
+              target <= current.recoveryCodeCount else {
+            lastError = String(localized: "No unused codes left.", bundle: AppLocale.bundle)
+            return
+        }
+        Task {
+            do {
+                let codes = try await vault.reveal(itemId: item.id, field: "codes").string.split(separator: "\n")
+                guard codes.indices.contains(target - 1) else { return }
+                clipboard.copy(SecretBytes(String(codes[target - 1])))
+                used[target] = used[target] ?? Date()
+                try items.setUsedRecoveryCodes(used, itemId: item.id)
+            } catch {
+                report(error)
+            }
+        }
+    }
+
+    func setRecoveryCode(_ item: SecretItem, index: Int, used isUsed: Bool) {
+        guard let current = try? items.fetch(id: item.id) else { return }
+        var used = current.usedRecoveryCodes
+        used[index] = isUsed ? (used[index] ?? Date()) : nil
+        do { try items.setUsedRecoveryCodes(used, itemId: item.id) } catch { report(error) }
+    }
+
+    /// The provider issued a new set: the edit sheet with an empty editor.
+    func replaceCodes(_ item: SecretItem) {
+        let model = makeForm(.edit(item))
+        model.replacingCodes = true
+        form = model
+    }
+
+    /// Writes the set as `RecoveryCodes.serialize` does (used codes marked
+    /// `[x] `, so importing the file keeps them), mode 0600. The caller has
+    /// already shown the "this is plaintext" confirmation.
+    func exportRecoveryCodes(_ item: SecretItem) {
+        let panel = NSSavePanel()
+        panel.nameFieldStringValue = "\(item.title).txt"
+        panel.allowedContentTypes = [.plainText]
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        Task {
+            do {
+                let codes = try await vault.reveal(itemId: item.id, field: "codes").string.split(separator: "\n")
+                let used = (try items.fetch(id: item.id) ?? item).usedRecoveryCodes
+                let text = RecoveryCodes.serialize(codes.enumerated().map { .init(String($1), used: used[$0 + 1] != nil) })
+                try (text + "\n").write(to: url, atomically: true, encoding: .utf8)
                 try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
             } catch {
                 report(error)

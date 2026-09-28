@@ -26,6 +26,17 @@ the vault's owner can complete it (needs Touch ID or a system setting).
 | 15 | Performance | **Automated** | `PerformanceTests.twoThousandItemsSearchUnder50ms`: list, search, filtered search and quick-search ranking over 2 000 items each under 50 ms (whole test incl. inserts: 0.16 s). |
 | 16 | Memory after hiding a reveal | **Owner (optional)** | `SecretBytes` zeroes its buffer in `deinit` (`SecretBytesTests.wipeZeroesTheBufferInPlace`); SwiftUI `Text` copies are outside the app's control (plan §2 T8). An Instruments Allocations pass is a nice-to-have, not a gate. |
 
+## Addendum 1.1.0 — recovery codes (docs/dkb-secret-recovery-codes-plan.md)
+
+| # | Check | Result | How |
+|---|---|---|---|
+| 17 | Codes never in SQLite | **Automated** | `RecoveryCodeUsageTests.codesNeverLandInTheDatabase`: create a set, tick a code, reveal, dump every cell, the canary is absent. The whole set is one HPKE blob. |
+| 18 | What metadata reveals | **Decided (RC4)** | `metadata_json` holds the number of codes and which positions are used, with the day each was marked (`codeCount`, `usedCodes`). Never a code. This is what lets ticking and counting work without Touch ID. |
+| 19 | Every read of a code goes through the enclave | **Pass by code** | Reveal All, copy one code, copy next unused, edit and export all call `SecretVault.reveal("codes")`. Ticking a checkbox only writes metadata. "No unused codes left" is decided from metadata before any reveal. |
+| 20 | Clipboard | **Pass by code** | One code at a time through `ClipboardService` (concealed, timed clear). ⌘C never copies the whole set. |
+| 21 | Export | **Pass by code** | `.txt` behind the same plaintext confirmation as `.env`, written 0600. |
+| 22 | Entitlements, dependencies | **Unchanged** | Parser is plain Swift in Core; no new entitlement, no new dependency, no schema migration. |
+
 ## Known limits (unchanged from the plan's threat model)
 
 - Malware with root, SIP off, or a debugger on the process while unlocked.

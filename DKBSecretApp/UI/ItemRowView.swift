@@ -27,7 +27,12 @@ struct ItemRowView: View {
                 .foregroundStyle(.secondary)
             }
             Spacer()
-            if let expires = item.expiresAt {
+            if item.kind == .recoveryCodes {
+                let left = item.remainingRecoveryCodes
+                Text(left == 0 ? "none left" : "\(left) left")
+                    .font(.caption2)
+                    .foregroundStyle(left == 0 ? Color.red : left <= RecoveryCodesSection.lowCount ? Color.orange : Color.secondary)
+            } else if let expires = item.expiresAt {
                 ExpiryLabel(date: expires)
             }
         }

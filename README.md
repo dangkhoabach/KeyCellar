@@ -1,7 +1,7 @@
 # DKB Secret
 
-A personal, native macOS vault for API keys, passwords, SSH keys, `.env` sets
-and secure notes. One user, one Mac, no account, no server, no sync.
+A personal, native macOS vault for API keys, passwords, SSH keys, `.env` sets,
+secure notes and 2FA recovery codes. One user, one Mac, no account, no server, no sync.
 
 Requires macOS 14+ and a Secure Enclave: any Apple silicon Mac, or an Intel
 Mac with the T2 chip (2018 and later). The release build is universal.

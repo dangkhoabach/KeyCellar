@@ -93,9 +93,14 @@ struct ContentView: View {
             Text(actions.lastError ?? "")
         }
         .dropDestination(for: URL.self) { urls, _ in
-            guard let url = urls.first(where: { $0.lastPathComponent.hasPrefix(".env") || $0.pathExtension == "env" }) else { return false }
-            actions.newEnvSet(fromFile: url)
-            return true
+            if let url = urls.first(where: { $0.lastPathComponent.hasPrefix(".env") || $0.pathExtension == "env" }) {
+                actions.newEnvSet(fromFile: url)
+                return true
+            }
+            if let url = urls.first(where: { $0.pathExtension.lowercased() == "txt" }) {
+                return actions.newRecoveryCodes(fromFile: url)
+            }
+            return false
         }
     }
 }

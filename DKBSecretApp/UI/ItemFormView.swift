@@ -1,5 +1,6 @@
 import DKBSecretCore
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// The create/edit sheet (plan §8 Phase 4.4). Creating starts on a kind
 /// picker unless the kind is already known (clipboard detection, a dropped
@@ -63,7 +64,7 @@ struct ItemFormView: View {
             HStack {
                 Label(kind.singularTitle, systemImage: kind.systemImage).font(.title3.bold())
                 Spacer()
-                Text(model.isEditing ? "Editing" : "New").foregroundStyle(.secondary)
+                Text(model.replacingCodes ? "Replacing Codes" : model.isEditing ? "Editing" : "New").foregroundStyle(.secondary)
             }
             .padding([.horizontal, .top], 16)
             Form {
@@ -140,7 +141,9 @@ struct ItemFormView: View {
     @ViewBuilder
     private func secretField(_ spec: FieldSpec) -> some View {
         let prompt = model.isEditing ? Text("Leave empty to keep the current value") : Text("")
-        if spec.isMultiline {
+        if spec.key == "codes" {
+            recoveryCodesEditor
+        } else if spec.isMultiline {
             LabeledContent(LocalizedStringKey(spec.label)) {
                 VStack(alignment: .trailing, spacing: 2) {
                     TextEditor(text: binding(spec.key))
@@ -187,6 +190,50 @@ struct ItemFormView: View {
             .font(.caption)
             .foregroundStyle(.secondary)
         }
+    }
+
+    /// Paste, type or import the set; the line under it counts what the
+    /// parser found, so a heading taken for a code shows before saving.
+    private var recoveryCodesEditor: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            TextEditor(text: binding("codes"))
+                .font(.system(.body, design: .monospaced))
+                .frame(minHeight: 160)
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    let codes = model.parsedCodes
+                    let used = codes.filter(\.used).count
+                    if codes.isEmpty {
+                        Text("No codes found").foregroundStyle(.red)
+                    } else if used > 0 {
+                        Text("\(codes.count) codes found · \(used) marked used")
+                    } else {
+                        Text("\(codes.count) codes found")
+                    }
+                    Spacer()
+                    Button("Import from File…") { importCodesFile() }
+                        .controlSize(.small)
+                    Button("Paste") {
+                        if let text = NSPasteboard.general.string(forType: .string) { model.loadCodes(text) }
+                    }
+                    .controlSize(.small)
+                }
+                Text(model.replacingCodes
+                    ? "Paste the new set. The old codes are replaced when you save."
+                    : "One code per line, or the provider's .txt file as is. Mark used codes with [x].")
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    private func importCodesFile() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.plainText]
+        panel.allowsMultipleSelection = false
+        guard panel.runModal() == .OK, let url = panel.url,
+              let text = try? String(contentsOf: url, encoding: .utf8) else { return }
+        model.loadCodes(text)
     }
 
     private var projectPicker: some View {

@@ -90,6 +90,10 @@ above once ("Always Allow"). Both go away only with an Apple Developer Program m
 (Developer ID + notarization; a Team ID also moves the Keychain item off the per-build cdhash
 partition).
 
+Backups only move forward: a `.dkbsecret` made by 1.1.0 or later that holds recovery codes
+does not import into 1.0.x, which does not know that kind (the reverse works). Update the
+other Mac first.
+
 There is no in-app update check (no network entitlement). Announce new versions where the
 DMG is published; users replace the app in `/Applications`. Their vault lives in the app's
 container and the enclave key in the login Keychain, so replacing the app keeps the data.
