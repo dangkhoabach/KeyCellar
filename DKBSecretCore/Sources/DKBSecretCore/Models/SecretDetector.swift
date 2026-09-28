@@ -37,6 +37,11 @@ public enum SecretDetector {
         if looksLikeEnvFile(trimmed) {
             return Detection(kind: .envSet, service: nil)
         }
+        // Codes never contain `=`, and one line is never a list, so this
+        // can't take a `.env` file or a single pasted key.
+        if RecoveryCodes.looksLikeCodeList(trimmed) {
+            return Detection(kind: .recoveryCodes, service: nil)
+        }
         if let match = prefixes.first(where: { trimmed.hasPrefix($0.prefix) }) {
             return Detection(kind: .apiKey, service: match.service)
         }

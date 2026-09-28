@@ -70,6 +70,7 @@ extension SecretKind {
         case .sshKey: "SSH Keys"
         case .envSet: ".env Sets"
         case .secureNote: "Secure Notes"
+        case .recoveryCodes: "Recovery Codes"
         }
     }
 
@@ -80,6 +81,7 @@ extension SecretKind {
         case .sshKey: "SSH Key"
         case .envSet: ".env Set"
         case .secureNote: "Secure Note"
+        case .recoveryCodes: "Recovery Codes"
         }
     }
 
@@ -90,6 +92,7 @@ extension SecretKind {
         case .sshKey: "terminal"
         case .envSet: "list.bullet.rectangle"
         case .secureNote: "note.text"
+        case .recoveryCodes: "lifepreserver"
         }
     }
 }

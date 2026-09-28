@@ -165,4 +165,15 @@ public struct ItemRepository: Sendable {
             try db.execute(sql: "UPDATE items SET favorite = ? WHERE id = ?", arguments: [favorite, itemId])
         }
     }
+
+    /// Ticks or unticks recovery codes. Metadata only, so no Touch ID; bumps
+    /// `updated_at` so a backup merge keeps the newer state.
+    public func setUsedRecoveryCodes(_ used: [Int: Date], itemId: String) throws {
+        try dbQueue.write { db in
+            guard var item = try SecretItem.fetchOne(db, key: itemId) else { throw VaultError.itemNotFound(itemId) }
+            item.usedRecoveryCodes = used
+            item.updatedAt = Date()
+            try item.update(db)
+        }
+    }
 }

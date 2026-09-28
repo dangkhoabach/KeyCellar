@@ -41,6 +41,10 @@ enum SampleData {
                 secrets["env.RESEND_API_KEY"] = SecretBytes("re_sample_\(i)")
                 secrets["env.PORT"] = SecretBytes("300\(i % 10)")
             case .secureNote: secrets["body"] = SecretBytes("Recovery codes for sample \(i):\n1111-2222\n3333-4444")
+            case .recoveryCodes:
+                secrets["codes"] = SecretBytes((1...10).map { String(format: "%04d-%04d", i, $0) }.joined(separator: "\n"))
+                item.recoveryCodeCount = 10
+                item.usedRecoveryCodes = [2: Date(), 5: Date()]
             }
             if i % 3 == 0 { secrets["notes"] = SecretBytes("Created from the dashboard on day \(i).") }
             try? await vault.create(item, tags: [["prod", "email", "ci", "infra"][i % 4]], secrets: secrets)

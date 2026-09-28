@@ -41,6 +41,7 @@ struct ItemRowView: View {
         case .sshKey: "SSH Key"
         case .envSet: ".env Set"
         case .secureNote: "Secure Note"
+        case .recoveryCodes: "Recovery Codes"
         }
     }
 

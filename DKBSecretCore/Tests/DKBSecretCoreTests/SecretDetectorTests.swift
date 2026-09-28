@@ -26,6 +26,13 @@ import Testing
         #expect(SecretDetector.detect("a=1\nnot a line") == nil)
     }
 
+    @Test func aListOfCodesIsRecoveryCodes() {
+        let github = "abcde-12345\nfghij-67890\nklmno-13579\npqrst-24680"
+        #expect(SecretDetector.detect(github) == .init(kind: .recoveryCodes, service: nil))
+        #expect(SecretDetector.detect("12345678") == nil, "one code alone is not a list")
+        #expect(SecretDetector.detect("A=1111-2222\nB=3333-4444\nC=5555-6666\nD=7777-8888")?.kind == .envSet)
+    }
+
     @Test func unknownAndEmptyInputAreNil() {
         #expect(SecretDetector.detect("") == nil)
         #expect(SecretDetector.detect("   ") == nil)

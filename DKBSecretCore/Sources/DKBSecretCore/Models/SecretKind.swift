@@ -1,10 +1,11 @@
 import Foundation
 
-/// The five item types of v1 (plan §5.2). Each is its own kind because its
+/// The item types (plan §5.2; `recoveryCodes` added in 1.1.0, see
+/// docs/dkb-secret-recovery-codes-plan.md). Each is its own kind because its
 /// field template or behaviour differs — a token is just an `apiKey` with a
 /// different name, so it isn't one.
 public enum SecretKind: String, Codable, CaseIterable, Sendable {
-    case apiKey, login, sshKey, envSet, secureNote
+    case apiKey, login, sshKey, envSet, secureNote, recoveryCodes
 
     public var template: KindTemplate { KindTemplate.templates[self]! }
 }
@@ -72,6 +73,16 @@ public struct KindTemplate: Sendable {
         ]),
         .secureNote: KindTemplate(kind: .secureNote, fields: [
             FieldSpec("body", "Note", secret: true, primary: true, multiline: true),
+        ]),
+        // The whole set is one blob, one code per line (`RecoveryCodes`);
+        // which ones are used lives in metadata so ticking one needs no
+        // Touch ID (see `SecretItem.usedRecoveryCodes`).
+        .recoveryCodes: KindTemplate(kind: .recoveryCodes, fields: [
+            FieldSpec("service", "Service"),
+            FieldSpec("url", "URL"),
+            FieldSpec("username", "Account"),
+            FieldSpec("codes", "Codes", secret: true, primary: true, multiline: true),
+            FieldSpec("notes", "Notes", secret: true, multiline: true),
         ]),
     ]
 }

@@ -12,7 +12,7 @@ public struct ExpiryPolicy: Equatable, Sendable {
     }
 
     public static let defaults: [SecretKind: Int] = [
-        .apiKey: 90, .login: 180, .sshKey: 365, .envSet: 0, .secureNote: 0,
+        .apiKey: 90, .login: 180, .sshKey: 365, .envSet: 0, .secureNote: 0, .recoveryCodes: 0,
     ]
 
     public func ttl(for kind: SecretKind) -> Int {
