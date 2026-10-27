@@ -27,7 +27,7 @@ struct KeyCellarApp: App {
     // scheme applied, SwiftUI doesn't reliably clear the appearance it set
     // under the hood - switching Dark/Light -> System silently no-ops.
     // Driving `NSApp.appearance` directly (nil = follow the system) doesn't
-    // have that staleness problem. (Same fix as DKB Monitor.)
+    // have that staleness problem. (Same fix as SignalBar.)
     private func applyAppearance() {
         switch themePreference {
         case .system: NSApp.appearance = nil
@@ -79,12 +79,12 @@ struct KeyCellarApp: App {
                 Button("Seed Sample Data") { Task { await SampleData.seed(services: .shared) } }
             }
             #endif
-            // Settings is a sidebar tab in the main window (like DKB Monitor),
+            // Settings is a sidebar tab in the main window (like SignalBar),
             // so Cmd+, routes there instead of opening a separate window.
             CommandGroup(replacing: .appSettings) {
                 // Deferred one run-loop tick: mutating the sidebar selection
                 // from inside the menu action left the sidebar List's
-                // selection stuck in DKB Monitor (AppKit menu tracking mode).
+                // selection stuck in SignalBar (AppKit menu tracking mode).
                 Button("Settings…") {
                     DispatchQueue.main.async { WindowPresenter.showSettings() }
                 }

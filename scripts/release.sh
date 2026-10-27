@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds, signs and packages a KeyCellar release entirely on this Mac
-# (docs/release.md). Same shape as DKB Monitor's and DKB Downloader's
+# (docs/release.md). Same shape as SignalBar's and MediaCatch's
 # release.sh, minus Sparkle: the app has no network entitlement, so there
 # is no update feed to sign for.
 #
@@ -73,7 +73,7 @@ mkdir -p "$OUT_DIR"
 BUILD_DIR=$(mktemp -d)
 
 echo "==> Building (Release, signed with \"$IDENTITY\", universal arm64+x86_64)"
-# Same as DKB Monitor: without the generic destination xcodebuild builds for
+# Same as SignalBar: without the generic destination xcodebuild builds for
 # this Mac's own architecture only and Intel Macs would be left out.
 xcodebuild build \
   -project "$PROJECT" -scheme "$SCHEME" -configuration Release \

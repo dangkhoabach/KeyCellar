@@ -3,7 +3,7 @@ import AppKit
 /// Minimal AppKit glue for the behaviors SwiftUI Scenes don't expose: keep
 /// running after the last window closes, reopen on Dock click, and restore
 /// the Regular activation policy (Dock icon) when reopening. Same shape as
-/// DKB Monitor's `AppDelegate`, minus everything that app starts at launch.
+/// SignalBar's `AppDelegate`, minus everything that app starts at launch.
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {

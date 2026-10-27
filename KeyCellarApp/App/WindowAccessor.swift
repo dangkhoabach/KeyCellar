@@ -4,7 +4,7 @@ import SwiftUI
 /// Intercepts the red close button to hide the window instead of destroying
 /// it, and switches the Dock icon to Accessory, so the menu bar extra and
 /// the global hotkey keep working after the window is "closed". Ported from
-/// DKB Monitor.
+/// SignalBar.
 final class HideInsteadOfCloseDelegate: NSObject, NSWindowDelegate {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         // `sender.orderOut(nil)` alone leaves the NSWindow object alive but
@@ -25,7 +25,7 @@ final class HideInsteadOfCloseDelegate: NSObject, NSWindowDelegate {
 /// AppKit once via `NSViewRepresentable` to grab the window and configure
 /// all three. The title-bar treatment (`titleVisibility = .hidden` paired
 /// with `titlebarAppearsTransparent` + `.fullSizeContentView`) is the same
-/// as DKB Monitor / DKB Downloader.
+/// as SignalBar / MediaCatch.
 struct WindowAccessor: NSViewRepresentable {
     let delegate: HideInsteadOfCloseDelegate
 

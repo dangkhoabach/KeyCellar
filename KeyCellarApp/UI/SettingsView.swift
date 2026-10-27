@@ -39,8 +39,8 @@ struct SettingsSectionList: View {
     }
 }
 
-/// One `Form` per section, `.formStyle(.grouped)` like DKB Monitor's and
-/// DKB Downloader's Settings pages.
+/// One `Form` per section, `.formStyle(.grouped)` like SignalBar's and
+/// MediaCatch's Settings pages.
 struct SettingsView: View {
     let section: SettingsSection
     @Bindable var preferences: AppPreferences

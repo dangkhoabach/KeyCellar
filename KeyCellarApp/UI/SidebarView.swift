@@ -2,7 +2,7 @@ import KeyCellarCore
 import SwiftUI
 
 /// Smart lists, kinds, projects, tags, Trash, Settings. Styling ported from
-/// DKB Monitor's sidebar: unselected icons dimmed to `.secondary`, resizable
+/// SignalBar's sidebar: unselected icons dimmed to `.secondary`, resizable
 /// column, focus reclaimed after every selection change (without it the
 /// selection pill renders in the inactive gray even though the window is key).
 struct SidebarView: View {

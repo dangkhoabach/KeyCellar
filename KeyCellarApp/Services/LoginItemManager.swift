@@ -2,7 +2,7 @@ import Foundation
 import ServiceManagement
 
 /// Registers/unregisters this app bundle as a Login Item via `SMAppService`.
-/// Ported from DKB Monitor, same logic.
+/// Ported from SignalBar, same logic.
 @MainActor
 final class LoginItemManager {
     static let shared = LoginItemManager()
@@ -26,7 +26,7 @@ final class LoginItemManager {
     /// Enabled/RequiresApproval — `SMAppService`'s own docs warn that
     /// re-registering an already-registered service isn't guaranteed to be a
     /// safe no-op; doing so produced a duplicate entry in System Settings >
-    /// Login Items in DKB Monitor's Rust version. Returns whether the item
+    /// Login Items in SignalBar's Rust version. Returns whether the item
     /// now needs the user's approval.
     @discardableResult
     func enable() throws -> Bool {

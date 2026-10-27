@@ -22,7 +22,7 @@ the vault's owner can complete it (needs Touch ID or a system setting).
 | 11 | Lock while a form is open | **Decided** | The sheet is closed and its typed values discarded. Safer than keeping a draft in memory across a lock; the user re-enters. |
 | 12 | Touch ID cancel | **Verified** | Cancelling the enclave prompt leaves the value masked and shows no alert (`ItemActions.isUserCancellation` walks the CryptoTokenKit → LAError chain; `ItemActionsTests`). |
 | 13 | Crash reports | **Pass by construction** | No secret is ever formatted into a string that reaches a log or an error message; `SecretBytes` has no `description`. |
-| 14 | Dependency pin | **Pass** | Only GRDB.swift, pinned in `Package.resolved` to revision `b83108d` (7.11.1), same revision DKB Downloader ships. |
+| 14 | Dependency pin | **Pass** | Only GRDB.swift, pinned in `Package.resolved` to revision `b83108d` (7.11.1), same revision MediaCatch ships. |
 | 15 | Performance | **Automated** | `PerformanceTests.twoThousandItemsSearchUnder50ms`: list, search, filtered search and quick-search ranking over 2 000 items each under 50 ms (whole test incl. inserts: 0.16 s). |
 | 16 | Memory after hiding a reveal | **Owner (optional)** | `SecretBytes` zeroes its buffer in `deinit` (`SecretBytesTests.wipeZeroesTheBufferInPlace`); SwiftUI `Text` copies are outside the app's control ([threat model](threat-model.md) T8). An Instruments Allocations pass is a nice-to-have, not a gate. |
 
@@ -52,5 +52,5 @@ the vault's owner can complete it (needs Touch ID or a system setting).
   Interpolation specifiers checked to match between EN and VI by script.
 - Verified by screenshot: sidebar, Settings, status bar, pickers in Vietnamese.
 - Limit: the app menu bar (File/Edit/Item…) stays English — `.commands` sit outside the
-  `WindowGroup`'s `\.locale` override, the same limit DKB Monitor has.
+  `WindowGroup`'s `\.locale` override, the same limit SignalBar has.
 - Reveal/copy buttons carry `accessibilityLabel`s; the app uses system controls throughout.

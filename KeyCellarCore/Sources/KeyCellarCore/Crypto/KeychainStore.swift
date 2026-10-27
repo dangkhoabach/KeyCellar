@@ -76,7 +76,7 @@ public struct KeychainStore: KeychainStoring {
 
     /// Keychain access can put up system UI (an ACL confirmation); Apple's
     /// guidance is to make such calls from the main thread. Same routing as
-    /// DKB Monitor's `KeychainStore`.
+    /// SignalBar's `KeychainStore`.
     private static func onMainThread<T: Sendable>(_ body: @Sendable () throws -> T) throws -> T {
         if Thread.isMainThread {
             return try body()

@@ -9,7 +9,7 @@ enum SampleData {
     static func seed(services: AppServices) async {
         let vault = services.vault
         let projects = services.projects
-        let names = ["CaPheSuaDa", "Northwind Studio", "Contoso Group", "DKB Monitor", "MyWebsite"]
+        let names = ["CaPheSuaDa", "Northwind Studio", "Contoso Group", "SignalBar", "MyWebsite"]
         let projectIds = names.compactMap { try? projects.findOrCreate(name: $0).id }
         let services = ["Resend", "GitHub", "AWS", "Stripe", "Slack", "OpenAI", "Cloudflare", "Vercel"]
         let envs: [DeploymentEnvironment?] = [.prod, .staging, .dev, nil]

@@ -2,7 +2,7 @@ import AppKit
 
 /// Brings the main window forward and restores the Dock icon — the one
 /// sequence shared by Dock-icon reopen (`AppDelegate`), the menu bar extra's
-/// "Open" item and Cmd+, (ported from DKB Monitor).
+/// "Open" item and Cmd+, (ported from SignalBar).
 @MainActor
 enum WindowPresenter {
     static func showMainWindow() {

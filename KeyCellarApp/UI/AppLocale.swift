@@ -1,7 +1,7 @@
 import Foundation
 
 /// In-app language override, independent of System Settings > Language &
-/// Region (ported from DKB Monitor). Views use `LocalizedStringKey`
+/// Region (ported from SignalBar). Views use `LocalizedStringKey`
 /// everywhere, so overriding `\.locale` on the root views in
 /// `KeyCellarApp.swift` is enough to make the switch take effect.
 enum AppLocale: String, CaseIterable, Identifiable {

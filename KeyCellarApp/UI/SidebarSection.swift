@@ -4,7 +4,7 @@ import SwiftUI
 /// Static sidebar rows. Kinds, projects and tags are data-driven and join
 /// them through `SidebarSelection`; Settings is a tab here (not a
 /// `Settings {}` scene) so Cmd+, and the menu bar extra land in one place,
-/// as in DKB Monitor.
+/// as in SignalBar.
 enum SidebarSection: String, CaseIterable, Identifiable, Hashable {
     case all, favorites, recent, expiring, trash, settings
 
