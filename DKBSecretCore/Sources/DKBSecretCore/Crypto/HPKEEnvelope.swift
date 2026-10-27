@@ -13,12 +13,12 @@ public struct SealedSecret: Equatable, Sendable {
     }
 }
 
-/// The only place HPKE is called (plan §3.2 D4). Sealing needs just the
+/// The only place HPKE is called. Sealing needs just the
 /// recipient public key; opening is generic over the private key so the
 /// Secure Enclave key and a software P-256 key (tests) run the same code.
 ///
 /// `info` binds a ciphertext to its blob id: a blob copied onto another
-/// row fails to open instead of decrypting under the wrong name (plan §2 T9).
+/// row fails to open instead of decrypting under the wrong name (threat model T9).
 enum HPKEEnvelope {
     static let ciphersuite = HPKE.Ciphersuite.P256_SHA256_AES_GCM_256
 

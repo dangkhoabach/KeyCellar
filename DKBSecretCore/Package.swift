@@ -8,7 +8,7 @@ let package = Package(
         .library(name: "DKBSecretCore", targets: ["DKBSecretCore"])
     ],
     dependencies: [
-        // The only third-party dependency this app has (plan §3.2 D9).
+        // The only third-party dependency this app has.
         // Package.resolved is committed so the reviewed revision is the one
         // every build uses.
         .package(url: "https://github.com/groue/GRDB.swift.git", from: "7.0.0")

@@ -20,8 +20,8 @@ update feed — `scripts/release.sh` is the whole process. The DMG it produces i
 
 `release.sh` runs both test suites, asks for the version (written into
 `DKBSecretApp/Info.plist`, both `CFBundleShortVersionString` and `CFBundleVersion`), builds Release, then checks the signature, Hardened Runtime
-that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship —
-plan §3.2 D10) and that the binary contains both arm64 and x86_64. Output:
+that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship)
+and that the binary contains both arm64 and x86_64. Output:
 `release-output/<version>/DKB-Secret-<version>.dmg` and the `.app`.
 
 The version must be `MAJOR.MINOR.PATCH` and not lower than the current one. If anything fails
@@ -33,7 +33,7 @@ version behind that was never released.
 Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change them):
 
 - `CODE_SIGN_STYLE = Manual`, no team: the app is built and installed on this Mac only, with
-  no Apple Developer Program (plan §3.2 D1). No provisioning profile is involved, so nothing
+  no Apple Developer Program. No provisioning profile is involved, so nothing
   can expire. The identity itself comes from `Local.xcconfig`.
 - `ENABLE_HARDENED_RUNTIME` is `YES` for Release only. Xcode 16+ Debug builds link the app
   through a generated `<App>.debug.dylib`, and Hardened Runtime's library validation rejects
@@ -41,9 +41,9 @@ Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change th
   the self-signed certificate would abort at launch.
 - `CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO` for Release: Xcode otherwise injects
   `get-task-allow` (debugger attach) into every Manual-signed build, and a vault's Release
-  build must not carry it (plan Phase 9 audit).
+  build must not carry it (security audit #5).
 - `DKBSecretApp.entitlements` is App Sandbox + user-selected files and deliberately nothing
-  else — no `com.apple.security.network.client` (plan §2 T6, §3.2 D10). Adding network
+  else — no `com.apple.security.network.client` (threat model T6). Adding network
   access is a threat-model change, not a one-line edit; `release.sh` fails if any other key
   ships.
 - `SWIFT_EMIT_LOC_STRINGS = YES`: the compiler must emit the exact runtime keys (`%lld` vs
@@ -52,7 +52,7 @@ Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change th
 ## First launch of a new build
 
 macOS pins the login Keychain item holding the enclave key blob to the cdhash of the build
-that created it (`partition_id`, see plan D1). A new build therefore triggers one dialog:
+that created it (`partition_id`). A new build therefore triggers one dialog:
 
 > DKB Secret wants to access key "com.dangkhoabach.dkb-secret" in your keychain.
 
@@ -63,7 +63,7 @@ relaunch and allow).
 Debug builds never see this: they keep a separate vault (`dkb-secret-debug.db` + a file-backed
 key blob) in the sandbox container.
 
-## Before trusting it with real secrets (plan Phase 10)
+## Before trusting it with real secrets
 
 1. Install the Release build, unlock with Touch ID.
 2. Settings › Backup › **Export Now…** with a passphrase you have written down **outside this

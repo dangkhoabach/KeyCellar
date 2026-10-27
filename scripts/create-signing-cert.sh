@@ -2,7 +2,7 @@
 # Creates the self-signed code-signing certificate every local build of DKB
 # Secret is signed with, and points Local.xcconfig at it.
 #
-# Why (plan §3.2 D1): there is no Apple Developer Program for this app, so the
+# Why: there is no Apple Developer Program for this app, so the
 # alternative is ad-hoc signing, whose identity is the code hash and therefore
 # changes on every build. A self-signed certificate gives each build the same
 # designated requirement, so anything keyed on the app's identity — the login

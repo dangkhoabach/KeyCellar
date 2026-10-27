@@ -4,7 +4,7 @@ import Foundation
 import Observation
 import UniformTypeIdentifiers
 
-/// Export, import and scheduled backups of the whole vault (plan §8 Phase 6).
+/// Export, import and scheduled backups of the whole vault.
 ///
 /// Scheduled backups run only right after a successful unlock: that is the
 /// one moment the enclave's authentication is fresh, so the export needs no

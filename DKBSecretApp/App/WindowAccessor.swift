@@ -37,7 +37,7 @@ struct WindowAccessor: NSViewRepresentable {
             window.titlebarAppearsTransparent = true
             window.titleVisibility = .hidden
             window.styleMask.insert(.fullSizeContentView)
-            // Plan §2 T4: the window renders black in screenshots, screen
+            // Threat model T4: the window renders black in screenshots, screen
             // recordings and screen sharing. Every window and panel of this
             // app must set this — a revealed secret is exactly what a
             // screen-share accident captures.

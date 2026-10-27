@@ -42,7 +42,7 @@ enum SidebarSelection: Hashable {
     case project(String)
     case tag(String)
 
-    /// Days before expiry that count as "expiring soon" (plan §6).
+    /// Days before expiry that count as "expiring soon".
     static let expiringWindowDays = 14
 
     var scope: ItemQuery.Scope {

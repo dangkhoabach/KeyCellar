@@ -6,7 +6,7 @@ public enum VaultError: Error, Equatable {
     case secretNotFound(itemId: String, field: String, slot: Int)
 }
 
-/// The one door to secret values (plan §5.4). Metadata reads go through
+/// The one door to secret values. Metadata reads go through
 /// `ItemRepository` directly; every write that involves a secret, and every
 /// read of one, goes through here so sealing, history and `last_used_at`
 /// have a single implementation.

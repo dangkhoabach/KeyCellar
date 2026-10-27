@@ -2,7 +2,7 @@ import DKBSecretCore
 import SwiftUI
 
 /// Sidebar + item list + detail. Settings is a sidebar tab that swaps the
-/// list/detail pair for `SettingsView` (Phase 5), as in DKB Monitor.
+/// list/detail pair for `SettingsView`, as in DKB Monitor.
 struct ContentView: View {
     @Bindable private var navigation = AppNavigationState.shared
     @State private var sidebar: SidebarViewModel

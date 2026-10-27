@@ -120,7 +120,7 @@ extension Tag: FetchableRecord, PersistableRecord {
 }
 
 /// One HPKE-sealed value. `slot` 0 is the current value; 1…`historyLimit`
-/// are previous values, 1 being the most recent (plan §5.3).
+/// are previous values, 1 being the most recent.
 public struct SecretBlob: Codable, Identifiable, Equatable, Sendable {
     public static let historyLimit = 5
 

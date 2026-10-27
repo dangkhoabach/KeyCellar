@@ -2,7 +2,7 @@ import AppKit
 import DKBSecretCore
 import SwiftUI
 
-/// The floating quick-search window (plan §6, §7.2 ⌥⌘S): a non-activating
+/// The floating quick-search window (⌥⌘S by default): a non-activating
 /// panel, so it takes keystrokes without switching away from the app the
 /// user is in, and closes as soon as it loses key status or on Escape.
 /// Capture-proof like every other window of the app.

@@ -17,11 +17,11 @@ public protocol KeychainStoring: Sendable {
 
 /// Login-Keychain (file-based) item, deliberately not the data-protection
 /// keychain: that one needs a Team-ID entitlement this unsigned-by-Apple app
-/// can't have (`errSecMissingEntitlement`, confirmed in Phase 0). The login
+/// can't have (`errSecMissingEntitlement`, confirmed by testing). The login
 /// Keychain still gives the blob an ACL bound to this app's code identity
 /// and encryption under the login password. The blob itself is useless
 /// without this Mac's Secure Enclave and a Touch ID, so this is the second
-/// layer, not the only one (plan §2 T2).
+/// layer, not the only one (threat model T2).
 public struct KeychainStore: KeychainStoring {
     private static let service = "com.dangkhoabach.dkb-secret"
     private static let account = "vault-master-key"

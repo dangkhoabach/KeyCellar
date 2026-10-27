@@ -9,7 +9,7 @@ struct HotKey: Equatable, Sendable {
     var keyCode: UInt32
     var carbonModifiers: UInt32
 
-    /// ⌥⌘S — the plan's default (§7.2).
+    /// ⌥⌘S, the default shortcut.
     static let `default` = HotKey(keyCode: UInt32(kVK_ANSI_S), carbonModifiers: UInt32(optionKey | cmdKey))
 
     init(keyCode: UInt32, carbonModifiers: UInt32) {
@@ -81,7 +81,7 @@ struct HotKey: Equatable, Sendable {
 }
 
 /// Registers the global shortcut with Carbon's `RegisterEventHotKey` — no
-/// Accessibility permission, works inside the sandbox (Phase 0). One
+/// Accessibility permission, works inside the sandbox (tested). One
 /// handler for the app; the registered combination can be swapped at
 /// runtime from Settings.
 @MainActor

@@ -5,8 +5,8 @@ import LocalAuthentication
 /// The production master key: a P-256 key generated inside the Secure
 /// Enclave with a `userPresence` access control, so every `open` is gated by
 /// Touch ID (or the login password) by the enclave itself — not by any
-/// check this app could forget to make (plan §3.2 D4/D5, verified in
-/// Phase 0). The key never leaves the chip; `keyBlob` is the opaque handle
+/// check this app could forget to make (verified on real
+/// hardware). The key never leaves the chip; `keyBlob` is the opaque handle
 /// the app keeps in the login Keychain.
 ///
 /// An actor so the cached `LAContext` (which is what turns "one Touch ID

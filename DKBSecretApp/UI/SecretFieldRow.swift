@@ -2,7 +2,7 @@ import DKBSecretCore
 import SwiftUI
 
 /// A masked value with reveal and copy buttons. Revealed text is monospaced
-/// inside a yellow border with a countdown, then hides itself (plan §7.3).
+/// inside a yellow border with a countdown, then hides itself.
 struct SecretFieldRow: View {
     /// A `Text` so template labels are localized while `.env` KEY names stay verbatim.
     let label: Text

@@ -99,7 +99,7 @@ for arch in arm64 x86_64; do
     exit 1
   }
 done
-# The two entitlements the plan allows, and nothing else (Phase 9 audit #5).
+# The two entitlements the app needs, and nothing else (security audit #5).
 ENTITLEMENTS=$(codesign -d --entitlements :- "$APP_PATH" 2>/dev/null | grep -oE '<key>[^<]+</key>' | sort | tr -d '\n')
 EXPECTED='<key>com.apple.security.app-sandbox</key><key>com.apple.security.files.user-selected.read-write</key>'
 [ "$ENTITLEMENTS" = "$EXPECTED" ] || { echo "Error: unexpected entitlements: $ENTITLEMENTS" >&2; exit 1; }

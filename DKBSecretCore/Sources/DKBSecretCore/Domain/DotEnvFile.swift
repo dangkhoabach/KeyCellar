@@ -1,6 +1,6 @@
 import Foundation
 
-/// The `.env` dialect the form editor, drag-and-drop import and the Phase 6
+/// The `.env` dialect the form editor, drag-and-drop import and the `.env`
 /// export all speak: `KEY=VALUE` lines, `#` comments, an optional `export `,
 /// single- or double-quoted values (double quotes may span lines), and
 /// everything else passed through as-is. Order is preserved.

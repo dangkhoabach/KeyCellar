@@ -2,7 +2,7 @@ import AppKit
 import DKBSecretCore
 import Observation
 
-/// Copies a secret the way a password manager should (plan §2 T5): marked
+/// Copies a secret the way a password manager should (threat model T5): marked
 /// with `org.nspasteboard.ConcealedType` so clipboard managers skip it, and
 /// cleared again after `clearAfterSeconds` — unless the user has copied
 /// something else since, which is theirs to keep.

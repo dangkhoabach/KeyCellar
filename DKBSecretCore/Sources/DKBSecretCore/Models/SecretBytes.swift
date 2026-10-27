@@ -2,7 +2,7 @@ import Foundation
 
 /// A secret value in memory. Holds its own buffer and zeroes it when it goes
 /// away, so a revealed key doesn't linger in freed heap memory for longer
-/// than it has to. Best-effort only (plan §2 T8): anything that copies the
+/// than it has to. Best-effort only (threat model T8): anything that copies the
 /// bytes into a `String` or a SwiftUI `Text` is outside this class's reach,
 /// so callers keep the `String` form as short-lived as possible.
 ///

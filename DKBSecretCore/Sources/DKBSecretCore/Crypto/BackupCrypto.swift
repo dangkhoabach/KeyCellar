@@ -9,7 +9,7 @@ public enum BackupError: Error, Equatable {
     case passphraseTooShort
 }
 
-/// The `.dkbsecret` container (plan §3.2 D7). Layout:
+/// The `.dkbsecret` container. Layout:
 ///
 ///     [4 bytes big-endian header length][header JSON][AES-GCM combined box]
 ///

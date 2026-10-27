@@ -1,6 +1,6 @@
 import Foundation
 
-/// When the vault locks on its own (plan §6 "Lock"). Pure decision logic;
+/// When the vault locks on its own. Pure decision logic;
 /// the app's `IdleMonitor` feeds it events. Defaults are the safe side of
 /// every switch.
 public struct AutoLockPolicy: Equatable, Sendable {

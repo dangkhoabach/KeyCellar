@@ -1,6 +1,6 @@
 import Foundation
 
-/// Default lifetime per kind (plan §8 Phase 8), applied when an item is
+/// Default lifetime per kind, applied when an item is
 /// created or rotated. Stored per kind in `settings`; 0 = no expiry.
 public struct ExpiryPolicy: Equatable, Sendable {
     public static let choices = [0, 30, 90, 180, 365]

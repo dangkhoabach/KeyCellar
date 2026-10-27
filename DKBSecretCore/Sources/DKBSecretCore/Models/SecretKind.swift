@@ -1,7 +1,6 @@
 import Foundation
 
-/// The item types (plan §5.2; `recoveryCodes` added in 1.0.1, see
-/// docs/dkb-secret-recovery-codes-plan.md). Each is its own kind because its
+/// The item types (`recoveryCodes` was added in 1.0.1). Each is its own kind because its
 /// field template or behaviour differs — a token is just an `apiKey` with a
 /// different name, so it isn't one.
 public enum SecretKind: String, Codable, CaseIterable, Sendable {
@@ -12,7 +11,7 @@ public enum SecretKind: String, Codable, CaseIterable, Sendable {
 
 /// One field of an item. `isSecret` decides where the value lives: metadata
 /// goes into the `items` row as searchable plaintext, secrets go into
-/// `secret_blobs` as HPKE ciphertext (plan §3.2 D4).
+/// `secret_blobs` as HPKE ciphertext.
 public struct FieldSpec: Equatable, Sendable {
     public let key: String
     public let label: String

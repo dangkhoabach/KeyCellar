@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import DKBSecretCore
 
-/// Plan §8 Phase 9.3: 2 000 items must stay instant to list and search.
+/// 2 000 items must stay instant to list and search.
 @Suite struct PerformanceTests {
     @Test func twoThousandItemsSearchUnder50ms() async throws {
         let t = try TestVault()

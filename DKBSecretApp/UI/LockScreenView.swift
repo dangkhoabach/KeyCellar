@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// Replaces the whole window content while the vault is locked (plan §7.3).
+/// Replaces the whole window content while the vault is locked.
 /// Touch ID is prompted automatically whenever the user comes to the app and
 /// finds it locked (launch, switching back from another app, unlocking the
 /// Mac) — the way Apple's Passwords app behaves. It is never prompted behind

@@ -59,7 +59,7 @@ struct DKBSecretApp: App {
             }
             // ⌘C on a selected item goes through the list's `onCopyCommand`
             // (so text fields keep their own copy); these are the secondary
-            // copies from plan §7.2.
+            // copies.
             CommandMenu("Item") {
                 Button("Copy Username") { AppServices.shared.actions.copyUsernameOfSelection() }
                     .keyboardShortcut("c", modifiers: [.command, .shift])

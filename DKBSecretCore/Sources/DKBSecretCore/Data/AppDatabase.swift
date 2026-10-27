@@ -3,7 +3,7 @@ import GRDB
 
 /// Opens (or creates) the app's SQLite database and keeps it migrated.
 /// Holds metadata and HPKE ciphertext only — never a plaintext secret and
-/// never the Secure Enclave key blob (plan §5.3 invariant, pinned by
+/// never the Secure Enclave key blob (an invariant pinned by
 /// `SecretVaultTests.noPlaintextSecretEverLandsInTheDatabase`).
 public struct AppDatabase: Sendable {
     public let dbQueue: DatabaseQueue

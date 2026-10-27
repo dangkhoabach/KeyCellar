@@ -4,7 +4,7 @@ import DKBSecretCore
 /// Turns system events into `AutoLockPolicy.Event`s and calls `onLock` when
 /// the policy says so. Idle time is polled (there is no push API for "the
 /// user stopped typing"); sleep, screen lock and app hide are notifications.
-/// All of these were confirmed to work inside the sandbox in Phase 0.
+/// All of these were confirmed to work inside the sandbox.
 @MainActor
 final class IdleMonitor {
     private let policy: () -> AutoLockPolicy

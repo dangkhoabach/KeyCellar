@@ -208,7 +208,7 @@ struct ItemDetailView: View {
 /// The codes of a `recoveryCodes` item, one row each: masked until "Reveal
 /// All" (one Touch ID, hidden again after the same countdown as any reveal),
 /// a copy button that marks the code used, and a checkbox for the used
-/// state, which is metadata and needs no Touch ID (plan §2.4).
+/// state, which is metadata and needs no Touch ID.
 struct RecoveryCodesSection: View {
     /// At or below this many unused codes the row and this section warn.
     static let lowCount = 2

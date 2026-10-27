@@ -2,7 +2,7 @@ import AppKit
 import DKBSecretCore
 import UserNotifications
 
-/// Posts "expires in N days" reminders (plan §8 Phase 8): checks on launch,
+/// Posts "expires in N days" reminders: checks on launch,
 /// every hour and after wake; each (item, expiry date, milestone) fires
 /// once, tracked through marker keys in `settings`. Clicking a reminder
 /// opens the item. Same `UNUserNotificationCenter` pattern as DKB Monitor.

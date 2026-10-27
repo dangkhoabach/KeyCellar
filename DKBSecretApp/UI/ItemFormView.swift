@@ -2,7 +2,7 @@ import DKBSecretCore
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// The create/edit sheet (plan §8 Phase 4.4). Creating starts on a kind
+/// The create/edit sheet. Creating starts on a kind
 /// picker unless the kind is already known (clipboard detection, a dropped
 /// .env file); editing goes straight to the fields.
 struct ItemFormView: View {

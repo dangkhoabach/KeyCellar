@@ -5,7 +5,7 @@ import Foundation
 /// them in two columns between a heading and a footer, GitHub lists sixteen
 /// `xxxxx-xxxxx`, Discord `abcd-efgh`, Microsoft one 25-character code. One
 /// parser serves pasting, file import, drag and drop and the clipboard
-/// detector (docs/dkb-secret-recovery-codes-plan.md §2.1).
+/// detector.
 public enum RecoveryCodes {
     public struct Code: Equatable, Sendable {
         public var value: String
