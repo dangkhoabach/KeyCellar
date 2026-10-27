@@ -1,13 +1,13 @@
 // Renders the app icon set from code: a dark rounded square with a key
 // glyph, so the project needs no design tool to produce
-// DKBSecretApp/Resources/Assets.xcassets/AppIcon.appiconset.
+// KeyCellarApp/Resources/Assets.xcassets/AppIcon.appiconset.
 //
 // Run once (or whenever the look changes):
 //   swift scripts/generate-app-icon.swift
 import AppKit
 
 let root = URL(fileURLWithPath: CommandLine.arguments.first!).deletingLastPathComponent().deletingLastPathComponent()
-let iconset = root.appendingPathComponent("DKBSecretApp/Resources/Assets.xcassets/AppIcon.appiconset")
+let iconset = root.appendingPathComponent("KeyCellarApp/Resources/Assets.xcassets/AppIcon.appiconset")
 try FileManager.default.createDirectory(at: iconset, withIntermediateDirectories: true)
 
 func render(size: CGFloat) -> NSImage {

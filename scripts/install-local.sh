@@ -4,12 +4,12 @@
 #   ./scripts/install-local.sh 1.0.0
 #
 # The first launch of each new build asks for the login keychain password
-# once ("DKB Secret wants to access key…"): choose Always Allow. See
+# once ("KeyCellar wants to access key…"): choose Always Allow. See
 # docs/release.md for why.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-APP_NAME="DKB Secret"
+APP_NAME="KeyCellar"
 VERSION="${1:-$(ls release-output 2>/dev/null | sort -V | tail -1)}"
 [ -n "$VERSION" ] || { echo "Error: no release in release-output/. Run scripts/release.sh first." >&2; exit 1; }
 SRC="release-output/$VERSION/$APP_NAME.app"

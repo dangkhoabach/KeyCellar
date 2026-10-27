@@ -1,4 +1,4 @@
-# DKB Secret — Threat model
+# KeyCellar — Threat model
 
 What the vault defends against, and how. Code comments refer to these entries as
 "threat model T1" to "T9". The [security audit](security-audit-v1.md) records how each

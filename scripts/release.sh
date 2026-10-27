@@ -1,32 +1,32 @@
 #!/usr/bin/env bash
-# Builds, signs and packages a DKB Secret release entirely on this Mac
+# Builds, signs and packages a KeyCellar release entirely on this Mac
 # (docs/release.md). Same shape as DKB Monitor's and DKB Downloader's
 # release.sh, minus Sparkle: the app has no network entitlement, so there
 # is no update feed to sign for.
 #
 # Signing uses the self-signed "DKB Secret Local Signing" certificate named
 # in Local.xcconfig (scripts/create-signing-cert.sh) — it keeps the vault's
-# Keychain item out of the `unsigned:` partition (plan D1). No Apple
+# Keychain item out of the `unsigned:` partition. No Apple
 # Developer Program, no notarization: first launch on another Mac needs
 # System Settings › Privacy & Security › Open Anyway.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-SCHEME="DKBSecretApp"
-TEST_SCHEME="DKBSecretAppTests"
-PROJECT="DKBSecretNative.xcodeproj"
-APP_NAME="DKB Secret"
-INFO_PLIST="DKBSecretApp/Info.plist"
+SCHEME="KeyCellarApp"
+TEST_SCHEME="KeyCellarAppTests"
+PROJECT="KeyCellar.xcodeproj"
+APP_NAME="KeyCellar"
+INFO_PLIST="KeyCellarApp/Info.plist"
 
 [ -f Local.xcconfig ] || { echo "Error: Local.xcconfig is missing. Run scripts/create-signing-cert.sh first." >&2; exit 1; }
 IDENTITY=$(sed -nE 's/^CODE_SIGN_IDENTITY *= *(.*)$/\1/p' Local.xcconfig)
 [ "$IDENTITY" != "-" ] || { echo "Error: Local.xcconfig is ad-hoc. A release must use the local certificate (scripts/create-signing-cert.sh)." >&2; exit 1; }
 command -v create-dmg >/dev/null || { echo "Error: create-dmg not found. Run: brew install create-dmg" >&2; exit 1; }
 
-echo "==> Testing DKBSecretCore"
-(cd DKBSecretCore && swift test)
+echo "==> Testing KeyCellarCore"
+(cd KeyCellarCore && swift test)
 
-echo "==> Testing DKBSecretApp"
+echo "==> Testing KeyCellarApp"
 xcodebuild test -project "$PROJECT" -scheme "$TEST_SCHEME" -destination "platform=macOS" -quiet
 
 # Info.plist is the source of truth for the version. Both fields get the
@@ -106,7 +106,7 @@ EXPECTED='<key>com.apple.security.app-sandbox</key><key>com.apple.security.files
 echo "    entitlements OK, hardened runtime OK, architectures: $ARCHS_BUILT"
 
 echo "==> Creating DMG"
-DMG_PATH="$OUT_DIR/DKB-Secret-$VERSION.dmg"
+DMG_PATH="$OUT_DIR/KeyCellar-$VERSION.dmg"
 rm -f "$DMG_PATH"
 create-dmg \
   --volname "$APP_NAME" \

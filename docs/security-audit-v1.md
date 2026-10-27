@@ -1,4 +1,4 @@
-# DKB Secret — Security audit v1.0.0
+# KeyCellar — Security audit v1.0.0
 
 Date: 2026-09-17 · Build audited: Release, `CODE_SIGN_IDENTITY = DKB Secret Local Signing`,
 Xcode 27.0 beta, macOS 26 (Darwin 27.0.0), Apple M3 Pro.
@@ -9,7 +9,7 @@ the vault's owner can complete it (needs Touch ID or a system setting).
 
 | # | Check | Result | How |
 |---|---|---|---|
-| 1 | No `print` / `NSLog` / `os_log` / `Logger` anywhere in App or Core sources | **Pass** | `grep -rnE 'print\(|NSLog\(|os_log|Logger\('` over `DKBSecretApp` and `DKBSecretCore/Sources` → 0 hits |
+| 1 | No `print` / `NSLog` / `os_log` / `Logger` anywhere in App or Core sources | **Pass** | `grep -rnE 'print\(|NSLog\(|os_log|Logger\('` over `KeyCellarApp` and `KeyCellarCore/Sources` → 0 hits |
 | 2 | No `String` holding a secret in an `@Observable` model outside a reveal | **Pass** | `ItemDetailViewModel.revealed` is `[RevealKey: SecretBytes]`, dropped on hide / lock. `ItemFormModel.values` holds `String`s only while its sheet is open (TextField requirement); the sheet is closed on lock and the model released. `BackupManager` keeps the session passphrase as `SecretBytes`, cleared on lock. |
 | 3 | No plaintext secret in SQLite | **Automated** | `SecretVaultTests.noPlaintextSecretEverLandsInTheDatabase` dumps every text/blob cell after create + rotate + reveal and asserts the canary is absent. `AppDatabase` has no column for plaintext by construction. |
 | 4 | Enclave key blob never in SQLite | **Pass** | Only `KeychainStore` (Release) / `DebugKeyBlobStore` (Debug) touch the blob; `AppDatabase` schema has no such column. |

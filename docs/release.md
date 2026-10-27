@@ -1,4 +1,4 @@
-# Releasing DKB Secret
+# Releasing KeyCellar
 
 Everything runs on this Mac. There is no Apple Developer Program, no notarization and no
 update feed — `scripts/release.sh` is the whole process. The DMG it produces is universal
@@ -15,14 +15,14 @@ update feed — `scripts/release.sh` is the whole process. The DMG it produces i
 
 ```bash
 ./scripts/release.sh          # tests → version prompt → Release build → verify → DMG
-./scripts/install-local.sh    # copies release-output/<version>/DKB Secret.app to /Applications
+./scripts/install-local.sh    # copies release-output/<version>/KeyCellar.app to /Applications
 ```
 
 `release.sh` runs both test suites, asks for the version (written into
-`DKBSecretApp/Info.plist`, both `CFBundleShortVersionString` and `CFBundleVersion`), builds Release, then checks the signature, Hardened Runtime
+`KeyCellarApp/Info.plist`, both `CFBundleShortVersionString` and `CFBundleVersion`), builds Release, then checks the signature, Hardened Runtime
 that the entitlements are exactly App Sandbox + user-selected files (nothing else may ship)
 and that the binary contains both arm64 and x86_64. Output:
-`release-output/<version>/DKB-Secret-<version>.dmg` and the `.app`.
+`release-output/<version>/KeyCellar-<version>.dmg` and the `.app`.
 
 The version must be `MAJOR.MINOR.PATCH` and not lower than the current one. If anything fails
 after the version was written, `Info.plist` is restored, so a failed run never leaves a
@@ -30,7 +30,7 @@ version behind that was never released.
 
 ## Build settings worth knowing
 
-Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change them):
+Set on the targets in `KeyCellar.xcodeproj` (open the project to change them):
 
 - `CODE_SIGN_STYLE = Manual`, no team: the app is built and installed on this Mac only, with
   no Apple Developer Program. No provisioning profile is involved, so nothing
@@ -42,7 +42,7 @@ Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change th
 - `CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO` for Release: Xcode otherwise injects
   `get-task-allow` (debugger attach) into every Manual-signed build, and a vault's Release
   build must not carry it (security audit #5).
-- `DKBSecretApp.entitlements` is App Sandbox + user-selected files and deliberately nothing
+- `KeyCellarApp.entitlements` is App Sandbox + user-selected files and deliberately nothing
   else — no `com.apple.security.network.client` (threat model T6). Adding network
   access is a threat-model change, not a one-line edit; `release.sh` fails if any other key
   ships.
@@ -54,7 +54,7 @@ Set on the targets in `DKBSecretNative.xcodeproj` (open the project to change th
 macOS pins the login Keychain item holding the enclave key blob to the cdhash of the build
 that created it (`partition_id`). A new build therefore triggers one dialog:
 
-> DKB Secret wants to access key "com.dangkhoabach.dkb-secret" in your keychain.
+> KeyCellar wants to access key "com.dangkhoabach.dkb-secret" in your keychain.
 
 Enter the login password and choose **Always Allow**. This happens once per installed build,
 never per launch. Deny would leave the vault unable to open (the app shows an alert and quits;
@@ -73,7 +73,7 @@ key blob) in the sandbox container.
    `--reset-debug-vault`, Import… the file (Replace), check the items and their history.
 4. Choose a backup folder outside the Mac (external disk or iCloud Drive — the file is
    encrypted) and set the schedule to Weekly.
-5. Turn on notifications for DKB Secret in System Settings › Notifications so expiry reminders
+5. Turn on notifications for KeyCellar in System Settings › Notifications so expiry reminders
    can be shown.
 
 ## Distributing

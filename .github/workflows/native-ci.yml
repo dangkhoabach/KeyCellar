@@ -7,17 +7,17 @@ on:
   push:
     branches: [main]
     paths:
-      - "DKBSecretApp/**"
-      - "DKBSecretAppTests/**"
-      - "DKBSecretCore/**"
-      - "DKBSecretNative.xcodeproj/**"
+      - "KeyCellarApp/**"
+      - "KeyCellarAppTests/**"
+      - "KeyCellarCore/**"
+      - "KeyCellar.xcodeproj/**"
       - ".github/workflows/native-ci.yml"
   pull_request:
     paths:
-      - "DKBSecretApp/**"
-      - "DKBSecretAppTests/**"
-      - "DKBSecretCore/**"
-      - "DKBSecretNative.xcodeproj/**"
+      - "KeyCellarApp/**"
+      - "KeyCellarAppTests/**"
+      - "KeyCellarCore/**"
+      - "KeyCellar.xcodeproj/**"
       - ".github/workflows/native-ci.yml"
 
 jobs:
@@ -33,8 +33,8 @@ jobs:
           sudo xcode-select -s "$LATEST"
           xcodebuild -version
 
-      - name: Test DKBSecretCore (headless package)
-        working-directory: DKBSecretCore
+      - name: Test KeyCellarCore (headless package)
+        working-directory: KeyCellarCore
         run: swift test
 
       # Local.xcconfig is gitignored (per-machine signing identity); the
@@ -42,7 +42,7 @@ jobs:
       - name: Create Local.xcconfig
         run: cp Local.xcconfig.example Local.xcconfig
 
-      - name: Build DKBSecretApp
+      - name: Build KeyCellarApp
         run: |
-          xcodebuild -project DKBSecretNative.xcodeproj -scheme DKBSecretApp -configuration Debug build \
+          xcodebuild -project KeyCellar.xcodeproj -scheme KeyCellarApp -configuration Debug build \
             CODE_SIGN_IDENTITY="-" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
