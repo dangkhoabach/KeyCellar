@@ -73,7 +73,7 @@ struct SettingsView: View {
     @ViewBuilder
     private var general: some View {
         Section("Startup") {
-            Toggle("Launch at login", isOn: Binding(get: { loginItemEnabled }, set: setLoginItem))
+            Toggle("Launch at login", isOn: Binding(get: { loginItemEnabled }, set: { setLoginItem($0) }))
             if loginItemNeedsApproval {
                 Text("Approve KeyCellar under System Settings › General › Login Items to finish enabling this.")
                     .font(.callout).foregroundStyle(.secondary)
