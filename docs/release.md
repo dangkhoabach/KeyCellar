@@ -98,6 +98,24 @@ There is no in-app update check (no network entitlement). Announce new versions 
 DMG is published; users replace the app in `/Applications`. Their vault lives in the app's
 container and the enclave key in the login Keychain, so replacing the app keeps the data.
 
+## Tag and GitHub release
+
+Once the DMG is on the download page, tag the commit that set the version (never a later
+commit) and publish a GitHub release from that tag:
+
+```bash
+git tag v<version> <commit>
+git push origin v<version>
+```
+
+On github.com/dangkhoabach/KeyCellar/releases/new pick that tag, title it
+`KeyCellar <version>` and write the English release notes, then an Install paragraph
+(**Open Anyway** on first launch and replacing the app in `/Applications` for an installed
+copy) and the DMG's SHA-256. Attach the same `KeyCellar-<version>.dmg` that went to the
+download page, not a rebuild, and check that the SHA-256 GitHub shows for the asset matches.
+Older versions get no GitHub release. The GitHub release is for people who find the app
+through the repository.
+
 ## Rotating the signing certificate
 
 If "DKB Secret Local Signing" is ever deleted from the Keychain, run
