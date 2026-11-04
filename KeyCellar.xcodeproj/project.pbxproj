@@ -27,6 +27,7 @@
 		574AD3524C6608330F08BAC3 /* AppServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD52A70C65E26CA3E54D56A /* AppServices.swift */; };
 		5816F7E3DC07CD5EAE850B66 /* RotateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20E1C622E4955E8708A442 /* RotateSheet.swift */; };
 		5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */; };
+		197DD4A2A7C266D13A1EBA7A /* WindowAccessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */; };
 		5C15EC32347CEDD6496C0427 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E53C60BB41442C6B613530 /* IdleMonitor.swift */; };
 		64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */; };
 		685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */; };
@@ -78,6 +79,7 @@
 
 /* Begin PBXFileReference section */
 		09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreferenceTests.swift; sourceTree = "<group>"; };
+		E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessorTests.swift; sourceTree = "<group>"; };
 		14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		14B40660FE3E6A4CF3FBA2A0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		179202217CDFEF4B4E31AF70 /* AppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferences.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				20965233AEE95C7F65B3F261 /* ItemListViewModelTests.swift */,
 				4AE07DC64C5C5C0F5B2170F2 /* RotationTests.swift */,
 				09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */,
+				E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */,
 				598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */,
 			);
 			path = KeyCellarAppTests;
@@ -456,6 +459,7 @@
 				EBBCCD2D4C82F8D94463C461 /* RotationTests.swift in Sources */,
 				5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */,
 				DA3F7A1F9400036B1AEFBA05 /* VaultSessionTests.swift in Sources */,
+				197DD4A2A7C266D13A1EBA7A /* WindowAccessorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
