@@ -2910,6 +2910,16 @@
           }
         }
       }
+    },
+    "Library" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thư viện"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

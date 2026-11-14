@@ -1,7 +1,8 @@
 import KeyCellarCore
 import SwiftUI
 
-/// Smart lists, kinds, projects, tags, Trash, Settings. Styling ported from
+/// Library (smart lists and Trash), kinds, projects, tags, and Settings pinned
+/// under them as in the author's other apps. Styling ported from
 /// SignalBar's sidebar: unselected icons dimmed to `.secondary`, resizable
 /// column, focus reclaimed after every selection change (without it the
 /// selection pill renders in the inactive gray even though the window is key).
@@ -38,6 +39,9 @@ struct SidebarView: View {
                 row(.section(.recent), Text(SidebarSection.recent.title), SidebarSection.recent.systemImage)
                 row(.section(.expiring), Text(SidebarSection.expiring.title), SidebarSection.expiring.systemImage,
                     count: model.counts.expiring, badge: model.counts.expiring > 0)
+                row(.section(.trash), Text(SidebarSection.trash.title), SidebarSection.trash.systemImage, count: model.counts.trash)
+            } header: {
+                Text("Library")
             }
             Section("Kinds") {
                 ForEach(SecretKind.allCases, id: \.self) { kind in
@@ -65,12 +69,13 @@ struct SidebarView: View {
                     }
                 }
             }
-            Section {
-                row(.section(.trash), Text(SidebarSection.trash.title), SidebarSection.trash.systemImage, count: model.counts.trash)
-                row(.section(.settings), Text(SidebarSection.settings.title), SidebarSection.settings.systemImage)
+        }
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            SidebarSettingsRow(isSelected: navigation.sidebarSelection == .section(.settings)) {
+                selection.wrappedValue = .section(.settings)
             }
         }
-        .navigationSplitViewColumnWidth(min: 190, ideal: 220)
+        .navigationSplitViewColumnWidth(min: 200, ideal: 220)
         .focused($focused)
         .onAppear { focused = true; model.start() }
         .onChange(of: navigation.sidebarSelection) { _, _ in focused = true }

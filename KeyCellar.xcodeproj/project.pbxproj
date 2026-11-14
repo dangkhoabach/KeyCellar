@@ -32,6 +32,7 @@
 		ECDEEDC32510019CCD03F419 /* AboutWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335C63CC5C2763C365720874 /* AboutWindowTests.swift */; };
 		5C15EC32347CEDD6496C0427 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E53C60BB41442C6B613530 /* IdleMonitor.swift */; };
 		64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */; };
+		35FA906603CA4E8B0C5B7431 /* SidebarSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB045A8636F8161AF28BE67 /* SidebarSettingsRow.swift */; };
 		685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */; };
 		6F934FCB7F83B8B1E1D71851 /* WindowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADE8E9E2FA802A421DE24C3 /* WindowPresenter.swift */; };
 		71F8E6B33F3DFE609E531505 /* QuickSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A137A466368279A59C6B7580 /* QuickSearchPanel.swift */; };
@@ -108,6 +109,7 @@
 		59514059C9A0418E66500BA3 /* ItemActionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemActionsTests.swift; sourceTree = "<group>"; };
 		598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultSessionTests.swift; sourceTree = "<group>"; };
 		5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarSection.swift; sourceTree = "<group>"; };
+		CCB045A8636F8161AF28BE67 /* SidebarSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarSettingsRow.swift; sourceTree = "<group>"; };
 		5ADE8E9E2FA802A421DE24C3 /* WindowPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowPresenter.swift; sourceTree = "<group>"; };
 		6738FB4CAC3792780F259009 /* Local.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Local.xcconfig; sourceTree = "<group>"; };
 		6831DCB8B5E3845217EF38BE /* ItemFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemFormView.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				EA661F7409BAE724EEE2A942 /* SecretFieldRow.swift */,
 				F7E9AC352AB27EF76F3EEC02 /* SettingsView.swift */,
 				5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */,
+				CCB045A8636F8161AF28BE67 /* SidebarSettingsRow.swift */,
 				4AD823F817AD5DAFF5646DC6 /* SidebarView.swift */,
 				90BBEDA0CA646A9E34103D26 /* SidebarViewModel.swift */,
 				962ADD29A9801786A0EB59FF /* StatusBarView.swift */,
@@ -449,6 +452,7 @@
 				849B9AEADA6E34E0835755E6 /* SecretFieldRow.swift in Sources */,
 				392E19FD8BB56B19D0AD45CA /* SettingsView.swift in Sources */,
 				64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */,
+				35FA906603CA4E8B0C5B7431 /* SidebarSettingsRow.swift in Sources */,
 				8E8D16647409AB1C592C8248 /* SidebarView.swift in Sources */,
 				14825CF95D69C87810678CD5 /* SidebarViewModel.swift in Sources */,
 				B3168B7D774729D5A14CD793 /* StatusBarView.swift in Sources */,
