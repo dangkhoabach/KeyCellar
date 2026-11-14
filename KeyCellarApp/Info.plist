@@ -18,6 +18,8 @@
 	<string>1.0.3</string>
 	<key>CFBundleVersion</key>
 	<string>1.0.3</string>
+	<key>AppReleaseDate</key>
+	<string>2026-11-04</string>
 	<key>LSUIElement</key>
 	<false/>
 	<key>UTExportedTypeDeclarations</key>

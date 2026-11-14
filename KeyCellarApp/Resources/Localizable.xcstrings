@@ -2820,6 +2820,96 @@
           }
         }
       }
+    },
+    "About KeyCellar" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới thiệu KeyCellar"
+          }
+        }
+      }
+    },
+    "A private vault for your keys, passwords and secrets." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kho riêng cho khoá, mật khẩu và bí mật của bạn."
+          }
+        }
+      }
+    },
+    "Version %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phiên bản %@"
+          }
+        }
+      }
+    },
+    "Released %@" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phát hành %@"
+          }
+        }
+      }
+    },
+    "Website" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trang web"
+          }
+        }
+      }
+    },
+    "Show KeyCellar" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện KeyCellar"
+          }
+        }
+      }
+    },
+    "Quit KeyCellar" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thoát KeyCellar"
+          }
+        }
+      }
+    },
+    "Locked" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã khoá"
+          }
+        }
+      }
+    },
+    "Unlocked" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã mở khoá"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

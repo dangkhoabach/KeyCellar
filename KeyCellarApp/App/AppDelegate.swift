@@ -20,6 +20,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(nil)
             return
         }
+        StatusBarController.shared.start()
         services.idleMonitor.start()
         services.hotKeys.start()
         services.expiryNotifier.start()

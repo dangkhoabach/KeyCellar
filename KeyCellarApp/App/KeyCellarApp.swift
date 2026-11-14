@@ -37,7 +37,7 @@ struct KeyCellarApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: WindowPresenter.mainWindowID) {
             ContentView()
                 .background(WindowAccessor(delegate: windowDelegate))
                 .preferredColorScheme(themePreference.colorScheme)
@@ -46,6 +46,9 @@ struct KeyCellarApp: App {
                 .onChange(of: themePreferenceRaw) { _, _ in applyAppearance() }
         }
         .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About KeyCellar") { AboutWindow.show() }
+            }
             CommandGroup(replacing: .newItem) {
                 Button("New Item…") { AppServices.shared.actions.newItem() }
                     .keyboardShortcut("n", modifiers: .command)
@@ -91,15 +94,5 @@ struct KeyCellarApp: App {
                 .keyboardShortcut(",", modifiers: .command)
             }
         }
-
-        // `.window` style: the dropdown hosts the quick search, not plain
-        // menu items.
-        MenuBarExtra {
-            MenuBarContentView()
-                .environment(\.locale, appLocale.locale)
-        } label: {
-            Image(systemName: "key.fill")
-        }
-        .menuBarExtraStyle(.window)
     }
 }

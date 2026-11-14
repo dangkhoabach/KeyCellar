@@ -28,6 +28,8 @@
 		5816F7E3DC07CD5EAE850B66 /* RotateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD20E1C622E4955E8708A442 /* RotateSheet.swift */; };
 		5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */; };
 		197DD4A2A7C266D13A1EBA7A /* WindowAccessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */; };
+		5B87C8E4606FD36C46212B46 /* WindowPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618189BDC12611BE8159DD77 /* WindowPresenterTests.swift */; };
+		ECDEEDC32510019CCD03F419 /* AboutWindowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335C63CC5C2763C365720874 /* AboutWindowTests.swift */; };
 		5C15EC32347CEDD6496C0427 /* IdleMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E53C60BB41442C6B613530 /* IdleMonitor.swift */; };
 		64627B500B858016FA88ED71 /* SidebarSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A459D4E16FDA3B58DE2748D /* SidebarSection.swift */; };
 		685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */; };
@@ -46,8 +48,10 @@
 		9E43F44FF8E5A7AE0AD585DF /* ThemePreference.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7EA7CBAF5A0DD8C257B9E /* ThemePreference.swift */; };
 		A043C730EE086DEB8B7A8271 /* DebugKeyBlobStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A818900472F87E65E7AF7E /* DebugKeyBlobStore.swift */; };
 		A34C5399AA956C8527698C8B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA593FD57BDE341E85FE933C /* AppDelegate.swift */; };
+		E98C08A1BBEE7A8B3939B461 /* AboutWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A312AD7DF2B726CB4EF8664F /* AboutWindow.swift */; };
 		A374A26B19B4CCBC3451BB88 /* BackupManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D43DE6B639F5BE4C7020189 /* BackupManager.swift */; };
-		A53D7AAEEDA3BDE1B247F597 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */; };
+		A53D7AAEEDA3BDE1B247F597 /* MenuBarPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB1CA300C5A1A00C6ADD38C /* MenuBarPanelView.swift */; };
+		645A51EFD891CD57A46F8BBC /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7363AA9474570C645695B8 /* StatusBarController.swift */; };
 		A7AA9519DC646FCC04FD7161 /* WindowAccessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDC65E01C09E061B34E516D /* WindowAccessor.swift */; };
 		A8C39F5E812C70AD0BBF8FD9 /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */; };
 		AC41CF23AE9F5374B2610E5E /* HotKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6797632A50D40AD01CEB04 /* HotKeyManager.swift */; };
@@ -80,6 +84,8 @@
 /* Begin PBXFileReference section */
 		09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreferenceTests.swift; sourceTree = "<group>"; };
 		E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessorTests.swift; sourceTree = "<group>"; };
+		618189BDC12611BE8159DD77 /* WindowPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowPresenterTests.swift; sourceTree = "<group>"; };
+		335C63CC5C2763C365720874 /* AboutWindowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutWindowTests.swift; sourceTree = "<group>"; };
 		14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
 		14B40660FE3E6A4CF3FBA2A0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		179202217CDFEF4B4E31AF70 /* AppPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPreferences.swift; sourceTree = "<group>"; };
@@ -87,7 +93,8 @@
 		1D43DE6B639F5BE4C7020189 /* BackupManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupManager.swift; sourceTree = "<group>"; };
 		20965233AEE95C7F65B3F261 /* ItemListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewModelTests.swift; sourceTree = "<group>"; };
 		287F8221ED7A1D92C9346113 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		2DB1CA300C5A1A00C6ADD38C /* MenuBarPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPanelView.swift; sourceTree = "<group>"; };
+		5A7363AA9474570C645695B8 /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		2E25745F5F5353E1CFD74CB9 /* BackupSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSettingsView.swift; sourceTree = "<group>"; };
 		34BEA8B34F25411FD4D816D6 /* ItemActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemActions.swift; sourceTree = "<group>"; };
 		364937D76DAA758CB4450E17 /* LoginItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemManager.swift; sourceTree = "<group>"; };
@@ -127,6 +134,7 @@
 		BDDC65E01C09E061B34E516D /* WindowAccessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowAccessor.swift; sourceTree = "<group>"; };
 		BF5E6971F6296BD28616EF4B /* LockScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenView.swift; sourceTree = "<group>"; };
 		CA593FD57BDE341E85FE933C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A312AD7DF2B726CB4EF8664F /* AboutWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutWindow.swift; sourceTree = "<group>"; };
 		CC6797632A50D40AD01CEB04 /* HotKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotKeyManager.swift; sourceTree = "<group>"; };
 		D4EFEABF887823DF8FDCE44E /* ItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListView.swift; sourceTree = "<group>"; };
 		E2214DBEE4ABE71A19370A14 /* ExpiryNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiryNotifier.swift; sourceTree = "<group>"; };
@@ -179,7 +187,8 @@
 				E7B9BC8E3F0B74E4ACB9C1C4 /* ItemListViewModel.swift */,
 				91D969A9D6D90301B49B4FC4 /* ItemRowView.swift */,
 				BF5E6971F6296BD28616EF4B /* LockScreenView.swift */,
-				2DB1CA300C5A1A00C6ADD38C /* MenuBarContentView.swift */,
+				2DB1CA300C5A1A00C6ADD38C /* MenuBarPanelView.swift */,
+				5A7363AA9474570C645695B8 /* StatusBarController.swift */,
 				8990AC807C7D5792EF0CE8B5 /* NativeSearchField.swift */,
 				92C5A8624A58F581E856B10C /* PassphraseSheet.swift */,
 				14860660D61A954FD27FBFB7 /* PasswordGeneratorView.swift */,
@@ -212,6 +221,7 @@
 			children = (
 				8FB439F2B16E2F532CED247A /* AppDatabaseLocation.swift */,
 				CA593FD57BDE341E85FE933C /* AppDelegate.swift */,
+				A312AD7DF2B726CB4EF8664F /* AboutWindow.swift */,
 				FCB75D813E02128A6775C2ED /* AppNavigationState.swift */,
 				179202217CDFEF4B4E31AF70 /* AppPreferences.swift */,
 				6DD52A70C65E26CA3E54D56A /* AppServices.swift */,
@@ -292,6 +302,8 @@
 				4AE07DC64C5C5C0F5B2170F2 /* RotationTests.swift */,
 				09C769998EAC25F6C043898D /* ThemePreferenceTests.swift */,
 				E8C27D3F6956FC25AE9613CE /* WindowAccessorTests.swift */,
+				618189BDC12611BE8159DD77 /* WindowPresenterTests.swift */,
+				335C63CC5C2763C365720874 /* AboutWindowTests.swift */,
 				598552AD9B0D12C4FCD4FDC1 /* VaultSessionTests.swift */,
 			);
 			path = KeyCellarAppTests;
@@ -400,6 +412,7 @@
 			files = (
 				685F55A4AEE5BC2F7A455FA7 /* AppDatabaseLocation.swift in Sources */,
 				A34C5399AA956C8527698C8B /* AppDelegate.swift in Sources */,
+				E98C08A1BBEE7A8B3939B461 /* AboutWindow.swift in Sources */,
 				AEB8187E9182E1BD4281C795 /* AppLocale.swift in Sources */,
 				4C9A6129C532ACF1CE6BAF56 /* AppNavigationState.swift in Sources */,
 				E510BB3294D4BFEE4C806652 /* AppPreferences.swift in Sources */,
@@ -424,7 +437,8 @@
 				1E95CE55D0CF974BDEC0A0DB /* ItemRowView.swift in Sources */,
 				F9B18806BEE0D7783FB4877C /* LockScreenView.swift in Sources */,
 				1003A819D3AFDF511DA09E5C /* LoginItemManager.swift in Sources */,
-				A53D7AAEEDA3BDE1B247F597 /* MenuBarContentView.swift in Sources */,
+				A53D7AAEEDA3BDE1B247F597 /* MenuBarPanelView.swift in Sources */,
+				645A51EFD891CD57A46F8BBC /* StatusBarController.swift in Sources */,
 				4FB71132453D741B13C834B1 /* NativeSearchField.swift in Sources */,
 				B5FC05276C4F9E5D384242C8 /* PassphraseSheet.swift in Sources */,
 				A8C39F5E812C70AD0BBF8FD9 /* PasswordGeneratorView.swift in Sources */,
@@ -460,6 +474,8 @@
 				5AE4FE789EB661D7B3FE1F60 /* ThemePreferenceTests.swift in Sources */,
 				DA3F7A1F9400036B1AEFBA05 /* VaultSessionTests.swift in Sources */,
 				197DD4A2A7C266D13A1EBA7A /* WindowAccessorTests.swift in Sources */,
+				5B87C8E4606FD36C46212B46 /* WindowPresenterTests.swift in Sources */,
+				ECDEEDC32510019CCD03F419 /* AboutWindowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
