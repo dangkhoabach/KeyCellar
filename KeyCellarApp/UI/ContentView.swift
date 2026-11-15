@@ -35,9 +35,6 @@ struct ContentView: View {
                 LockScreenView(session: session)
             } else {
                 splitView
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        StatusBarView(preferences: preferences, clipboard: clipboard, backup: backup)
-                    }
             }
         }
         .frame(minWidth: 900, minHeight: 560)
@@ -60,22 +57,13 @@ struct ContentView: View {
                 ItemListView(navigation: navigation, model: list, actions: actions)
             }
         } detail: {
-            if navigation.sidebarSelection.isSettings {
-                SettingsView(section: settingsSection, preferences: preferences, backup: backup)
-            } else {
-                ItemDetailView(model: detail, actions: actions, inTrash: navigation.sidebarSelection.isTrash)
-                    // Window toolbar (system treatment, Liquid Glass on
-                    // 26+), attached to the detail column so it sits at
-                    // the window's trailing edge.
-                    .toolbar {
-                        // `Spacer` becomes NSToolbar's flexible space, which
-                        // is what pushes the button to the right edge.
-                        ToolbarItem(placement: .primaryAction) { Spacer() }
-                        ToolbarItem(placement: .primaryAction) {
-                            if !navigation.sidebarSelection.isTrash { newItemButton }
-                        }
-                    }
-            }
+            detailColumn
+                // On the detail column, not the whole split view: the
+                // sidebar runs the window's full height, and a bar across
+                // the bottom would cover its pinned Settings row.
+                .safeAreaInset(edge: .bottom, spacing: 0) {
+                    StatusBarView(preferences: preferences, clipboard: clipboard, backup: backup)
+                }
         }
         .onChange(of: navigation.selectedItemId, initial: true) { _, id in detail.show(itemId: id) }
         .sheet(item: $actions.form) { form in
@@ -101,6 +89,26 @@ struct ContentView: View {
                 return actions.newRecoveryCodes(fromFile: url)
             }
             return false
+        }
+    }
+
+    @ViewBuilder
+    private var detailColumn: some View {
+        if navigation.sidebarSelection.isSettings {
+            SettingsView(section: settingsSection, preferences: preferences, backup: backup)
+        } else {
+            ItemDetailView(model: detail, actions: actions, inTrash: navigation.sidebarSelection.isTrash)
+                // Window toolbar (system treatment, Liquid Glass on 26+),
+                // attached to the detail column so it sits at the window's
+                // trailing edge.
+                .toolbar {
+                    // `Spacer` becomes NSToolbar's flexible space, which is
+                    // what pushes the button to the right edge.
+                    ToolbarItem(placement: .primaryAction) { Spacer() }
+                    ToolbarItem(placement: .primaryAction) {
+                        if !navigation.sidebarSelection.isTrash { newItemButton }
+                    }
+                }
         }
     }
 }

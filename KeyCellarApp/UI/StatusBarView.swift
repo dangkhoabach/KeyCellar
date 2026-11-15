@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The strip under the split view: when the vault will auto-lock, and how
+/// The strip under the detail column: when the vault will auto-lock, and how
 /// long a copied secret stays on the clipboard. Redraws once a
 /// second only while it has something to count down.
 struct StatusBarView: View {
